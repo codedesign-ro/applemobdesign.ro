@@ -55,7 +55,7 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   background: var(--white);
   color: var(--text);
@@ -301,6 +301,7 @@ nav.scrolled {
 .section-wrap {
   max-width: 1400px; margin: 0 auto;
   padding: 100px 48px;
+  overflow-x: hidden;
 }
 .section-tag {
   display: inline-flex; align-items: center; gap: 8px;
@@ -798,7 +799,7 @@ footer {
   .hero-right { height: 400px; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
   .hero-img:first-child { grid-row: span 1; }
   .about-grid { grid-template-columns: 1fr; }
-  .about-imgs { height: 360px; }
+  .about-imgs { height: 360px; overflow: hidden; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .process-grid { grid-template-columns: 1fr 1fr; }
   .process-grid::before { display: none; }
