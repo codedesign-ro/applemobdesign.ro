@@ -799,7 +799,7 @@ footer {
   .hero-right { height: 400px; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
   .hero-img:first-child { grid-row: span 1; }
   .about-grid { grid-template-columns: 1fr; }
-  .about-imgs { height: 360px; overflow: hidden; }
+  .about-imgs { height: 360px; overflow: visible; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .process-grid { grid-template-columns: 1fr 1fr; }
   .process-grid::before { display: none; }
@@ -838,7 +838,7 @@ footer {
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   /* About section mobile fixes */
   #about, #contact { overflow-x: hidden; }
-  .about-float-card { position: absolute; top: auto; bottom: 16px; left: 50%; right: auto; transform: translateX(-50%) scale(0.85); margin: 0; }
+  .about-float-card { position: absolute; top: auto; bottom: -20px; left: 50%; right: auto; transform: translateX(-50%) scale(0.85); margin: 0; z-index: 10; }
   .about-grid { gap: 32px; }
   .about-right { width: 100%; max-width: 100%; }
   .about-features { margin: 20px 0; }
