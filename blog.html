@@ -7,7 +7,8 @@
 <meta name="description" content="Articole despre design interior, mobilier la comandă, tendințe și proiecte recente de la Apple Mob Design, Baia Mare.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet"></head>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+</head>
 <body>
 
 <!-- MOBILE MENU -->
@@ -90,16 +91,16 @@
 <!-- ── FILTER BAR ── -->
 <div class="filter-bar" id="filterBar">
   <button class="filter-btn active" onclick="filterArticles(this,'all')">
-    Toate articolele <span class="filter-count">12</span>
+    Toate articolele <span class="filter-count">8</span>
   </button>
   <button class="filter-btn" onclick="filterArticles(this,'sfaturi')">
-    Sfaturi Design <span class="filter-count">4</span>
+    Sfaturi Design <span class="filter-count">3</span>
   </button>
   <button class="filter-btn" onclick="filterArticles(this,'proiecte')">
-    Proiecte Recente <span class="filter-count">3</span>
+    Proiecte Recente <span class="filter-count">2</span>
   </button>
   <button class="filter-btn" onclick="filterArticles(this,'materiale')">
-    Ghiduri Materiale <span class="filter-count">3</span>
+    Ghiduri Materiale <span class="filter-count">2</span>
   </button>
   <button class="filter-btn" onclick="filterArticles(this,'tendinte')">
     Tendințe & Noutăți <span class="filter-count">2</span>
@@ -123,7 +124,7 @@
           <span class="article-read-time">7 min lectură</span>
         </div>
         <h2 class="article-title">Bucătărie modernă cu insulă în <em>Baia Mare</em> — de la concept la realitate</h2>
-        <p class="article-excerpt">Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan de 28mp, cu insulă centrală, fronturi din MDF vopsit mat și electrocasnice Teka integrate. Un proiect care a durat 6 săptămâni și a depășit așteptările clienților.</p>
+        <p class="article-excerpt">Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan de 28mp, cu insulă centrală, fronturi din MDF vopsit mat și electrocasnice Teka integrate.</p>
         <div class="article-footer">
           <div class="article-author">
             <div class="author-avatar">D</div>
@@ -450,10 +451,18 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// Category filter
+// Category filter — FIXED: was truncated in previous version
 function filterArticles(btn, cat) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.article-card').forEach(card => {
     const show = cat === 'all' || card.dataset.cat === cat;
-    card.st
+    card.style.opacity = show ? '1' : '0.2';
+    card.style.transform = show ? '' : 'scale(0.97)';
+    card.style.transition = 'opacity 0.35s, transform 0.35s';
+    card.style.pointerEvents = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
