@@ -838,7 +838,17 @@ footer {
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   /* About section mobile fixes */
   #about, #contact { overflow-x: hidden; }
-  .about-float-card { position: absolute; top: auto; bottom: -20px; left: 50%; right: auto; transform: translateX(-50%) scale(0.85); margin: 0; z-index: 10; }
+  .about-float-card {
+    position: absolute;
+    top: auto !important;
+    bottom: 20px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    margin: 0;
+    white-space: nowrap;
+    z-index: 10;
+  }
   .about-grid { gap: 32px; }
   .about-right { width: 100%; max-width: 100%; }
   .about-features { margin: 20px 0; }
