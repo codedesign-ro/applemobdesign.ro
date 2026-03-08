@@ -355,6 +355,10 @@ tr:hover td { background: var(--off); }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
         Portofoliu
       </div>
+      <div class="nav-item" onclick="showPage('blog')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+        Blog
+      </div>
       <div class="nav-item" onclick="showPage('testimoniale')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Testimoniale
@@ -432,6 +436,21 @@ tr:hover td { background: var(--off); }
       </button>
       <div class="card">
         <div class="table-wrap" id="portfolioTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
+    <!-- ── BLOG ── -->
+    <div class="page" id="page-blog">
+      <div class="page-header">
+        <div class="page-title">Blog</div>
+        <div class="page-sub">Adaugă, modifică sau șterge articolele de blog afișate pe site.</div>
+      </div>
+      <button class="btn-add" onclick="openBlogModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Articol Nou
+      </button>
+      <div class="card">
+        <div class="table-wrap" id="blogTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
       </div>
     </div>
 
@@ -710,6 +729,86 @@ tr:hover td { background: var(--off); }
   </div>
 </div>
 
+<!-- Blog Modal -->
+<div class="modal-overlay" id="blogModal">
+  <div class="modal" style="max-width:800px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title" id="blogModalTitle">Adaugă Articol</div>
+    <div class="modal-grid">
+      <div class="f-group full">
+        <label class="f-label">Titlu (RO) *</label>
+        <input type="text" id="bl-title-ro" class="f-input" placeholder="ex: Bucătărie modernă cu insulă...">
+        <span class="f-hint">Slug-ul se generează automat din titlul RO</span>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Titlu (EN)</label>
+        <input type="text" id="bl-title-en" class="f-input" placeholder="Modern kitchen with island...">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Slug (URL) *</label>
+        <input type="text" id="bl-slug" class="f-input" placeholder="bucatarie-moderna-insula">
+        <span class="f-hint">Auto-generat din titlul RO. Modifică manual dacă e necesar.</span>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Rezumat (RO)</label>
+        <textarea id="bl-excerpt-ro" class="f-textarea" placeholder="Scurtă descriere afișată în lista de articole..."></textarea>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Rezumat (EN)</label>
+        <textarea id="bl-excerpt-en" class="f-textarea" placeholder="Short description shown in article list..."></textarea>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Conținut Articol (RO)</label>
+        <textarea id="bl-content-ro" class="f-textarea" style="min-height:180px;" placeholder="Conținut HTML al articolului în română..."></textarea>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Conținut Articol (EN)</label>
+        <textarea id="bl-content-en" class="f-textarea" style="min-height:180px;" placeholder="Article HTML content in English..."></textarea>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Imagine Copertă (URL)</label>
+        <input type="url" id="bl-cover" class="f-input" placeholder="https://...">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Categorie</label>
+        <select id="bl-category" class="f-select">
+          <option value="inspiratie">Sfaturi & Inspirație</option>
+          <option value="proiecte">Proiecte Recente</option>
+          <option value="materiale">Ghiduri Materiale</option>
+          <option value="despre-noi">Despre Noi</option>
+        </select>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Autor</label>
+        <input type="text" id="bl-author" class="f-input" value="Daniel Marosan">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Timp Lectură (minute)</label>
+        <input type="number" id="bl-read-time" class="f-input" value="5" min="1">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine Afișare</label>
+        <input type="number" id="bl-order" class="f-input" value="0">
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="bl-featured"><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Articol Recomandat (featured)</span>
+        </label>
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="bl-published"><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Publicat (vizibil pe site)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('blogModal')">Anulează</button>
+      <button class="btn-save" onclick="saveBlog()">Salvează</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
@@ -739,11 +838,13 @@ window.openPortfolioModal = openPortfolioModal;
 window.openTestiModal = openTestiModal;
 window.openBrandModal = openBrandModal;
 window.openCatModal = openCatModal;
+window.openBlogModal = openBlogModal;
 window.closeModal = closeModal;
 window.savePortfolio = savePortfolio;
 window.saveTestimonial = saveTestimonial;
 window.saveBrand = saveBrand;
 window.saveCategory = saveCategory;
+window.saveBlog = saveBlog;
 window.editPortfolio = editPortfolio;
 window.deletePortfolio = deletePortfolio;
 window.editTestimonial = editTestimonial;
@@ -751,6 +852,8 @@ window.deleteTestimonial = deleteTestimonial;
 window.editBrand = editBrand;
 window.deleteBrand = deleteBrand;
 window.deleteCategory = deleteCategory;
+window.editBlog = editBlog;
+window.deleteBlog = deleteBlog;
 window.markMessageRead = markMessageRead;
 window.saveContactField = saveContactField;
 window.saveService = saveService;
@@ -820,6 +923,7 @@ function showPage(name) {
 
   const loaders = {
     portofoliu:   loadPortfolio,
+    blog:         loadBlog,
     testimoniale: loadTestimoniale,
     mesaje:       loadMessages,
     abonati:      loadAbonati,
@@ -874,6 +978,131 @@ function msgCard(m) {
       ${!m.is_read ? '<button class="btn-sm btn-edit" onclick="markMessageRead(\'' + m.id + '\')">Marchează citit</button>' : '<span style="font-size:0.72rem;color:var(--text-light)">✓ Citit</span>'}
     </div>
   </div>`;
+}
+
+// ══════════════════════════════════════
+// BLOG
+// ══════════════════════════════════════
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ă/g,'a').replace(/â/g,'a').replace(/î/g,'i').replace(/ș/g,'s').replace(/ț/g,'t')
+    .replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');
+}
+
+const CAT_LABELS_ADMIN = { inspiratie: 'Sfaturi & Inspirație', proiecte: 'Proiecte Recente', materiale: 'Ghiduri Materiale', 'despre-noi': 'Despre Noi' };
+
+async function loadBlog() {
+  const { data } = await sb.from('blog_posts').select('id,title_ro,category,featured,is_published,published_at,slug').order('published_at', { ascending: false });
+  const el = document.getElementById('blogTable');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Niciun articol adăugat.</p>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>Titlu</th><th>Categorie</th><th>Data Publicării</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map(p => `
+      <tr>
+        <td><strong>${p.title_ro}</strong>${p.featured ? ' <span class="badge badge-orange">Featured</span>' : ''}</td>
+        <td>${CAT_LABELS_ADMIN[p.category] || p.category}</td>
+        <td>${p.published_at ? new Date(p.published_at).toLocaleDateString('ro-RO',{day:'numeric',month:'short',year:'numeric'}) : '—'}</td>
+        <td><span class="badge ${p.is_published ? 'badge-green' : 'badge-gray'}">${p.is_published ? 'Publicat' : 'Draft'}</span></td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn-sm btn-edit" onclick="editBlog('${p.id}')">✏️ Editează</button>
+          <button class="btn-sm btn-delete" onclick="deleteBlog('${p.id}')">🗑 Șterge</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openBlogModal() {
+  editingId = null;
+  document.getElementById('blogModalTitle').textContent = 'Adaugă Articol';
+  ['bl-title-ro','bl-title-en','bl-slug','bl-excerpt-ro','bl-excerpt-en','bl-content-ro','bl-content-en','bl-cover'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('bl-author').value = 'Daniel Marosan';
+  document.getElementById('bl-read-time').value = '5';
+  document.getElementById('bl-order').value = '0';
+  document.getElementById('bl-category').value = 'inspiratie';
+  document.getElementById('bl-featured').checked = false;
+  document.getElementById('bl-published').checked = false;
+
+  // Auto-generate slug from title_ro
+  const titleEl = document.getElementById('bl-title-ro');
+  const slugEl  = document.getElementById('bl-slug');
+  titleEl.oninput = () => { slugEl.value = slugify(titleEl.value); };
+
+  document.getElementById('blogModal').classList.add('open');
+}
+
+async function editBlog(id) {
+  const { data } = await sb.from('blog_posts').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('blogModalTitle').textContent = 'Editează Articol';
+  document.getElementById('bl-title-ro').value   = data.title_ro || '';
+  document.getElementById('bl-title-en').value   = data.title_en || '';
+  document.getElementById('bl-slug').value        = data.slug || '';
+  document.getElementById('bl-excerpt-ro').value = data.excerpt_ro || '';
+  document.getElementById('bl-excerpt-en').value = data.excerpt_en || '';
+  document.getElementById('bl-content-ro').value = data.content_ro || '';
+  document.getElementById('bl-content-en').value = data.content_en || '';
+  document.getElementById('bl-cover').value       = data.cover_image || '';
+  document.getElementById('bl-category').value   = data.category || 'inspiratie';
+  document.getElementById('bl-author').value      = data.author || 'Daniel Marosan';
+  document.getElementById('bl-read-time').value   = data.read_time_min || 5;
+  document.getElementById('bl-order').value       = data.order_num || 0;
+  document.getElementById('bl-featured').checked  = data.featured || false;
+  document.getElementById('bl-published').checked = data.is_published || false;
+
+  // Auto-generate slug only when title changes and slug hasn't been manually edited
+  const titleEl = document.getElementById('bl-title-ro');
+  const slugEl  = document.getElementById('bl-slug');
+  titleEl.oninput = () => { slugEl.value = slugify(titleEl.value); };
+
+  document.getElementById('blogModal').classList.add('open');
+}
+
+async function saveBlog() {
+  const isPublished = document.getElementById('bl-published').checked;
+  const wasPublished = editingId
+    ? (await sb.from('blog_posts').select('is_published,published_at').eq('id', editingId).single()).data
+    : null;
+
+  const payload = {
+    title_ro:     document.getElementById('bl-title-ro').value.trim(),
+    title_en:     document.getElementById('bl-title-en').value.trim() || null,
+    slug:         document.getElementById('bl-slug').value.trim(),
+    excerpt_ro:   document.getElementById('bl-excerpt-ro').value.trim() || null,
+    excerpt_en:   document.getElementById('bl-excerpt-en').value.trim() || null,
+    content_ro:   document.getElementById('bl-content-ro').value.trim() || null,
+    content_en:   document.getElementById('bl-content-en').value.trim() || null,
+    cover_image:  document.getElementById('bl-cover').value.trim() || null,
+    category:     document.getElementById('bl-category').value,
+    author:       document.getElementById('bl-author').value.trim() || 'Daniel Marosan',
+    read_time_min:parseInt(document.getElementById('bl-read-time').value) || 5,
+    order_num:    parseInt(document.getElementById('bl-order').value) || 0,
+    featured:     document.getElementById('bl-featured').checked,
+    is_published: isPublished,
+    // Set published_at to now() when first publishing
+    published_at: isPublished && (!wasPublished || !wasPublished.is_published)
+      ? new Date().toISOString()
+      : (wasPublished?.published_at || null),
+  };
+
+  if (!payload.title_ro) { showToast('Titlul RO este obligatoriu!', 'error'); return; }
+  if (!payload.slug) { showToast('Slug-ul este obligatoriu!', 'error'); return; }
+
+  const { error } = editingId
+    ? await sb.from('blog_posts').update(payload).eq('id', editingId)
+    : await sb.from('blog_posts').insert(payload);
+
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('blogModal');
+  showToast(editingId ? 'Articol actualizat!' : 'Articol adăugat!');
+  loadBlog();
+}
+
+async function deleteBlog(id) {
+  if (!confirm('Ștergi acest articol? Acțiunea este ireversibilă.')) return;
+  await sb.from('blog_posts').delete().eq('id', id);
+  showToast('Articol șters.');
+  loadBlog();
 }
 
 // ══════════════════════════════════════

@@ -60,30 +60,30 @@
 <section style="background:var(--white);">
   <div class="blog-hero">
     <div class="blog-hero-left">
-      <div class="blog-tag">Jurnal & Inspirație</div>
-      <h1 class="blog-hero-title">
+      <div class="blog-tag" id="blogTag">Jurnal & Inspirație</div>
+      <h1 class="blog-hero-title" id="blogHeroTitle">
         Articole despre<br>
         <em>Design Interior</em><br>
         și Mobilier
       </h1>
-      <p class="blog-hero-sub">Sfaturi practice, proiecte recente, ghiduri de materiale și ultimele tendințe în design interior — scrise de echipa Apple Mob Design.</p>
+      <p class="blog-hero-sub" id="blogHeroSub">Sfaturi practice, proiecte recente, ghiduri de materiale și ultimele tendințe în design interior — scrise de echipa Apple Mob Design.</p>
     </div>
     <div class="blog-hero-right">
       <div class="blog-hero-stat">
-        <div class="blog-hero-stat-num">20<span style="color:rgba(255,255,255,0.6)">+</span></div>
-        <div class="blog-hero-stat-label">Articole Publicate</div>
+        <div class="blog-hero-stat-num" id="statArticole">—</div>
+        <div class="blog-hero-stat-label" id="statArticoleLabel">Articole Publicate</div>
       </div>
       <div class="blog-hero-stat">
         <div class="blog-hero-stat-num" style="color:var(--green)">4</div>
-        <div class="blog-hero-stat-label">Categorii</div>
+        <div class="blog-hero-stat-label" id="statCategorii">Categorii</div>
       </div>
       <div class="blog-hero-stat">
-        <div class="blog-hero-stat-num" style="color:var(--green)">5min</div>
-        <div class="blog-hero-stat-label">Lectură Medie</div>
+        <div class="blog-hero-stat-num" style="color:var(--green)" id="statReadTime">5min</div>
+        <div class="blog-hero-stat-label" id="statReadTimeLabel">Lectură Medie</div>
       </div>
       <div class="blog-hero-stat">
         <div class="blog-hero-stat-num" style="color:var(--green)">★4.9</div>
-        <div class="blog-hero-stat-label">Recenzii Clienți</div>
+        <div class="blog-hero-stat-label" id="statRecenzii">Recenzii Clienți</div>
       </div>
     </div>
   </div>
@@ -91,270 +91,31 @@
 
 <!-- ── FILTER BAR ── -->
 <div class="filter-bar" id="filterBar">
-  <button class="filter-btn active" onclick="filterArticles(this,'all')">
-    Toate articolele <span class="filter-count">8</span>
+  <button class="filter-btn active" data-cat="all" onclick="filterArticles(this,'all')">
+    <span class="filter-label" data-key="filterAll">Toate articolele</span> <span class="filter-count">0</span>
   </button>
-  <button class="filter-btn" onclick="filterArticles(this,'sfaturi')">
-    Sfaturi Design <span class="filter-count">3</span>
+  <button class="filter-btn" data-cat="inspiratie" onclick="filterArticles(this,'inspiratie')">
+    <span class="filter-label" data-key="filterInspiratie">Sfaturi & Inspirație</span> <span class="filter-count">0</span>
   </button>
-  <button class="filter-btn" onclick="filterArticles(this,'proiecte')">
-    Proiecte Recente <span class="filter-count">2</span>
+  <button class="filter-btn" data-cat="proiecte" onclick="filterArticles(this,'proiecte')">
+    <span class="filter-label" data-key="filterProiecte">Proiecte Recente</span> <span class="filter-count">0</span>
   </button>
-  <button class="filter-btn" onclick="filterArticles(this,'materiale')">
-    Ghiduri Materiale <span class="filter-count">2</span>
+  <button class="filter-btn" data-cat="materiale" onclick="filterArticles(this,'materiale')">
+    <span class="filter-label" data-key="filterMateriale">Ghiduri Materiale</span> <span class="filter-count">0</span>
   </button>
-  <button class="filter-btn" onclick="filterArticles(this,'tendinte')">
-    Tendințe & Noutăți <span class="filter-count">2</span>
+  <button class="filter-btn" data-cat="despre-noi" onclick="filterArticles(this,'despre-noi')">
+    <span class="filter-label" data-key="filterDespreNoi">Despre Noi</span> <span class="filter-count">0</span>
   </button>
 </div>
 
 <!-- ── ARTICLES GRID ── -->
 <section class="articles-section">
   <div class="articles-grid" id="articlesGrid">
-
-    <!-- FEATURED -->
-    <article class="article-card featured reveal" data-cat="proiecte">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6789-HDR-Edit.jpg" alt="Bucătărie modernă Baia Mare">
-        <span class="article-cat-badge cat-proiecte">Proiecte Recente</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">15 Ianuarie 2025</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">7 min lectură</span>
-        </div>
-        <h2 class="article-title">Bucătărie modernă cu insulă în <em>Baia Mare</em> — de la concept la realitate</h2>
-        <p class="article-excerpt">Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan de 28mp, cu insulă centrală, fronturi din MDF vopsit mat și electrocasnice Teka integrate.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 1 -->
-    <article class="article-card reveal d1" data-cat="sfaturi">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6636-HDR-Edit.jpg" alt="Dormitor la comandă">
-        <span class="article-cat-badge cat-sfaturi">Sfaturi Design</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">8 Ianuarie 2025</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">5 min lectură</span>
-        </div>
-        <h2 class="article-title">5 greșeli pe care le fac toți clienții când aleg <em>mobilier dormitor</em></h2>
-        <p class="article-excerpt">De la alegerea culorii prea devreme până la ignorarea înălțimii tavanului — iată cum să eviți cele mai comune greșeli.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 2 -->
-    <article class="article-card reveal" data-cat="materiale">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6813.jpg" alt="Materiale mobilier">
-        <span class="article-cat-badge cat-materiale">Ghid Materiale</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">2 Ianuarie 2025</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">6 min lectură</span>
-        </div>
-        <h2 class="article-title">PAL melaminat vs MDF vopsit — <em>ce alegi</em> pentru bucătăria ta?</h2>
-        <p class="article-excerpt">Comparăm cele două materiale cele mai folosite în mobilierul la comandă: durabilitate, preț, estetică și întreținere.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 3 -->
-    <article class="article-card reveal d1" data-cat="tendinte">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6679-HDR.jpg" alt="Tendinte design 2025">
-        <span class="article-cat-badge cat-tendinte">Tendințe & Noutăți</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">20 Decembrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">4 min lectură</span>
-        </div>
-        <h2 class="article-title">Top 7 tendințe în design interior pentru <em>2025</em></h2>
-        <p class="article-excerpt">Culorile pământii, textura betonului aparent, verde sage și lemn natural — ce domină designul de interior în acest an.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 4 -->
-    <article class="article-card reveal d2" data-cat="sfaturi">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6688-HDR-Edit.jpg" alt="Dulap walk-in">
-        <span class="article-cat-badge cat-sfaturi">Sfaturi Design</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">10 Decembrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">5 min lectură</span>
-        </div>
-        <h2 class="article-title">Cum să planifici un <em>walk-in closet</em> eficient în orice spațiu</h2>
-        <p class="article-excerpt">Nu ai nevoie de o cameră mare pentru un walk-in. Îți arătăm cum să maximizezi orice spațiu de 4-6mp.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 5 -->
-    <article class="article-card reveal" data-cat="proiecte">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6314-HDR.jpg" alt="Living open space">
-        <span class="article-cat-badge cat-proiecte">Proiecte Recente</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">28 Noiembrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">6 min lectură</span>
-        </div>
-        <h2 class="article-title">Living open space în <em>Cluj-Napoca</em> — 42mp transformați în 8 săptămâni</h2>
-        <p class="article-excerpt">Un proiect ambițios: un apartament cu pereți demolați, corp TV custom de 4m și bibliotecă integrată de podea la tavan.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 6 -->
-    <article class="article-card reveal d1" data-cat="materiale">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6544-HDR-Edit.jpg" alt="Sisteme feronerie Blum">
-        <span class="article-cat-badge cat-materiale">Ghid Materiale</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">15 Noiembrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">5 min lectură</span>
-        </div>
-        <h2 class="article-title">De ce folosim <em>sisteme Blum</em> în toate proiectele noastre</h2>
-        <p class="article-excerpt">Sertarele Tandembox, balamalele Clip Top, sistemul Legrabox — de ce feroneria austriacă Blum este standardul industriei.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 7 -->
-    <article class="article-card reveal d2" data-cat="sfaturi">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6304-HDR-Edit.jpg" alt="Sfaturi iluminat interior">
-        <span class="article-cat-badge cat-sfaturi">Sfaturi Design</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">5 Noiembrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">4 min lectură</span>
-        </div>
-        <h2 class="article-title">Iluminatul în mobilier — <em>leduri integrate</em> sau spoturi? Ghid complet</h2>
-        <p class="article-excerpt">Iluminatul sub dulapuri, în interiorul sertarelor sau în spatele oglinzilor — cum să folosești lumina ca element de design.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- CARD 8 -->
-    <article class="article-card reveal" data-cat="tendinte">
-      <div class="article-img">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2022/01/DSC_6620-HDR-Edit.jpg" alt="Culori mobilier 2025">
-        <span class="article-cat-badge cat-tendinte">Tendințe & Noutăți</span>
-      </div>
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="article-date">20 Octombrie 2024</span>
-          <span class="article-meta-dot"></span>
-          <span class="article-read-time">3 min lectură</span>
-        </div>
-        <h2 class="article-title">Culorile anului în mobilier — <em>verde sage, bej și gri cald</em> domină</h2>
-        <p class="article-excerpt">Pantone a anunțat culorile anului iar industria mobilei a răspuns. Ce nuanțe aleg clienții noștri în 2025.</p>
-        <div class="article-footer">
-          <div class="article-author">
-            <div class="author-avatar">D</div>
-            <div class="author-name">Daniel Marosan</div>
-          </div>
-          <a href="article.html" class="article-link">
-            Citește mai mult
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-
+    <!-- Populated by JS -->
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-light);">
+      <div class="spinner" style="margin:0 auto 16px;"></div>
+      Se încarcă articolele...
+    </div>
   </div>
 </section>
 
@@ -362,11 +123,11 @@
 <div class="newsletter">
   <div class="nl-left">
     <div class="nl-tag">Newsletter</div>
-    <div class="nl-title">Înscrie-te și primești articole noi<br>direct în căsuța ta de email</div>
+    <div class="nl-title" id="nlTitle">Înscrie-te și primești articole noi<br>direct în căsuța ta de email</div>
   </div>
   <div class="nl-right">
-    <input type="email" class="nl-input" placeholder="Adresa ta de email">
-    <button class="nl-btn">Înscrie-te</button>
+    <input type="email" class="nl-input" id="nlInput" placeholder="Adresa ta de email">
+    <button class="nl-btn" id="nlBtn">Înscrie-te</button>
   </div>
 </div>
 
@@ -399,10 +160,10 @@
     <div>
       <div class="footer-col-title">Categorii Blog</div>
       <ul class="footer-links">
-        <li><a href="blog.html">Sfaturi Design</a></li>
+        <li><a href="blog.html">Sfaturi & Inspirație</a></li>
         <li><a href="blog.html">Proiecte Recente</a></li>
         <li><a href="blog.html">Ghiduri Materiale</a></li>
-        <li><a href="blog.html">Tendințe & Noutăți</a></li>
+        <li><a href="blog.html">Despre Noi</a></li>
       </ul>
     </div>
     <div>
@@ -438,147 +199,267 @@
 </footer>
 
 <script>
-// ── Newsletter subscription for blog page ──
-const { createClient } = window.supabase
-const db = createClient(
-  'https://nhuxlpwjuqeolflrugvu.supabase.co',
-  'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
-)
-document.addEventListener('DOMContentLoaded', () => {
-  const btn   = document.querySelector('.nl-btn')
-  const input = document.querySelector('.nl-input')
-  if (!btn || !input) return
-  btn.addEventListener('click', async () => {
-    const email = input.value.trim()
-    if (!email || !email.includes('@')) {
-      alert('Introduceți o adresă de email validă.')
-      return
-    }
-    const origText = btn.textContent
-    btn.disabled = true
-    btn.textContent = 'Se procesează…'
-    const { error } = await db.from('newsletter_subscribers').insert([{ email }])
-    if (error?.code === '23505') {
-      btn.textContent = 'Ești deja abonat!'
-      btn.disabled = false
-    } else if (error) {
-      console.error('Newsletter error:', error)
-      alert('Eroare. Încearcă din nou.')
-      btn.disabled = false
-      btn.textContent = origText
-    } else {
-      btn.textContent = '✓ Mulțumim!'
-      input.value = ''
-    }
-  })
-})
-</script>
-
-<script>
-// Nav scroll
+// ── Nav + mobile menu ──
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-
-// Mobile menu
 function openMob() { document.getElementById('mobMenu').classList.add('open'); }
 function closeMob() { document.getElementById('mobMenu').classList.remove('open'); }
 
-// Scroll reveal
+// ── Scroll reveal ──
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+function reObserve() { document.querySelectorAll('.reveal:not(.vis)').forEach(el => obs.observe(el)); }
 
-// Category filter
-function filterArticles(btn, cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.article-card').forEach(card => {
-    const show = cat === 'all' || card.dataset.cat === cat;
-    card.style.opacity = show ? '1' : '0.2';
-    card.style.transform = show ? '' : 'scale(0.97)';
-    card.style.transition = 'opacity 0.35s, transform 0.35s';
-    card.style.pointerEvents = show ? '' : 'none';
-  });
-}
+// ── Supabase ──
+const { createClient } = window.supabase;
+const db = createClient(
+  'https://nhuxlpwjuqeolflrugvu.supabase.co',
+  'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
+);
 
-// Language switcher for blog page
-const blogTranslations = {
+// ── In-memory state ──
+let _posts = [];
+let _lang  = 'ro';
+
+// ── Category config ──
+const CAT = {
+  ro: { inspiratie: 'Sfaturi & Inspirație', proiecte: 'Proiecte Recente', materiale: 'Ghiduri Materiale', 'despre-noi': 'Despre Noi' },
+  en: { inspiratie: 'Tips & Inspiration',   proiecte: 'Recent Projects',   materiale: 'Material Guides',   'despre-noi': 'About Us' }
+};
+// CSS class suffix for category badge colour (reuse existing cat-* classes)
+const CAT_CSS = { inspiratie: 'sfaturi', proiecte: 'proiecte', materiale: 'materiale', 'despre-noi': 'tendinte' };
+
+// ── Translations ──
+const T = {
   ro: {
     heroTag: 'Jurnal & Inspirație',
     heroTitle: 'Articole despre<br><em>Design Interior</em><br>și Mobilier',
     heroSub: 'Sfaturi practice, proiecte recente, ghiduri de materiale și ultimele tendințe în design interior — scrise de echipa Apple Mob Design.',
-    filterAll: 'Toate articolele', filterSfaturi: 'Sfaturi Design',
-    filterProiecte: 'Proiecte Recente', filterMateriale: 'Ghiduri Materiale',
-    filterTendinte: 'Tendințe & Noutăți',
+    statArticoleLabel: 'Articole Publicate', statCategorii: 'Categorii',
+    statReadTimeLabel: 'Lectură Medie', statRecenzii: 'Recenzii Clienți',
+    filterAll: 'Toate articolele', filterInspiratie: 'Sfaturi & Inspirație',
+    filterProiecte: 'Proiecte Recente', filterMateriale: 'Ghiduri Materiale', filterDespreNoi: 'Despre Noi',
+    readMore: 'Citește mai mult', minRead: 'min lectură',
     nlTitle: 'Înscrie-te și primești articole noi<br>direct în căsuța ta de email',
     nlBtn: 'Înscrie-te', nlPlaceholder: 'Adresa ta de email',
-    readMore: 'Citește mai mult',
+    loading: 'Se încarcă articolele...',
+    noArticles: 'Niciun articol publicat momentan.',
   },
   en: {
     heroTag: 'Journal & Inspiration',
     heroTitle: 'Articles about<br><em>Interior Design</em><br>and Furniture',
     heroSub: 'Practical tips, recent projects, material guides and the latest interior design trends — written by the Apple Mob Design team.',
-    filterAll: 'All articles', filterSfaturi: 'Design Tips',
-    filterProiecte: 'Recent Projects', filterMateriale: 'Material Guides',
-    filterTendinte: 'Trends & News',
+    statArticoleLabel: 'Published Articles', statCategorii: 'Categories',
+    statReadTimeLabel: 'Average Read', statRecenzii: 'Client Reviews',
+    filterAll: 'All articles', filterInspiratie: 'Tips & Inspiration',
+    filterProiecte: 'Recent Projects', filterMateriale: 'Material Guides', filterDespreNoi: 'About Us',
+    readMore: 'Read more', minRead: 'min read',
     nlTitle: 'Subscribe and receive new articles<br>directly in your inbox',
     nlBtn: 'Subscribe', nlPlaceholder: 'Your email address',
-    readMore: 'Read more',
+    loading: 'Loading articles...',
+    noArticles: 'No articles published yet.',
   }
 };
 
+function formatDate(iso, lang) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString(lang === 'ro' ? 'ro-RO' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ── Render posts to DOM ──
+function renderPosts(posts, lang) {
+  const grid = document.getElementById('articlesGrid');
+  if (!grid) return;
+  const t = T[lang];
+
+  if (!posts || posts.length === 0) {
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-light);">${t.noArticles}</p>`;
+    return;
+  }
+
+  const featured = posts.find(p => p.featured) || posts[0];
+  const rest     = posts.filter(p => p.id !== featured.id);
+  const delays   = [' d1', '', ' d1', ' d2', '', ' d1', ' d2'];
+
+  function cardHTML(p, extraClass, delay) {
+    const title   = (lang === 'en' && p.title_en)   ? p.title_en   : p.title_ro;
+    const excerpt = (lang === 'en' && p.excerpt_en) ? p.excerpt_en : (p.excerpt_ro || '');
+    const catLabel = CAT[lang]?.[p.category] || p.category;
+    const catCls   = CAT_CSS[p.category] || 'sfaturi';
+    const date     = formatDate(p.published_at, lang);
+    const initial  = (p.author || 'D').charAt(0).toUpperCase();
+    return `<article class="article-card${extraClass} reveal${delay}" data-cat="${p.category}">
+      <div class="article-img">
+        <img src="${p.cover_image || ''}" alt="${title.replace(/"/g,'&quot;')}" onerror="this.parentElement.style.background='var(--gray)'">
+        <span class="article-cat-badge cat-${catCls}">${catLabel}</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="article-date">${date}</span>
+          <span class="article-meta-dot"></span>
+          <span class="article-read-time">${p.read_time_min} ${t.minRead}</span>
+        </div>
+        <h2 class="article-title">${title}</h2>
+        <p class="article-excerpt">${excerpt}</p>
+        <div class="article-footer">
+          <div class="article-author">
+            <div class="author-avatar">${initial}</div>
+            <div class="author-name">${p.author || 'Daniel Marosan'}</div>
+          </div>
+          <a href="article.html" class="article-link">
+            ${t.readMore}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  grid.innerHTML = cardHTML(featured, ' featured', '')
+    + rest.map((p, i) => cardHTML(p, '', delays[i % delays.length])).join('');
+
+  reObserve();
+  updateFilterCounts(posts);
+
+  // Re-apply active category filter
+  const activeBtn = document.querySelector('.filter-btn.active');
+  if (activeBtn) {
+    const cat = activeBtn.dataset.cat || 'all';
+    if (cat !== 'all') applyFilter(cat);
+  }
+}
+
+// ── Update filter button counts ──
+function updateFilterCounts(posts) {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const cat   = btn.dataset.cat;
+    const count = cat === 'all' ? posts.length : posts.filter(p => p.category === cat).length;
+    const badge = btn.querySelector('.filter-count');
+    if (badge) badge.textContent = count;
+  });
+}
+
+// ── Category filter ──
+function applyFilter(cat) {
+  document.querySelectorAll('.article-card').forEach(card => {
+    const show = cat === 'all' || card.dataset.cat === cat;
+    card.style.opacity       = show ? '1' : '0.2';
+    card.style.transform     = show ? '' : 'scale(0.97)';
+    card.style.transition    = 'opacity 0.35s, transform 0.35s';
+    card.style.pointerEvents = show ? '' : 'none';
+  });
+}
+
+function filterArticles(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter(cat);
+}
+
+// ── Language switcher ──
 function setLang(lang) {
-  const t = blogTranslations[lang];
+  _lang = lang;
+  localStorage.setItem('amd_lang', lang);
+  const t = T[lang];
 
-  // Hero section
-  const tag = document.querySelector('.blog-tag');
-  if (tag) tag.textContent = t.heroTag;
-  const title = document.querySelector('.blog-hero-title');
-  if (title) title.innerHTML = t.heroTitle;
-  const sub = document.querySelector('.blog-hero-sub');
-  if (sub) sub.textContent = t.heroSub;
+  // Hero
+  const tag = document.getElementById('blogTag');         if (tag) tag.textContent   = t.heroTag;
+  const title = document.getElementById('blogHeroTitle'); if (title) title.innerHTML = t.heroTitle;
+  const sub = document.getElementById('blogHeroSub');     if (sub) sub.textContent   = t.heroSub;
 
-  // Filter bar labels
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const filterKeys = ['filterAll','filterSfaturi','filterProiecte','filterMateriale','filterTendinte'];
-  filterBtns.forEach((btn, i) => {
-    if (filterKeys[i]) {
-      // Preserve the count badge
-      const badge = btn.querySelector('.filter-count');
-      const count = badge ? badge.outerHTML : '';
-      btn.innerHTML = t[filterKeys[i]] + ' ' + count;
-    }
+  // Hero stats labels
+  ['statArticoleLabel','statCategorii','statReadTimeLabel','statRecenzii'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = t[id];
   });
 
-  // Article read-more links
-  document.querySelectorAll('.article-link').forEach(a => {
-    const svg = a.querySelector('svg');
-    a.childNodes[0].textContent = t.readMore + ' ';
-    if (svg) a.appendChild(svg);
+  // Filter labels
+  document.querySelectorAll('.filter-btn .filter-label').forEach(el => {
+    const key = el.dataset.key; if (key && t[key]) el.textContent = t[key];
   });
 
   // Newsletter
-  const nlTitle = document.querySelector('.nl-title');
-  if (nlTitle) nlTitle.innerHTML = t.nlTitle;
-  const nlBtn = document.querySelector('.nl-btn');
-  if (nlBtn && !nlBtn.disabled) nlBtn.textContent = t.nlBtn;
-  const nlInput = document.querySelector('.nl-input');
-  if (nlInput) nlInput.placeholder = t.nlPlaceholder;
+  const nlTitle = document.getElementById('nlTitle'); if (nlTitle) nlTitle.innerHTML = t.nlTitle;
+  const nlBtn   = document.getElementById('nlBtn');   if (nlBtn && !nlBtn.disabled) nlBtn.textContent = t.nlBtn;
+  const nlInput = document.getElementById('nlInput'); if (nlInput) nlInput.placeholder = t.nlPlaceholder;
 
-  // Active button state
+  // Lang button states
   document.querySelectorAll('.lang-btn, .mob-lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
   });
 
-  localStorage.setItem('amd_lang', lang);
+  // Re-render posts in new language
+  if (_posts.length) renderPosts(_posts, lang);
 }
 
-// Restore language on load
+// ── Newsletter ──
 document.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('amd_lang') || 'ro';
-  if (saved === 'en') setLang('en');
+  const btn   = document.getElementById('nlBtn');
+  const input = document.getElementById('nlInput');
+  if (btn && input) {
+    btn.addEventListener('click', async () => {
+      const email = input.value.trim();
+      if (!email || !email.includes('@')) {
+        alert(_lang === 'ro' ? 'Introduceți o adresă de email validă.' : 'Please enter a valid email address.');
+        return;
+      }
+      const origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = _lang === 'ro' ? 'Se procesează…' : 'Processing…';
+      const { error } = await db.from('newsletter_subscribers').insert([{ email }]);
+      if (error?.code === '23505') {
+        btn.textContent = _lang === 'ro' ? 'Ești deja abonat!' : 'Already subscribed!';
+        btn.disabled = false;
+      } else if (error) {
+        alert(_lang === 'ro' ? 'Eroare. Încearcă din nou.' : 'Error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = origText;
+      } else {
+        btn.textContent = _lang === 'ro' ? '✓ Mulțumim!' : '✓ Thank you!';
+        input.value = '';
+      }
+    });
+  }
 });
+
+// ── Main init ──
+async function init() {
+  _lang = localStorage.getItem('amd_lang') || 'ro';
+
+  // Apply saved language to UI chrome first (hero, filters, newsletter)
+  setLang(_lang);
+
+  // Fetch posts from Supabase
+  const { data, error } = await db
+    .from('blog_posts')
+    .select('id, title_ro, title_en, slug, excerpt_ro, excerpt_en, cover_image, category, author, read_time_min, featured, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+
+  if (error) {
+    console.error('blog_posts:', error.message);
+    document.getElementById('articlesGrid').innerHTML =
+      '<p style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-light);">Eroare la încărcare. Reîncercați mai târziu.</p>';
+    return;
+  }
+
+  _posts = data || [];
+
+  // Update article count stat
+  const statEl = document.getElementById('statArticole');
+  if (statEl) statEl.textContent = _posts.length;
+
+  // Update average read time stat
+  if (_posts.length) {
+    const avgRead = Math.round(_posts.reduce((s, p) => s + (p.read_time_min || 5), 0) / _posts.length);
+    const rtEl = document.getElementById('statReadTime');
+    if (rtEl) rtEl.textContent = avgRead + 'min';
+  }
+
+  renderPosts(_posts, _lang);
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
