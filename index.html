@@ -728,6 +728,325 @@
   </div>
 </footer>
 
+<script type="module">
+// ══════════════════════════════════════════════════════
+// SUPABASE INTEGRATION
+// ══════════════════════════════════════════════════════
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const db = createClient(
+  'https://nhuxlpwjuqeolflrugvu.supabase.co',
+  'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
+)
+
+// SVG icons for service cards (by position)
+const SVC_ICONS = [
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11h18v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z"/><path d="M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4"/><line x1="12" y1="11" x2="12" y2="21"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="16" width="20" height="5" rx="1"/><rect x="4" y="10" width="6" height="6" rx="1"/><rect x="14" y="7" width="6" height="9" rx="1"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="14" width="20" height="7" rx="1"/><rect x="5" y="9" width="14" height="5" rx="1"/><circle cx="8" cy="18" r="1" fill="currentColor"/><circle cx="16" cy="18" r="1" fill="currentColor"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="12" y1="9" x2="12" y2="21"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`
+]
+
+// Category labels for portfolio
+const CAT_LABELS = {
+  ro: { bucatarie:'Bucătărie', living:'Living', dormitor:'Dormitor', mansarda:'Mansardă', baie:'Baie' },
+  en: { bucatarie:'Kitchen', living:'Living Room', dormitor:'Bedroom', mansarda:'Attic', baie:'Bathroom' }
+}
+
+// Star helper
+const stars = n => '★'.repeat(Math.min(Math.max(n || 5, 1), 5))
+
+// Scroll-reveal observer for dynamically rendered elements
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis') })
+}, { threshold: 0.1 })
+
+function reObserve(container) {
+  container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el))
+}
+
+// ── Cached data for re-renders on language switch ──
+const _cache = {}
+let _lang = 'ro'
+
+// ══════════════════════════════════════════════════════
+// RENDER FUNCTIONS (called on load + on language switch)
+// ══════════════════════════════════════════════════════
+
+function applyHeroStats(stats, lang) {
+  const container = document.querySelector('.hero-stats')
+  if (!container || !stats?.length) return
+  container.innerHTML = stats.map(s => `
+    <div>
+      <div class="hero-stat-num">${s.value}<span>${s.suffix || ''}</span></div>
+      <div class="hero-stat-label">${(lang === 'en' && s.label_en) ? s.label_en : s.label_ro}</div>
+    </div>`).join('')
+}
+
+function applyServices(services, lang) {
+  const grid = document.querySelector('.services-grid')
+  if (!grid || !services?.length) return
+  const delays = ['', ' d1', ' d2', '', ' d1', ' d2']
+  grid.innerHTML = services.map((s, i) => `
+    <div class="svc-card reveal${delays[i % 6]}">
+      <div class="svc-icon">${SVC_ICONS[i] || SVC_ICONS[0]}</div>
+      <div class="svc-num">${String(i + 1).padStart(2, '0')}</div>
+      <div class="svc-title">${(lang === 'en' && s.title_en) ? s.title_en : s.title_ro}</div>
+      <p class="svc-desc">${(lang === 'en' && s.desc_en) ? s.desc_en : s.desc_ro}</p>
+    </div>`).join('')
+  reObserve(grid)
+}
+
+function applyTestimonials(testimonials, lang) {
+  const grid = document.querySelector('.testi-grid')
+  if (!grid || !testimonials?.length) return
+  grid.innerHTML = testimonials.map((t, i) => {
+    const text = (lang === 'en' && t.text_en) ? t.text_en : t.text_ro
+    const role = (lang === 'en' && t.role_en) ? t.role_en : t.role_ro
+    const initial = (t.client_name || '?').charAt(0).toUpperCase()
+    if (i === 0 && t.image_url) {
+      return `
+        <div class="testi-card featured reveal">
+          <div>
+            <div class="testi-stars">${stars(t.rating)}</div>
+            <p class="testi-text">${text}</p>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:rgba(255,255,255,0.2);color:white;">${initial}</div>
+              <div>
+                <div class="testi-name">${t.client_name}</div>
+                <div class="testi-role">${role}</div>
+              </div>
+            </div>
+          </div>
+          <div class="featured-img"><img src="${t.image_url}" alt="${t.client_name}"></div>
+        </div>`
+    }
+    const delay = i === 2 ? ' d1' : ''
+    return `
+      <div class="testi-card reveal${delay}">
+        <div class="testi-stars">${stars(t.rating)}</div>
+        <p class="testi-text">${text}</p>
+        <div class="testi-author">
+          <div class="testi-avatar">${initial}</div>
+          <div>
+            <div class="testi-name">${t.client_name}</div>
+            <div class="testi-role">${role}</div>
+          </div>
+        </div>
+      </div>`
+  }).join('')
+  reObserve(grid)
+}
+
+function applyPortfolio(items, lang) {
+  const grid = document.querySelector('.portfolio-grid')
+  if (!grid || !items?.length) return
+  grid.innerHTML = items.map(item => {
+    const title = (lang === 'en' && item.title_en) ? item.title_en : item.title_ro
+    const catLabel = CAT_LABELS[lang]?.[item.category] || item.category || ''
+    return `
+      <div class="p-item" data-cat="${item.category || ''}">
+        <img src="${item.image_url}" alt="${item.alt_text || title}">
+        <div class="p-overlay">
+          <div class="p-cat">${catLabel}</div>
+          <div class="p-name">${title}</div>
+        </div>
+        <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+      </div>`
+  }).join('')
+}
+
+function applyContactDetails(d, lang) {
+  if (!d) return
+  // Contact info cards (phone, email, address, hours)
+  document.querySelectorAll('.ci-card').forEach(card => {
+    const labelEl = card.querySelector('.ci-label')
+    const valEl = card.querySelector('.ci-val')
+    if (!labelEl || !valEl) return
+    const key = labelEl.dataset.i18n || ''
+    if (key === 'ciPhone' && d.phone) valEl.textContent = d.phone
+    if (!key && labelEl.textContent.includes('Email') && d.email) valEl.textContent = d.email
+    if (key === 'ciShowroom' && d.address) valEl.textContent = d.address
+    if (key === 'ciHours') {
+      const hrs = (lang === 'en' && d.hours_en) ? d.hours_en : d.hours_ro
+      if (hrs) valEl.textContent = hrs
+    }
+  })
+  // Footer contact items
+  document.querySelectorAll('.footer-contact-item').forEach(item => {
+    const labelEl = item.querySelector('.fci-label')
+    const valEl = item.querySelector('.fci-val')
+    if (!labelEl || !valEl) return
+    const key = labelEl.dataset.i18n || ''
+    if (key === 'ciPhone' && d.phone) {
+      valEl.innerHTML = `<a href="tel:${d.phone.replace(/\s/g,'')}">${d.phone}</a>`
+    }
+    if (!key && labelEl.textContent.includes('Email') && d.email) valEl.textContent = d.email
+    if (key === 'fciAddr' && d.address) {
+      valEl.innerHTML = (lang === 'en' && d.address_en) ? d.address_en : d.address.replace(/\n/g,'<br>')
+    }
+  })
+  // Daniel card phone link
+  if (d.phone) {
+    const danielCta = document.querySelector('.daniel-cta')
+    if (danielCta) danielCta.href = `tel:${d.phone.replace(/\s/g,'')}`
+  }
+}
+
+function applyBrands(brands, lang) {
+  const row = document.querySelector('.brands-row')
+  if (!row || !brands?.length) return
+  const delays = ['', ' d1', ' d2', ' d1', ' d2', ' d3']
+  row.innerHTML = brands.map((b, i) => {
+    const tag = (lang === 'en' && b.tag_en) ? b.tag_en : b.tag_ro
+    return `
+      <div class="brand-card reveal${delays[i % 6]}">
+        <div class="brand-name">${b.name}</div>
+        <div class="brand-tag">${tag}</div>
+      </div>`
+  }).join('')
+  reObserve(row)
+}
+
+function applyHeroImages(settings) {
+  if (!settings) return
+  // Hero section images
+  const heroImgs = document.querySelectorAll('.hero-img img')
+  if (settings.hero_image_primary && heroImgs[0]) heroImgs[0].src = settings.hero_image_primary
+  if (settings.hero_image_secondary && heroImgs[1]) heroImgs[1].src = settings.hero_image_secondary
+  // About section images
+  const aboutMain = document.querySelector('.about-img-main img')
+  const aboutSec  = document.querySelector('.about-img-sec img')
+  if (settings.hero_image_primary && aboutMain) aboutMain.src = settings.hero_image_primary
+  if (settings.hero_image_secondary && aboutSec) aboutSec.src = settings.hero_image_secondary
+}
+
+// ══════════════════════════════════════════════════════
+// FORM HANDLERS
+// ══════════════════════════════════════════════════════
+
+function setupContactForm() {
+  const btn = document.querySelector('.form-submit')
+  if (!btn) return
+  btn.addEventListener('click', async () => {
+    const inputs = document.querySelectorAll('.form-input')
+    const payload = {
+      first_name:   inputs[0]?.value?.trim() || null,
+      last_name:    inputs[1]?.value?.trim() || null,
+      email:        inputs[2]?.value?.trim() || null,
+      phone:        inputs[3]?.value?.trim() || null,
+      project_type: document.querySelector('.form-select')?.value || null,
+      message:      document.querySelector('.form-textarea')?.value?.trim() || null,
+    }
+    if (!payload.email) {
+      alert(_lang === 'ro' ? 'Adresa de email este obligatorie.' : 'Email address is required.')
+      return
+    }
+    const origHTML = btn.innerHTML
+    btn.disabled = true
+    btn.textContent = _lang === 'ro' ? 'Se trimite…' : 'Sending…'
+    const { error } = await db.from('contact_messages').insert([payload])
+    if (error) {
+      console.error('Contact form error:', error)
+      alert(_lang === 'ro' ? 'Eroare la trimitere. Încearcă din nou.' : 'Send error. Please try again.')
+      btn.disabled = false
+      btn.innerHTML = origHTML
+    } else {
+      btn.textContent = _lang === 'ro' ? '✓ Mesaj trimis! Vă contactăm în curând.' : '✓ Message sent! We will contact you soon.'
+      btn.style.cssText = 'background:var(--green);cursor:default;'
+      // Clear fields
+      document.querySelectorAll('.form-input').forEach(i => i.value = '')
+      const ta = document.querySelector('.form-textarea')
+      if (ta) ta.value = ''
+      const sel = document.querySelector('.form-select')
+      if (sel) sel.selectedIndex = 0
+    }
+  })
+}
+
+function setupNewsletterForm() {
+  const btn   = document.querySelector('.nl-btn')
+  const input = document.querySelector('.nl-input')
+  if (!btn || !input) return
+  btn.addEventListener('click', async () => {
+    const email = input.value.trim()
+    if (!email || !email.includes('@')) {
+      alert(_lang === 'ro' ? 'Introduceți o adresă de email validă.' : 'Please enter a valid email address.')
+      return
+    }
+    const origText = btn.textContent
+    btn.disabled = true
+    btn.textContent = _lang === 'ro' ? 'Se procesează…' : 'Processing…'
+    const { error } = await db.from('newsletter_subscribers').insert([{ email }])
+    if (error?.code === '23505') {
+      btn.textContent = _lang === 'ro' ? 'Ești deja abonat!' : 'Already subscribed!'
+      btn.disabled = false
+    } else if (error) {
+      console.error('Newsletter error:', error)
+      alert(_lang === 'ro' ? 'Eroare. Încearcă din nou.' : 'Error. Please try again.')
+      btn.disabled = false
+      btn.textContent = origText
+    } else {
+      btn.textContent = _lang === 'ro' ? '✓ Mulțumim!' : '✓ Thank you!'
+      input.value = ''
+    }
+  })
+}
+
+// ══════════════════════════════════════════════════════
+// PATCH setLang TO RE-RENDER DYNAMIC SECTIONS
+// ══════════════════════════════════════════════════════
+function patchSetLang() {
+  const original = window.setLang
+  if (!original) return
+  window.setLang = function(lang) {
+    _lang = lang
+    original(lang)
+    if (_cache.heroStats)    applyHeroStats(_cache.heroStats, lang)
+    if (_cache.services)     applyServices(_cache.services, lang)
+    if (_cache.testimonials) applyTestimonials(_cache.testimonials, lang)
+    if (_cache.portfolio)    applyPortfolio(_cache.portfolio, lang)
+    if (_cache.contactDetails) applyContactDetails(_cache.contactDetails, lang)
+    if (_cache.brands)       applyBrands(_cache.brands, lang)
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// MAIN INIT
+// ══════════════════════════════════════════════════════
+async function init() {
+  // Patch setLang (regular script has already run and defined it)
+  patchSetLang()
+  _lang = localStorage.getItem('amd_lang') || 'ro'
+
+  const [heroStats, services, testimonials, portfolio, contactDetails, brands, heroSettings] =
+    await Promise.all([
+      db.from('hero_stats').select('*').order('sort_order'),
+      db.from('services').select('*').order('sort_order'),
+      db.from('testimonials').select('*').eq('is_published', true).order('sort_order'),
+      db.from('portfolio_items').select('*').eq('is_published', true).order('sort_order').limit(6),
+      db.from('contact_details').select('*').limit(1).maybeSingle(),
+      db.from('brands').select('*').eq('is_active', true).order('sort_order'),
+      db.from('hero_settings').select('hero_image_primary,hero_image_secondary').limit(1).maybeSingle(),
+    ])
+
+  if (heroStats.data?.length)    { _cache.heroStats    = heroStats.data;    applyHeroStats(_cache.heroStats, _lang) }
+  if (services.data?.length)     { _cache.services     = services.data;     applyServices(_cache.services, _lang) }
+  if (testimonials.data?.length) { _cache.testimonials = testimonials.data; applyTestimonials(_cache.testimonials, _lang) }
+  if (portfolio.data?.length)    { _cache.portfolio    = portfolio.data;    applyPortfolio(_cache.portfolio, _lang) }
+  if (contactDetails.data)       { _cache.contactDetails = contactDetails.data; applyContactDetails(_cache.contactDetails, _lang) }
+  if (brands.data?.length)       { _cache.brands       = brands.data;       applyBrands(_cache.brands, _lang) }
+  if (heroSettings.data)         { applyHeroImages(heroSettings.data) }
+
+  setupContactForm()
+  setupNewsletterForm()
+}
+
+init()
+</script>
+
 <script>
 // ══════════════════════════════════════════════════════
 // TRANSLATIONS

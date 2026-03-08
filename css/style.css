@@ -1238,3 +1238,9 @@ footer {
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
+/* ── Form feedback states ── */
+.form-submit:disabled,
+.nl-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}

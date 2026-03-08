@@ -436,6 +436,43 @@
   </div>
 </footer>
 
+<script type="module">
+// ── Newsletter subscription for blog page ──
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const db = createClient(
+  'https://nhuxlpwjuqeolflrugvu.supabase.co',
+  'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
+)
+document.addEventListener('DOMContentLoaded', () => {
+  const btn   = document.querySelector('.nl-btn')
+  const input = document.querySelector('.nl-input')
+  if (!btn || !input) return
+  btn.addEventListener('click', async () => {
+    const email = input.value.trim()
+    if (!email || !email.includes('@')) {
+      alert('Introduceți o adresă de email validă.')
+      return
+    }
+    const origText = btn.textContent
+    btn.disabled = true
+    btn.textContent = 'Se procesează…'
+    const { error } = await db.from('newsletter_subscribers').insert([{ email }])
+    if (error?.code === '23505') {
+      btn.textContent = 'Ești deja abonat!'
+      btn.disabled = false
+    } else if (error) {
+      console.error('Newsletter error:', error)
+      alert('Eroare. Încearcă din nou.')
+      btn.disabled = false
+      btn.textContent = origText
+    } else {
+      btn.textContent = '✓ Mulțumim!'
+      input.value = ''
+    }
+  })
+})
+</script>
+
 <script>
 // Nav scroll
 const nav = document.getElementById('nav');
