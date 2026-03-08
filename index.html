@@ -249,12 +249,12 @@
         <h2 class="section-title reveal d1" style="margin-bottom:0;">Ultimele Noastre<br><em>Proiecte</em></h2>
       </div>
       <div class="portfolio-filters reveal">
-        <button class="pf-btn active" onclick="filterPortfolio(this,'all')" data-i18n="filterAll">Toate</button>
-        <button class="pf-btn" onclick="filterPortfolio(this,'dormitor')" data-i18n="filterBed">Dormitoare</button>
-        <button class="pf-btn" onclick="filterPortfolio(this,'bucatarie')">Bucătarii</button>
-        <button class="pf-btn" onclick="filterPortfolio(this,'living')" data-i18n="filterLiv">Living</button>
-        <button class="pf-btn" onclick="filterPortfolio(this,'mansarda')" data-i18n="filterAtt">Mansarde</button>
-        <button class="pf-btn" onclick="filterPortfolio(this,'baie')" data-i18n="filterBath">Băi</button>
+        <button class="pf-btn active" onclick="filterPortfolio(this,'all')" data-cat="all" data-i18n="filterAll">Toate</button>
+        <button class="pf-btn" onclick="filterPortfolio(this,'dormitor')" data-cat="dormitor" data-i18n="filterBed">Dormitoare</button>
+        <button class="pf-btn" onclick="filterPortfolio(this,'bucatarie')" data-cat="bucatarie">Bucătarii</button>
+        <button class="pf-btn" onclick="filterPortfolio(this,'living')" data-cat="living" data-i18n="filterLiv">Living</button>
+        <button class="pf-btn" onclick="filterPortfolio(this,'mansarda')" data-cat="mansarda" data-i18n="filterAtt">Mansarde</button>
+        <button class="pf-btn" onclick="filterPortfolio(this,'baie')" data-cat="baie" data-i18n="filterBath">Băi</button>
       </div>
     </div>
     <div class="portfolio-grid reveal">
@@ -813,8 +813,11 @@ function renderTestimonials(list, lang) {
     const text    = (lang === 'en' && t.text_en) ? t.text_en : (t.text_ro || '')
     const role    = (lang === 'en' && t.role_en) ? t.role_en : (t.role_ro || '')
     const initial = (t.client_name || '?').charAt(0).toUpperCase()
-    // First item is featured if it has an image
-    if (i === 0 && t.image_url) {
+    // First item is always featured (image is optional)
+    if (i === 0) {
+      const imgHTML = t.image_url
+        ? `<div class="featured-img"><img src="${t.image_url}" alt="${t.client_name || ''}"></div>`
+        : ''
       return `<div class="testi-card featured reveal">
         <div>
           <div class="testi-stars">${stars(t.rating)}</div>
@@ -827,7 +830,7 @@ function renderTestimonials(list, lang) {
             </div>
           </div>
         </div>
-        <div class="featured-img"><img src="${t.image_url}" alt="${t.client_name || ''}"></div>
+        ${imgHTML}
       </div>`
     }
     const delay = i === 2 ? ' d1' : ''
@@ -861,7 +864,11 @@ function renderPortfolio(items, lang) {
       <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
     </div>`
   }).join('')
-  // Portfolio items don't have .reveal class — no reObserve needed
+  // Re-apply active filter so a language switch doesn't reset the visible set
+  const activeBtn = document.querySelector('.pf-btn.active')
+  if (activeBtn && typeof filterPortfolio === 'function') {
+    filterPortfolio(activeBtn, activeBtn.dataset.cat || 'all')
+  }
 }
 
 // contact_details is a key-value table: rows have { key, value }

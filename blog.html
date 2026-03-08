@@ -15,9 +15,9 @@
 <div class="mob-menu" id="mobMenu">
   <span class="mob-close" onclick="closeMob()">×</span>
   <div class="mob-lang">
-    <button class="mob-lang-btn active" onclick="closeMob()">RO</button>
+    <button class="mob-lang-btn active" onclick="setLang('ro');closeMob()">RO</button>
     <span class="mob-lang-sep">|</span>
-    <button class="mob-lang-btn" onclick="closeMob()">EN</button>
+    <button class="mob-lang-btn" onclick="setLang('en');closeMob()">EN</button>
   </div>
   <a href="index.html" onclick="closeMob()">Acasă</a>
   <a href="index.html#services" onclick="closeMob()">Servicii</a>
@@ -45,8 +45,8 @@
   </ul>
   <div class="nav-right">
     <div class="lang-wrap">
-      <button class="lang-btn active">RO</button>
-      <button class="lang-btn">EN</button>
+      <button class="lang-btn active" onclick="setLang('ro')">RO</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
     <a href="index.html#contact" class="btn-nav">Contact</a>
   </div>
@@ -488,7 +488,7 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// Category filter — FIXED: was truncated in previous version
+// Category filter
 function filterArticles(btn, cat) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -500,6 +500,84 @@ function filterArticles(btn, cat) {
     card.style.pointerEvents = show ? '' : 'none';
   });
 }
+
+// Language switcher for blog page
+const blogTranslations = {
+  ro: {
+    heroTag: 'Jurnal & Inspirație',
+    heroTitle: 'Articole despre<br><em>Design Interior</em><br>și Mobilier',
+    heroSub: 'Sfaturi practice, proiecte recente, ghiduri de materiale și ultimele tendințe în design interior — scrise de echipa Apple Mob Design.',
+    filterAll: 'Toate articolele', filterSfaturi: 'Sfaturi Design',
+    filterProiecte: 'Proiecte Recente', filterMateriale: 'Ghiduri Materiale',
+    filterTendinte: 'Tendințe & Noutăți',
+    nlTitle: 'Înscrie-te și primești articole noi<br>direct în căsuța ta de email',
+    nlBtn: 'Înscrie-te', nlPlaceholder: 'Adresa ta de email',
+    readMore: 'Citește mai mult',
+  },
+  en: {
+    heroTag: 'Journal & Inspiration',
+    heroTitle: 'Articles about<br><em>Interior Design</em><br>and Furniture',
+    heroSub: 'Practical tips, recent projects, material guides and the latest interior design trends — written by the Apple Mob Design team.',
+    filterAll: 'All articles', filterSfaturi: 'Design Tips',
+    filterProiecte: 'Recent Projects', filterMateriale: 'Material Guides',
+    filterTendinte: 'Trends & News',
+    nlTitle: 'Subscribe and receive new articles<br>directly in your inbox',
+    nlBtn: 'Subscribe', nlPlaceholder: 'Your email address',
+    readMore: 'Read more',
+  }
+};
+
+function setLang(lang) {
+  const t = blogTranslations[lang];
+
+  // Hero section
+  const tag = document.querySelector('.blog-tag');
+  if (tag) tag.textContent = t.heroTag;
+  const title = document.querySelector('.blog-hero-title');
+  if (title) title.innerHTML = t.heroTitle;
+  const sub = document.querySelector('.blog-hero-sub');
+  if (sub) sub.textContent = t.heroSub;
+
+  // Filter bar labels
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const filterKeys = ['filterAll','filterSfaturi','filterProiecte','filterMateriale','filterTendinte'];
+  filterBtns.forEach((btn, i) => {
+    if (filterKeys[i]) {
+      // Preserve the count badge
+      const badge = btn.querySelector('.filter-count');
+      const count = badge ? badge.outerHTML : '';
+      btn.innerHTML = t[filterKeys[i]] + ' ' + count;
+    }
+  });
+
+  // Article read-more links
+  document.querySelectorAll('.article-link').forEach(a => {
+    const svg = a.querySelector('svg');
+    a.childNodes[0].textContent = t.readMore + ' ';
+    if (svg) a.appendChild(svg);
+  });
+
+  // Newsletter
+  const nlTitle = document.querySelector('.nl-title');
+  if (nlTitle) nlTitle.innerHTML = t.nlTitle;
+  const nlBtn = document.querySelector('.nl-btn');
+  if (nlBtn && !nlBtn.disabled) nlBtn.textContent = t.nlBtn;
+  const nlInput = document.querySelector('.nl-input');
+  if (nlInput) nlInput.placeholder = t.nlPlaceholder;
+
+  // Active button state
+  document.querySelectorAll('.lang-btn, .mob-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+  });
+
+  localStorage.setItem('amd_lang', lang);
+}
+
+// Restore language on load
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('amd_lang') || 'ro';
+  if (saved === 'en') setLang('en');
+});
 </script>
 </body>
 </html>
