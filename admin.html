@@ -596,6 +596,11 @@ tr:hover td { background: var(--off); }
         <label class="f-label">Textul Recenziei *</label>
         <textarea id="t-text" class="f-textarea" placeholder="Ce a spus clientul..."></textarea>
       </div>
+      <div class="f-group full">
+        <label class="f-label">Fotografie Client (URL imagine)</label>
+        <input type="url" id="t-photo" class="f-input" placeholder="https://...">
+        <span class="f-hint">Opțional — folosit pentru testimonialul principal (featured). Dacă nu ai o fotografie reală, lasă gol.</span>
+      </div>
       <div class="f-group">
         <label class="f-label">Stele (1-5)</label>
         <select id="t-stars" class="f-select">
@@ -652,6 +657,11 @@ tr:hover td { background: var(--off); }
       <div class="f-group full">
         <label class="f-label">Website</label>
         <input type="url" id="b-web" class="f-input" placeholder="https://blum.com">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Logo Brand (URL imagine PNG/JPG)</label>
+        <input type="url" id="b-logo" class="f-input" placeholder="https://...logo.png">
+        <span class="f-hint">Opțional — dacă adaugi un logo, acesta va fi afișat în locul numelui text. Recomandat: PNG transparent, min. 200x80px.</span>
       </div>
       <div class="f-group">
         <label class="f-toggle">
@@ -974,7 +984,7 @@ async function loadTestimoniale() {
 function openTestiModal() {
   editingId = null;
   document.getElementById('testiModalTitle').textContent = 'Adaugă Testimonial';
-  ['t-name','t-city','t-project','t-text'].forEach(id => document.getElementById(id).value = '');
+  ['t-name','t-city','t-project','t-text','t-photo'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('t-stars').value = '5';
   document.getElementById('t-order').value = '0';
   document.getElementById('t-featured').checked = false;
@@ -991,6 +1001,7 @@ async function editTestimonial(id) {
   document.getElementById('t-city').value    = data.city || '';
   document.getElementById('t-project').value = data.project_type || '';
   document.getElementById('t-text').value    = data.text || '';
+  document.getElementById('t-photo').value   = data.photo_url || '';
   document.getElementById('t-stars').value   = data.stars || 5;
   document.getElementById('t-order').value   = data.order_num || 0;
   document.getElementById('t-featured').checked  = data.featured || false;
@@ -1004,6 +1015,7 @@ async function saveTestimonial() {
     city:         document.getElementById('t-city').value.trim() || null,
     project_type: document.getElementById('t-project').value.trim() || null,
     text:         document.getElementById('t-text').value.trim(),
+    photo_url:    document.getElementById('t-photo').value.trim() || null,
     stars:        parseInt(document.getElementById('t-stars').value),
     order_num:    parseInt(document.getElementById('t-order').value) || 0,
     featured:     document.getElementById('t-featured').checked,
@@ -1121,23 +1133,55 @@ async function loadHero() {
     sb.from('hero_stats').select('*').order('order_num'),
     sb.from('hero_settings').select('*').order('key'),
   ]);
+
+  // Relabel settings for clarity
+  const labelMap = {
+    'hero_image_primary':   '🏠 Imagine Hero Principală (stânga sus)',
+    'hero_image_secondary': '🏠 Imagine Hero Secundară (dreapta jos)',
+    'years_in_industry':    '🟢 Cardul Verde — Ani în Industrie',
+    'founded_year':         '📅 Anul Fondării (Est. xxxx în navbar)',
+  };
+
+  // About section images come from hero_settings primary/secondary
+  const aboutSettings = (settings || []).filter(s =>
+    ['hero_image_primary','hero_image_secondary'].includes(s.key)
+  );
+  const otherSettings = (settings || []).filter(s =>
+    !['hero_image_primary','hero_image_secondary'].includes(s.key)
+  );
+
   const el = document.getElementById('heroContent');
   el.innerHTML = `
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-title">Statistici Hero (numerele mari)</div>
+      <div class="card-title">📊 Statistici Hero (numerele mari de pe prima pagină)</div>
       ${(stats || []).map(s => `
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-          <input type="text" class="f-input" style="width:100px;" id="hs-val-${s.id}" value="${s.value}" placeholder="20+">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+          <input type="text" class="f-input" style="width:90px;" id="hs-val-${s.id}" value="${s.value}" placeholder="20+">
           <input type="text" class="f-input" id="hs-ro-${s.id}" value="${s.label_ro}" placeholder="Ani Experiență">
           <input type="text" class="f-input" id="hs-en-${s.id}" value="${s.label_en || ''}" placeholder="Years Experience">
           <button class="btn-save-field" onclick="saveHeroStat('${s.id}')">Salvează</button>
         </div>`).join('')}
     </div>
-    <div class="card">
-      <div class="card-title">Setări Hero</div>
-      ${(settings || []).map(s => `
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">🖼 Imagini Secțiunea "Cine Suntem"</div>
+      <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:16px;">Acestea sunt cele două fotografii afișate în secțiunea "Despre Noi / Cine Suntem" de pe pagina principală.</p>
+      ${aboutSettings.map(s => `
         <div class="contact-field-card" style="margin-bottom:12px;">
-          <div class="contact-field-label">${s.label_ro || s.key}</div>
+          <div class="contact-field-label">${labelMap[s.key] || s.key}</div>
+          <div class="contact-field-row">
+            <input type="url" class="f-input" id="hset-${s.id}" value="${s.value}" placeholder="https://...">
+            <button class="btn-save-field" onclick="saveHeroSetting('${s.id}', 'hset-${s.id}')">Salvează</button>
+          </div>
+          ${s.value ? '<img src="' + s.value + '" style="margin-top:10px;height:80px;border-radius:8px;object-fit:cover;" onerror="this.style.display=\'none\'">' : ''}
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙️ Alte Setări Hero</div>
+      ${otherSettings.map(s => `
+        <div class="contact-field-card" style="margin-bottom:12px;">
+          <div class="contact-field-label">${labelMap[s.key] || s.key}</div>
           <div class="contact-field-row">
             <input type="text" class="f-input" id="hset-${s.id}" value="${s.value}">
             <button class="btn-save-field" onclick="saveHeroSetting('${s.id}', 'hset-${s.id}')">Salvează</button>
@@ -1172,9 +1216,10 @@ async function loadParteneri() {
   const el = document.getElementById('brandsTable');
   if (!data || data.length === 0) { el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Niciun brand adăugat.</p>'; return; }
   el.innerHTML = `<table>
-    <thead><tr><th>Nume</th><th>Categorie RO</th><th>Categorie EN</th><th>Ordine</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <thead><tr><th>Logo</th><th>Nume</th><th>Categorie RO</th><th>Categorie EN</th><th>Ordine</th><th>Status</th><th>Acțiuni</th></tr></thead>
     <tbody>${data.map(b => `
       <tr>
+        <td>${b.logo_url ? '<img src="' + b.logo_url + '" style="height:36px;max-width:80px;object-fit:contain;" onerror="this.style.display=\'none\'">' : '—'}</td>
         <td><strong>${b.name}</strong></td>
         <td>${b.category_ro || '—'}</td>
         <td>${b.category_en || '—'}</td>
@@ -1191,7 +1236,7 @@ async function loadParteneri() {
 function openBrandModal() {
   editingId = null;
   document.getElementById('brandModalTitle').textContent = 'Adaugă Brand';
-  ['b-name','b-cat-ro','b-cat-en','b-web'].forEach(id => document.getElementById(id).value = '');
+  ['b-name','b-cat-ro','b-cat-en','b-web','b-logo'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('b-order').value = '0';
   document.getElementById('b-active').checked = true;
   document.getElementById('brandModal').classList.add('open');
@@ -1206,6 +1251,7 @@ async function editBrand(id) {
   document.getElementById('b-cat-ro').value = data.category_ro || '';
   document.getElementById('b-cat-en').value = data.category_en || '';
   document.getElementById('b-web').value    = data.website_url || '';
+  document.getElementById('b-logo').value   = data.logo_url || '';
   document.getElementById('b-order').value  = data.order_num || 0;
   document.getElementById('b-active').checked = data.is_active !== false;
   document.getElementById('brandModal').classList.add('open');
@@ -1217,6 +1263,7 @@ async function saveBrand() {
     category_ro:  document.getElementById('b-cat-ro').value.trim() || null,
     category_en:  document.getElementById('b-cat-en').value.trim() || null,
     website_url:  document.getElementById('b-web').value.trim() || null,
+    logo_url:     document.getElementById('b-logo').value.trim() || null,
     order_num:    parseInt(document.getElementById('b-order').value) || 0,
     is_active:    document.getElementById('b-active').checked,
   };
