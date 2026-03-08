@@ -6,7 +6,9 @@
 <title>Apple Mob Design — Mobilier la Comandă, Baia Mare</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet"></head>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
 <body>
 
 <!-- MOBILE MENU -->
@@ -728,11 +730,13 @@
   </div>
 </footer>
 
-<script type="module">
+<script>
 // ══════════════════════════════════════════════════════
 // SUPABASE INTEGRATION
+// UMD build loaded via <script src> in <head> — no ES
+// modules, fully compatible with Cloudflare Rocket Loader
 // ══════════════════════════════════════════════════════
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const { createClient } = window.supabase
 
 const db = createClient(
   'https://nhuxlpwjuqeolflrugvu.supabase.co',
