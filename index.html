@@ -814,22 +814,23 @@ function renderTestimonials(list, lang) {
   const grid = document.querySelector('.testi-grid')
   if (!grid || !list?.length) return
   grid.innerHTML = list.map((t, i) => {
-    const text    = (lang === 'en' && t.text_en) ? t.text_en : (t.text_ro || '')
-    const role    = (lang === 'en' && t.role_en) ? t.role_en : (t.role_ro || '')
-    const initial = (t.client_name || '?').charAt(0).toUpperCase()
-    // First item is always featured (image is optional)
+    // Actual columns: name, text, city, project_type, stars, photo_url
+    const text    = t.text || ''
+    const role    = [t.city, t.project_type].filter(Boolean).join(' • ')
+    const initial = (t.name || '?').charAt(0).toUpperCase()
+    // First item is always featured (photo optional)
     if (i === 0) {
-      const imgHTML = t.image_url
-        ? `<div class="featured-img"><img src="${t.image_url}" alt="${t.client_name || ''}"></div>`
+      const imgHTML = t.photo_url
+        ? `<div class="featured-img"><img src="${t.photo_url}" alt="${t.name || ''}"></div>`
         : ''
       return `<div class="testi-card featured reveal">
         <div>
-          <div class="testi-stars">${stars(t.rating)}</div>
+          <div class="testi-stars">${stars(t.stars)}</div>
           <p class="testi-text">${text}</p>
           <div class="testi-author">
             <div class="testi-avatar" style="background:rgba(255,255,255,0.2);color:white;">${initial}</div>
             <div>
-              <div class="testi-name">${t.client_name || ''}</div>
+              <div class="testi-name">${t.name || ''}</div>
               <div class="testi-role">${role}</div>
             </div>
           </div>
@@ -839,12 +840,12 @@ function renderTestimonials(list, lang) {
     }
     const delay = i === 2 ? ' d1' : ''
     return `<div class="testi-card reveal${delay}">
-      <div class="testi-stars">${stars(t.rating)}</div>
+      <div class="testi-stars">${stars(t.stars)}</div>
       <p class="testi-text">${text}</p>
       <div class="testi-author">
         <div class="testi-avatar">${initial}</div>
         <div>
-          <div class="testi-name">${t.client_name || ''}</div>
+          <div class="testi-name">${t.name || ''}</div>
           <div class="testi-role">${role}</div>
         </div>
       </div>
@@ -857,10 +858,12 @@ function renderPortfolio(items, lang) {
   const grid = document.querySelector('.portfolio-grid')
   if (!grid || !items?.length) return
   grid.innerHTML = items.map(item => {
-    const title    = (lang === 'en' && item.title_en) ? item.title_en : (item.title_ro || '')
-    const catLabel = CAT_LABELS[lang]?.[item.category] || item.category || ''
-    return `<div class="p-item" data-cat="${item.category || ''}">
-      <img src="${item.image_url}" alt="${item.alt_text || title}">
+    // Actual columns: title (single), cover_image, portfolio_categories.slug (joined)
+    const title    = item.title || ''
+    const catSlug  = item.portfolio_categories?.slug || ''
+    const catLabel = CAT_LABELS[lang]?.[catSlug] || catSlug
+    return `<div class="p-item" data-cat="${catSlug}">
+      <img src="${item.cover_image || ''}" alt="${title}">
       <div class="p-overlay">
         <div class="p-cat">${catLabel}</div>
         <div class="p-name">${title}</div>
@@ -926,8 +929,8 @@ function renderBrands(brands, lang) {
   if (!row || !brands?.length) return
   const delays = ['', ' d1', ' d2', ' d1', ' d2', ' d3']
   row.innerHTML = brands.map((b, i) => {
-    const tag = (lang === 'en' && b.tag_en) ? b.tag_en : (b.tag_ro || '')
-    // Show logo image if available, otherwise text name
+    // Actual columns: category_ro, category_en (not tag_ro/tag_en)
+    const tag = (lang === 'en' && b.category_en) ? b.category_en : (b.category_ro || '')
     const nameHTML = b.logo_url
       ? `<img src="${b.logo_url}" alt="${b.name}" style="max-height:36px;object-fit:contain;">`
       : `<div class="brand-name">${b.name}</div>`
@@ -940,12 +943,12 @@ function renderBrands(brands, lang) {
 }
 
 function renderHeroImages(settings) {
+  // hero_settings is a key-value table — settings is already a plain object
+  // e.g. { hero_image_primary: 'https://...', hero_image_secondary: 'https://...' }
   if (!settings) return
-  // Hero right-side images
   const heroImgs = document.querySelectorAll('.hero-img img')
   if (settings.hero_image_primary   && heroImgs[0]) heroImgs[0].src = settings.hero_image_primary
   if (settings.hero_image_secondary && heroImgs[1]) heroImgs[1].src = settings.hero_image_secondary
-  // About section images (same source per spec)
   const aboutMain = document.querySelector('.about-img-main img')
   const aboutSec  = document.querySelector('.about-img-sec img')
   if (settings.hero_image_primary   && aboutMain) aboutMain.src = settings.hero_image_primary
@@ -1049,18 +1052,22 @@ async function init() {
     { data: portfolio,    error: e4 },
     { data: contactRows,  error: e5 },
     { data: brands,       error: e6 },
-    { data: heroSettings, error: e7 },
+    { data: heroSettingsRows, error: e7 },
   ] = await Promise.all([
     db.from('hero_stats').select('*').order('order_num'),
     db.from('services').select('*').eq('is_active', true).order('order_num'),
     db.from('testimonials').select('*').eq('is_published', true).order('order_num'),
-    db.from('portfolio_items').select('*').eq('is_published', true).order('order_num').limit(6),
-    db.from('contact_details').select('key,value'),   // key-value rows
+    // Join portfolio_categories to get the slug for filtering
+    db.from('portfolio_items')
+      .select('id, title, cover_image, order_num, portfolio_categories(slug)')
+      .eq('is_published', true).order('order_num').limit(6),
+    db.from('contact_details').select('key,value'),
     db.from('brands').select('*').eq('is_active', true).order('order_num'),
-    db.from('hero_settings').select('hero_image_primary,hero_image_secondary').limit(1).maybeSingle(),
+    // hero_settings is also a key-value table
+    db.from('hero_settings').select('key,value'),
   ])
 
-  // Log any errors to console for debugging — sections gracefully fall back to static HTML
+  // Log errors — each section gracefully falls back to static HTML on failure
   if (e1) console.warn('hero_stats:', e1.message)
   if (e2) console.warn('services:', e2.message)
   if (e3) console.warn('testimonials:', e3.message)
@@ -1069,11 +1076,10 @@ async function init() {
   if (e6) console.warn('brands:', e6.message)
   if (e7) console.warn('hero_settings:', e7.message)
 
-  // Convert contact_details key-value rows → plain object
-  // e.g. [{ key:'phone', value:'...' }, ...] → { phone:'...', ... }
-  const contact = contactRows?.length
-    ? contactRows.reduce((acc, r) => { acc[r.key] = r.value; return acc }, {})
-    : null
+  // Convert key-value tables to plain objects
+  const toObj = rows => rows?.length ? rows.reduce((a, r) => { a[r.key] = r.value; return a }, {}) : null
+  const contact      = toObj(contactRows)
+  const heroSettings = toObj(heroSettingsRows)
 
   // Cache and render each section
   if (heroStats?.length)    { C.heroStats    = heroStats;    renderHeroStats(C.heroStats, _lang) }
