@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Apple Mob Design</title>
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --green: #2D7A3A; --green-dark: #1F5A2A; --green-pale: #EBF5EC; --green-mid: #C8E6CB;
+  --orange: #F5A623; --red: #E53935; --red-pale: #FFEBEE;
+  --text: #1A2E1C; --text-mid: #4A6B4D; --text-light: #7A9B7D;
+  --white: #fff; --off: #F8FAF8; --gray: #E0E4E0; --gray-light: #F2F4F2;
+  --sans: 'Inter', system-ui, sans-serif;
+  --sidebar-w: 240px;
+}
+body { font-family: var(--sans); background: var(--off); color: var(--text); min-height: 100vh; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+input, textarea, select { font-family: var(--sans); }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--green);
+}
+.login-box {
+  background: white; border-radius: 24px; padding: 48px 40px;
+  width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.login-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+.login-logo-mark {
+  width: 48px; height: 48px; background: var(--green); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-logo-mark svg { width: 28px; height: 28px; }
+.login-logo-text { font-weight: 700; font-size: 1.1rem; line-height: 1.2; }
+.login-logo-text span { color: var(--green); display: block; font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; }
+.login-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+.login-sub { font-size: 0.85rem; color: var(--text-light); margin-bottom: 28px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-label { font-size: 0.72rem; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-input {
+  border: 1.5px solid var(--gray); border-radius: 12px;
+  padding: 12px 16px; font-size: 0.9rem; outline: none;
+  transition: border-color 0.2s; width: 100%;
+}
+.form-input:focus { border-color: var(--green); }
+.btn-primary {
+  width: 100%; background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 13px; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; margin-top: 8px;
+}
+.btn-primary:hover { background: var(--green-dark); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.login-error { background: var(--red-pale); color: var(--red); border-radius: 10px; padding: 10px 14px; font-size: 0.82rem; margin-top: 12px; display: none; }
+
+/* ── APP LAYOUT ── */
+#app { display: none; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w);
+  background: var(--text); display: flex; flex-direction: column;
+  z-index: 100; overflow-y: auto;
+}
+.sidebar-header {
+  padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo { display: flex; align-items: center; gap: 10px; }
+.sidebar-logo-mark {
+  width: 38px; height: 38px; background: var(--green); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sidebar-logo-mark svg { width: 22px; height: 22px; }
+.sidebar-logo-text { font-weight: 700; font-size: 0.9rem; color: white; line-height: 1.2; }
+.sidebar-logo-text span { color: var(--green-mid); font-weight: 400; font-size: 0.65rem; display: block; }
+.sidebar-user {
+  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-user-label { font-size: 0.6rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.sidebar-user-email { font-size: 0.75rem; color: rgba(255,255,255,0.65); }
+.sidebar-nav { padding: 16px 12px; flex: 1; }
+.nav-section-label {
+  font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3); padding: 0 8px; margin: 16px 0 6px;
+}
+.nav-section-label:first-child { margin-top: 0; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer;
+  color: rgba(255,255,255,0.55); font-size: 0.82rem; font-weight: 500;
+  transition: all 0.2s; margin-bottom: 2px;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: white; }
+.nav-item.active { background: var(--green); color: white; }
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--red); color: white;
+  font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 100px;
+}
+.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+.btn-logout {
+  width: 100%; background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.5);
+  border-radius: 10px; padding: 10px; font-size: 0.78rem; cursor: pointer;
+  transition: all 0.2s; font-family: var(--sans);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-logout:hover { background: rgba(255,255,255,0.12); color: white; }
+.btn-logout svg { width: 14px; height: 14px; }
+
+/* ── MAIN CONTENT ── */
+.main { margin-left: var(--sidebar-w); padding: 32px; min-height: 100vh; }
+.page { display: none; }
+.page.active { display: block; }
+.page-header { margin-bottom: 28px; }
+.page-title { font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.page-sub { font-size: 0.85rem; color: var(--text-light); }
+
+/* ── WARNING BOX ── */
+.warning-box {
+  background: var(--red-pale); border: 1.5px solid #FFCDD2;
+  border-radius: 14px; padding: 16px 20px; margin-bottom: 24px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.warning-box svg { width: 20px; height: 20px; color: var(--red); flex-shrink: 0; margin-top: 1px; }
+.warning-box-text { font-size: 0.83rem; color: #B71C1C; line-height: 1.6; }
+.warning-box-text strong { display: block; margin-bottom: 2px; }
+
+/* ── CARDS ── */
+.card {
+  background: white; border-radius: 16px; padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px;
+}
+.card-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 20px;
+}
+
+/* ── DASHBOARD STATS ── */
+.dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.dash-stat {
+  background: white; border-radius: 16px; padding: 24px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.dash-stat-num { font-size: 2rem; font-weight: 700; color: var(--green); line-height: 1; margin-bottom: 6px; }
+.dash-stat-label { font-size: 0.78rem; color: var(--text-light); }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--gray); }
+td { padding: 12px 14px; font-size: 0.83rem; border-bottom: 1px solid var(--gray-light); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--off); }
+.td-img { width: 52px; height: 42px; border-radius: 8px; object-fit: cover; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.68rem; font-weight: 700; }
+.badge-green { background: var(--green-pale); color: var(--green); }
+.badge-gray  { background: var(--gray-light); color: var(--text-light); }
+.badge-orange{ background: #FFF3E0; color: #E65100; }
+
+/* ── ACTION BUTTONS ── */
+.btn-sm {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s; font-family: var(--sans);
+}
+.btn-edit  { background: var(--green-pale); color: var(--green); }
+.btn-edit:hover { background: var(--green-mid); }
+.btn-delete{ background: var(--red-pale); color: var(--red); }
+.btn-delete:hover { background: #FFCDD2; }
+.btn-add {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 10px 20px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: var(--sans); margin-bottom: 16px;
+}
+.btn-add:hover { background: var(--green-dark); }
+.btn-add svg { width: 14px; height: 14px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white; border-radius: 20px; padding: 32px;
+  width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+}
+.modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 24px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.modal-grid .full { grid-column: span 2; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray); }
+.btn-cancel { background: var(--gray-light); color: var(--text-mid); border: none; border-radius: 100px; padding: 10px 20px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: var(--sans); }
+.btn-save { background: var(--green); color: white; border: none; border-radius: 100px; padding: 10px 24px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all 0.2s; }
+.btn-save:hover { background: var(--green-dark); }
+
+/* ── FORM ELEMENTS ── */
+.f-group { display: flex; flex-direction: column; gap: 6px; }
+.f-label { font-size: 0.72rem; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.04em; }
+.f-input, .f-select, .f-textarea {
+  border: 1.5px solid var(--gray); border-radius: 10px;
+  padding: 10px 14px; font-size: 0.87rem; outline: none;
+  transition: border-color 0.2s; width: 100%; font-family: var(--sans);
+  background: white; color: var(--text);
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--green); }
+.f-textarea { resize: vertical; min-height: 90px; }
+.f-hint { font-size: 0.72rem; color: var(--text-light); }
+.f-toggle { display: flex; align-items: center; gap: 10px; }
+.toggle { position: relative; width: 44px; height: 24px; cursor: pointer; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: var(--gray); border-radius: 100px; transition: 0.3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%;
+  background: white; left: 3px; top: 3px; transition: 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-slider { background: var(--green); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+.f-toggle-label { font-size: 0.83rem; color: var(--text); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--text); color: white; border-radius: 12px;
+  padding: 14px 20px; font-size: 0.83rem; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  max-width: 360px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+.toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ── IMAGE UPLOAD ── */
+.img-upload-area {
+  border: 2px dashed var(--gray); border-radius: 12px; padding: 24px;
+  text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.img-upload-area:hover { border-color: var(--green); background: var(--green-pale); }
+.img-upload-area input { display: none; }
+.img-preview-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.img-preview-item { position: relative; width: 80px; height: 80px; }
+.img-preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.img-remove {
+  position: absolute; top: -6px; right: -6px; width: 20px; height: 20px;
+  background: var(--red); color: white; border-radius: 50%; border: none;
+  cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
+}
+
+/* ── UNREAD MESSAGES ── */
+.msg-card {
+  background: white; border-radius: 14px; padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 12px;
+  border-left: 4px solid var(--green-pale); transition: all 0.2s;
+}
+.msg-card.unread { border-left-color: var(--green); }
+.msg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.msg-name { font-weight: 700; font-size: 0.9rem; }
+.msg-date { font-size: 0.72rem; color: var(--text-light); }
+.msg-type { font-size: 0.72rem; color: var(--green); font-weight: 600; margin-bottom: 8px; }
+.msg-text { font-size: 0.83rem; color: var(--text-mid); line-height: 1.6; }
+.msg-contacts { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-light); }
+.msg-contact-item { font-size: 0.78rem; color: var(--text-light); }
+.msg-contact-item a { color: var(--green); }
+
+/* ── CONTACT EDIT ── */
+.contact-field-card {
+  background: white; border-radius: 14px; padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 12px;
+}
+.contact-field-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 8px; }
+.contact-field-row { display: flex; gap: 10px; align-items: center; }
+.contact-field-row .f-input { flex: 1; }
+.btn-save-field { background: var(--green); color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: var(--sans); white-space: nowrap; transition: all 0.2s; }
+.btn-save-field:hover { background: var(--green-dark); }
+
+/* ── LOADING ── */
+.loading { text-align: center; padding: 48px; color: var(--text-light); font-size: 0.85rem; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--gray); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .main { margin-left: 0; padding: 20px; }
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+  .modal-grid { grid-template-columns: 1fr; }
+  .modal-grid .full { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">
+        <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" fill="white" opacity="0.9"/><rect x="14" y="2" width="10" height="10" rx="2" fill="white" opacity="0.55"/><rect x="2" y="14" width="10" height="10" rx="2" fill="white" opacity="0.55"/><rect x="14" y="14" width="10" height="10" rx="2" fill="white" opacity="0.9"/></svg>
+      </div>
+      <div class="login-logo-text">AppleMob Design<span>Panou Administrare</span></div>
+    </div>
+    <div class="login-title">Bine ai venit!</div>
+    <div class="login-sub">Autentifică-te pentru a gestiona site-ul.</div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="loginEmail" class="form-input" placeholder="daniel@applemobdesign.ro">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Parolă</label>
+      <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
+    </div>
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Intră în cont</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" fill="white" opacity="0.9"/><rect x="14" y="2" width="10" height="10" rx="2" fill="white" opacity="0.55"/><rect x="2" y="14" width="10" height="10" rx="2" fill="white" opacity="0.55"/><rect x="14" y="14" width="10" height="10" rx="2" fill="white" opacity="0.9"/></svg>
+        </div>
+        <div class="sidebar-logo-text">AppleMob<span>Admin Panel</span></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-label">Conectat ca</div>
+      <div class="sidebar-user-email" id="userEmail">—</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Conținut Site</div>
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Panou Principal
+      </div>
+      <div class="nav-item" onclick="showPage('portofoliu')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Portofoliu
+      </div>
+      <div class="nav-item" onclick="showPage('testimoniale')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Testimoniale
+      </div>
+      <div class="nav-item" onclick="showPage('mesaje')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Mesaje
+        <span class="nav-badge" id="unreadBadge" style="display:none">0</span>
+      </div>
+      <div class="nav-section-label">Setări Site</div>
+      <div class="nav-item" onclick="showPage('contact')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
+        Date Contact
+      </div>
+      <div class="nav-item" onclick="showPage('servicii')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.3 7 1-5 4.9 1.2 6.9L12 17.8l-6.2 3.3L7 14.2 2 9.3l7-1L12 2z"/></svg>
+        Servicii
+      </div>
+      <div class="nav-item" onclick="showPage('hero')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Hero & Statistici
+      </div>
+      <div class="nav-item" onclick="showPage('parteneri')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Parteneri
+      </div>
+      <div class="nav-section-label">Avansat</div>
+      <div class="nav-item" onclick="showPage('avansat')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41"/></svg>
+        Setări Avansate
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Deconectare
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Bună ziua, Daniel! 👋</div>
+        <div class="page-sub">Iată o privire de ansamblu asupra site-ului tău.</div>
+      </div>
+      <div class="dash-grid" id="dashGrid">
+        <div class="dash-stat"><div class="dash-stat-num" id="ds-portfolio">—</div><div class="dash-stat-label">Proiecte Portofoliu</div></div>
+        <div class="dash-stat"><div class="dash-stat-num" id="ds-testimonials">—</div><div class="dash-stat-label">Testimoniale</div></div>
+        <div class="dash-stat"><div class="dash-stat-num" id="ds-messages">—</div><div class="dash-stat-label">Mesaje Necitite</div></div>
+        <div class="dash-stat"><div class="dash-stat-num" id="ds-subscribers">—</div><div class="dash-stat-label">Abonați Newsletter</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mesaje Recente</div>
+        <div id="recentMessages"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
+    <!-- ── PORTOFOLIU ── -->
+    <div class="page" id="page-portofoliu">
+      <div class="page-header">
+        <div class="page-title">Portofoliu</div>
+        <div class="page-sub">Adaugă, modifică sau șterge proiectele afișate pe site.</div>
+      </div>
+      <button class="btn-add" onclick="openPortfolioModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adaugă Proiect Nou
+      </button>
+      <div class="card">
+        <div class="table-wrap" id="portfolioTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
+    <!-- ── TESTIMONIALE ── -->
+    <div class="page" id="page-testimoniale">
+      <div class="page-header">
+        <div class="page-title">Testimoniale</div>
+        <div class="page-sub">Gestionează recenziile clienților afișate pe site.</div>
+      </div>
+      <button class="btn-add" onclick="openTestiModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adaugă Testimonial
+      </button>
+      <div id="testiList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── MESAJE ── -->
+    <div class="page" id="page-mesaje">
+      <div class="page-header">
+        <div class="page-title">Mesaje de la Clienți</div>
+        <div class="page-sub">Formularele completate de vizitatori pe site.</div>
+      </div>
+      <div id="messagesList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── CONTACT ── -->
+    <div class="page" id="page-contact">
+      <div class="page-header">
+        <div class="page-title">Date de Contact</div>
+        <div class="page-sub">Modifică informațiile de contact afișate pe site.</div>
+      </div>
+      <div id="contactFields"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── SERVICII ── -->
+    <div class="page" id="page-servicii">
+      <div class="page-header">
+        <div class="page-title">Servicii</div>
+        <div class="page-sub">Modifică titlul și descrierea celor 6 carduri de servicii.</div>
+      </div>
+      <div id="serviciiList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── HERO ── -->
+    <div class="page" id="page-hero">
+      <div class="page-header">
+        <div class="page-title">Hero & Statistici</div>
+        <div class="page-sub">Modifică numerele și imaginile din secțiunea principală.</div>
+      </div>
+      <div id="heroContent"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── PARTENERI ── -->
+    <div class="page" id="page-parteneri">
+      <div class="page-header">
+        <div class="page-title">Parteneri & Branduri</div>
+        <div class="page-sub">Gestionează brandurile afișate în secțiunea de parteneri.</div>
+      </div>
+      <button class="btn-add" onclick="openBrandModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adaugă Brand
+      </button>
+      <div class="card">
+        <div class="table-wrap" id="brandsTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
+    <!-- ── AVANSAT ── -->
+    <div class="page" id="page-avansat">
+      <div class="page-header">
+        <div class="page-title">Setări Avansate</div>
+        <div class="page-sub">Secțiuni care necesită atenție sporită.</div>
+      </div>
+      <div class="warning-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div class="warning-box-text">
+          <strong>⚠️ Atenție — Setări Avansate</strong>
+          Aceste secțiuni afectează structura și funcționarea site-ului. Dacă nu ești sigur ce modifici, te rugăm să contactezi <strong>CodeDesign.ro</strong> înainte de a salva orice modificare. Modificările incorecte pot afecta afișarea site-ului.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Categorii Portofoliu</div>
+        <div id="categoriiList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+        <button class="btn-add" style="margin-top:16px;margin-bottom:0;" onclick="openCatModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adaugă Categorie
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+<!-- Portfolio Modal -->
+<div class="modal-overlay" id="portfolioModal">
+  <div class="modal">
+    <div class="modal-title" id="portfolioModalTitle">Adaugă Proiect</div>
+    <div class="modal-grid">
+      <div class="f-group full">
+        <label class="f-label">Titlu Proiect *</label>
+        <input type="text" id="p-title" class="f-input" placeholder="ex: Bucătărie Modernă cu Insulă">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Descriere</label>
+        <textarea id="p-desc" class="f-textarea" placeholder="Descriere scurtă a proiectului..."></textarea>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Categorie</label>
+        <select id="p-cat" class="f-select"></select>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine Afișare</label>
+        <input type="number" id="p-order" class="f-input" value="0">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">URL Imagine Principală</label>
+        <input type="url" id="p-cover" class="f-input" placeholder="https://...">
+        <span class="f-hint">Linkul imaginii principale afișate în grilă</span>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Imagini Suplimentare (URL-uri, câte unul pe linie)</label>
+        <textarea id="p-images" class="f-textarea" placeholder="https://imagine1.jpg&#10;https://imagine2.jpg" style="min-height:70px;"></textarea>
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="p-featured"><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Proiect Recomandat (featured)</span>
+        </label>
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="p-published" checked><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Publicat (vizibil pe site)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('portfolioModal')">Anulează</button>
+      <button class="btn-save" onclick="savePortfolio()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonial Modal -->
+<div class="modal-overlay" id="testiModal">
+  <div class="modal">
+    <div class="modal-title" id="testiModalTitle">Adaugă Testimonial</div>
+    <div class="modal-grid">
+      <div class="f-group">
+        <label class="f-label">Nume Client *</label>
+        <input type="text" id="t-name" class="f-input" placeholder="Maria Popescu">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Oraș</label>
+        <input type="text" id="t-city" class="f-input" placeholder="Cluj-Napoca">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Tipul Proiectului</label>
+        <input type="text" id="t-project" class="f-input" placeholder="Bucătărie Completă">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Textul Recenziei *</label>
+        <textarea id="t-text" class="f-textarea" placeholder="Ce a spus clientul..."></textarea>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Stele (1-5)</label>
+        <select id="t-stars" class="f-select">
+          <option value="5">★★★★★ (5)</option>
+          <option value="4">★★★★ (4)</option>
+          <option value="3">★★★ (3)</option>
+        </select>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine</label>
+        <input type="number" id="t-order" class="f-input" value="0">
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="t-featured"><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Afișat în evidență</span>
+        </label>
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="t-published" checked><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Publicat</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('testiModal')">Anulează</button>
+      <button class="btn-save" onclick="saveTestimonial()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- Brand Modal -->
+<div class="modal-overlay" id="brandModal">
+  <div class="modal">
+    <div class="modal-title" id="brandModalTitle">Adaugă Brand</div>
+    <div class="modal-grid">
+      <div class="f-group">
+        <label class="f-label">Nume Brand *</label>
+        <input type="text" id="b-name" class="f-input" placeholder="Blum">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine</label>
+        <input type="number" id="b-order" class="f-input" value="0">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Categorie (RO)</label>
+        <input type="text" id="b-cat-ro" class="f-input" placeholder="Feronerie">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Categorie (EN)</label>
+        <input type="text" id="b-cat-en" class="f-input" placeholder="Hardware">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Website</label>
+        <input type="url" id="b-web" class="f-input" placeholder="https://blum.com">
+      </div>
+      <div class="f-group">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="b-active" checked><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Activ (vizibil pe site)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('brandModal')">Anulează</button>
+      <button class="btn-save" onclick="saveBrand()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-title">Adaugă Categorie</div>
+    <div class="f-group" style="margin-bottom:14px;">
+      <label class="f-label">Nume Categorie *</label>
+      <input type="text" id="c-name" class="f-input" placeholder="ex: Birou">
+    </div>
+    <div class="f-group">
+      <label class="f-label">Slug (URL) *</label>
+      <input type="text" id="c-slug" class="f-input" placeholder="ex: birou">
+      <span class="f-hint">Doar litere mici și cratime, fără diacritice</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('catModal')">Anulează</button>
+      <button class="btn-save" onclick="saveCategory()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://nhuxlpwjuqeolflrugvu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── State ──
+let currentUser = null;
+let editingId = null;
+let categories = [];
+
+// ── Expose functions to global scope ──
+window.doLogin = doLogin;
+window.doLogout = doLogout;
+window.showPage = showPage;
+window.openPortfolioModal = openPortfolioModal;
+window.openTestiModal = openTestiModal;
+window.openBrandModal = openBrandModal;
+window.openCatModal = openCatModal;
+window.closeModal = closeModal;
+window.savePortfolio = savePortfolio;
+window.saveTestimonial = saveTestimonial;
+window.saveBrand = saveBrand;
+window.saveCategory = saveCategory;
+window.editPortfolio = editPortfolio;
+window.deletePortfolio = deletePortfolio;
+window.editTestimonial = editTestimonial;
+window.deleteTestimonial = deleteTestimonial;
+window.editBrand = editBrand;
+window.deleteBrand = deleteBrand;
+window.deleteCategory = deleteCategory;
+window.markMessageRead = markMessageRead;
+window.saveContactField = saveContactField;
+window.saveService = saveService;
+window.saveHeroStat = saveHeroStat;
+window.saveHeroSetting = saveHeroSetting;
+
+// ══════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const btn   = document.getElementById('loginBtn');
+  const err   = document.getElementById('loginError');
+
+  if (!email || !pass) { showLoginError('Completează email și parola.'); return; }
+  btn.disabled = true;
+  btn.textContent = 'Se autentifică...';
+  err.style.display = 'none';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    showLoginError('Email sau parolă incorecte. Încearcă din nou.');
+    btn.disabled = false; btn.textContent = 'Intră în cont'; return;
+  }
+  currentUser = data.user;
+  initApp();
+}
+
+function showLoginError(msg) {
+  const err = document.getElementById('loginError');
+  err.textContent = msg; err.style.display = 'block';
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  currentUser = null;
+}
+
+// Check existing session
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) { currentUser = data.session.user; initApp(); }
+});
+
+// ══════════════════════════════════════
+// APP INIT
+// ══════════════════════════════════════
+async function initApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userEmail').textContent = currentUser.email;
+
+  await loadCategories();
+  loadDashboard();
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+
+  const loaders = {
+    portofoliu:   loadPortfolio,
+    testimoniale: loadTestimoniale,
+    mesaje:       loadMessages,
+    contact:      loadContact,
+    servicii:     loadServicii,
+    hero:         loadHero,
+    parteneri:    loadParteneri,
+    avansat:      loadAvansat,
+  };
+  if (loaders[name]) loaders[name]();
+}
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+async function loadDashboard() {
+  const [port, testi, msgs, subs] = await Promise.all([
+    sb.from('portfolio_items').select('id', { count: 'exact', head: true }),
+    sb.from('testimonials').select('id', { count: 'exact', head: true }),
+    sb.from('contact_messages').select('id', { count: 'exact', head: true }).eq('is_read', false),
+    sb.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('is_active', true),
+  ]);
+  document.getElementById('ds-portfolio').textContent    = port.count ?? 0;
+  document.getElementById('ds-testimonials').textContent = testi.count ?? 0;
+  document.getElementById('ds-messages').textContent     = msgs.count ?? 0;
+  document.getElementById('ds-subscribers').textContent  = subs.count ?? 0;
+
+  if (msgs.count > 0) {
+    const badge = document.getElementById('unreadBadge');
+    badge.textContent = msgs.count; badge.style.display = 'inline';
+  }
+
+  // Recent messages
+  const { data } = await sb.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(3);
+  const el = document.getElementById('recentMessages');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Niciun mesaj încă.</p>'; return; }
+  el.innerHTML = data.map(m => msgCard(m)).join('');
+}
+
+function msgCard(m) {
+  const d = new Date(m.created_at).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+  return `<div class="msg-card ${m.is_read ? '' : 'unread'}">
+    <div class="msg-header">
+      <div class="msg-name">${m.first_name || ''} ${m.last_name || ''}</div>
+      <div class="msg-date">${d}</div>
+    </div>
+    ${m.project_type ? '<div class="msg-type">' + m.project_type + '</div>' : ''}
+    <div class="msg-text">${m.message || '—'}</div>
+    <div class="msg-contacts">
+      ${m.email ? '<div class="msg-contact-item">✉ <a href="mailto:' + m.email + '">' + m.email + '</a></div>' : ''}
+      ${m.phone ? '<div class="msg-contact-item">📞 <a href="tel:' + m.phone + '">' + m.phone + '</a></div>' : ''}
+      ${!m.is_read ? '<button class="btn-sm btn-edit" onclick="markMessageRead(\'' + m.id + '\')">Marchează citit</button>' : '<span style="font-size:0.72rem;color:var(--text-light)">✓ Citit</span>'}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════
+// PORTFOLIO
+// ══════════════════════════════════════
+async function loadCategories() {
+  const { data } = await sb.from('portfolio_categories').select('*').order('order_num');
+  categories = data || [];
+}
+
+async function loadPortfolio() {
+  const { data } = await sb.from('portfolio_items')
+    .select('*, portfolio_categories(name)')
+    .order('order_num');
+  const el = document.getElementById('portfolioTable');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Niciun proiect adăugat încă.</p>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>Imagine</th><th>Titlu</th><th>Categorie</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map(p => `
+      <tr>
+        <td>${p.cover_image ? '<img class="td-img" src="' + p.cover_image + '" onerror="this.style.display=\'none\'">' : '—'}</td>
+        <td><strong>${p.title}</strong>${p.featured ? ' <span class="badge badge-orange">Featured</span>' : ''}</td>
+        <td>${p.portfolio_categories?.name || '—'}</td>
+        <td><span class="badge ${p.is_published ? 'badge-green' : 'badge-gray'}">${p.is_published ? 'Publicat' : 'Ascuns'}</span></td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn-sm btn-edit" onclick="editPortfolio('${p.id}')">✏️ Editează</button>
+          <button class="btn-sm btn-delete" onclick="deletePortfolio('${p.id}')">🗑 Șterge</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openPortfolioModal(id) {
+  editingId = null;
+  document.getElementById('portfolioModalTitle').textContent = 'Adaugă Proiect Nou';
+  document.getElementById('p-title').value = '';
+  document.getElementById('p-desc').value = '';
+  document.getElementById('p-cover').value = '';
+  document.getElementById('p-images').value = '';
+  document.getElementById('p-order').value = '0';
+  document.getElementById('p-featured').checked = false;
+  document.getElementById('p-published').checked = true;
+  const sel = document.getElementById('p-cat');
+  sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('portfolioModal').classList.add('open');
+}
+
+async function editPortfolio(id) {
+  const { data } = await sb.from('portfolio_items').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('portfolioModalTitle').textContent = 'Editează Proiect';
+  document.getElementById('p-title').value   = data.title || '';
+  document.getElementById('p-desc').value    = data.description || '';
+  document.getElementById('p-cover').value   = data.cover_image || '';
+  document.getElementById('p-images').value  = (data.images || []).join('\n');
+  document.getElementById('p-order').value   = data.order_num || 0;
+  document.getElementById('p-featured').checked  = data.featured || false;
+  document.getElementById('p-published').checked = data.is_published !== false;
+  const sel = document.getElementById('p-cat');
+  sel.innerHTML = categories.map(c => `<option value="${c.id}" ${c.id === data.category_id ? 'selected' : ''}>${c.name}</option>`).join('');
+  document.getElementById('portfolioModal').classList.add('open');
+}
+
+async function savePortfolio() {
+  const payload = {
+    title:       document.getElementById('p-title').value.trim(),
+    description: document.getElementById('p-desc').value.trim(),
+    category_id: document.getElementById('p-cat').value || null,
+    cover_image: document.getElementById('p-cover').value.trim() || null,
+    images:      document.getElementById('p-images').value.split('\n').map(s => s.trim()).filter(Boolean),
+    order_num:   parseInt(document.getElementById('p-order').value) || 0,
+    featured:    document.getElementById('p-featured').checked,
+    is_published:document.getElementById('p-published').checked,
+  };
+  if (!payload.title) { showToast('Titlul este obligatoriu!', 'error'); return; }
+
+  const { error } = editingId
+    ? await sb.from('portfolio_items').update(payload).eq('id', editingId)
+    : await sb.from('portfolio_items').insert(payload);
+
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('portfolioModal');
+  showToast(editingId ? 'Proiect actualizat!' : 'Proiect adăugat!');
+  loadPortfolio();
+}
+
+async function deletePortfolio(id) {
+  if (!confirm('Ești sigur că vrei să ștergi acest proiect? Acțiunea este ireversibilă.')) return;
+  await sb.from('portfolio_items').delete().eq('id', id);
+  showToast('Proiect șters.');
+  loadPortfolio();
+}
+
+// ══════════════════════════════════════
+// TESTIMONIALE
+// ══════════════════════════════════════
+async function loadTestimoniale() {
+  const { data } = await sb.from('testimonials').select('*').order('order_num');
+  const el = document.getElementById('testiList');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Niciun testimonial adăugat.</p>'; return; }
+  el.innerHTML = data.map(t => `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <strong>${t.name}</strong>
+            ${t.featured ? '<span class="badge badge-orange">Featured</span>' : ''}
+            <span class="badge ${t.is_published ? 'badge-green' : 'badge-gray'}">${t.is_published ? 'Publicat' : 'Ascuns'}</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-light);margin-bottom:8px;">${t.city || ''} ${t.project_type ? '• ' + t.project_type : ''}</div>
+          <div style="font-size:0.85rem;color:var(--text-mid);font-style:italic;">"${t.text}"</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-sm btn-edit" onclick="editTestimonial('${t.id}')">✏️</button>
+          <button class="btn-sm btn-delete" onclick="deleteTestimonial('${t.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openTestiModal() {
+  editingId = null;
+  document.getElementById('testiModalTitle').textContent = 'Adaugă Testimonial';
+  ['t-name','t-city','t-project','t-text'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('t-stars').value = '5';
+  document.getElementById('t-order').value = '0';
+  document.getElementById('t-featured').checked = false;
+  document.getElementById('t-published').checked = true;
+  document.getElementById('testiModal').classList.add('open');
+}
+
+async function editTestimonial(id) {
+  const { data } = await sb.from('testimonials').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('testiModalTitle').textContent = 'Editează Testimonial';
+  document.getElementById('t-name').value    = data.name || '';
+  document.getElementById('t-city').value    = data.city || '';
+  document.getElementById('t-project').value = data.project_type || '';
+  document.getElementById('t-text').value    = data.text || '';
+  document.getElementById('t-stars').value   = data.stars || 5;
+  document.getElementById('t-order').value   = data.order_num || 0;
+  document.getElementById('t-featured').checked  = data.featured || false;
+  document.getElementById('t-published').checked = data.is_published !== false;
+  document.getElementById('testiModal').classList.add('open');
+}
+
+async function saveTestimonial() {
+  const payload = {
+    name:         document.getElementById('t-name').value.trim(),
+    city:         document.getElementById('t-city').value.trim() || null,
+    project_type: document.getElementById('t-project').value.trim() || null,
+    text:         document.getElementById('t-text').value.trim(),
+    stars:        parseInt(document.getElementById('t-stars').value),
+    order_num:    parseInt(document.getElementById('t-order').value) || 0,
+    featured:     document.getElementById('t-featured').checked,
+    is_published: document.getElementById('t-published').checked,
+  };
+  if (!payload.name || !payload.text) { showToast('Numele și textul sunt obligatorii!', 'error'); return; }
+  const { error } = editingId
+    ? await sb.from('testimonials').update(payload).eq('id', editingId)
+    : await sb.from('testimonials').insert(payload);
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('testiModal');
+  showToast(editingId ? 'Testimonial actualizat!' : 'Testimonial adăugat!');
+  loadTestimoniale();
+}
+
+async function deleteTestimonial(id) {
+  if (!confirm('Ștergi acest testimonial?')) return;
+  await sb.from('testimonials').delete().eq('id', id);
+  showToast('Testimonial șters.');
+  loadTestimoniale();
+}
+
+// ══════════════════════════════════════
+// MESAJE
+// ══════════════════════════════════════
+async function loadMessages() {
+  const { data } = await sb.from('contact_messages').select('*').order('created_at', { ascending: false });
+  const el = document.getElementById('messagesList');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Niciun mesaj primit încă.</p>'; return; }
+  el.innerHTML = data.map(m => msgCard(m)).join('');
+}
+
+async function markMessageRead(id) {
+  await sb.from('contact_messages').update({ is_read: true }).eq('id', id);
+  showToast('Marcat ca citit.');
+  loadMessages();
+  loadDashboard();
+}
+
+// ══════════════════════════════════════
+// CONTACT DETAILS
+// ══════════════════════════════════════
+async function loadContact() {
+  const { data } = await sb.from('contact_details').select('*').order('key');
+  const el = document.getElementById('contactFields');
+  if (!data) { el.innerHTML = '<p>Eroare la încărcare.</p>'; return; }
+  el.innerHTML = data.map(f => `
+    <div class="contact-field-card">
+      <div class="contact-field-label">${f.label_ro || f.key}</div>
+      <div class="contact-field-row">
+        <input type="text" class="f-input" id="cf-${f.id}" value="${f.value}">
+        <button class="btn-save-field" onclick="saveContactField('${f.id}', 'cf-${f.id}')">Salvează</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveContactField(id, inputId) {
+  const value = document.getElementById(inputId).value.trim();
+  const { error } = await sb.from('contact_details').update({ value }).eq('id', id);
+  if (error) { showToast('Eroare la salvare!', 'error'); return; }
+  showToast('Date de contact actualizate!');
+}
+
+// ══════════════════════════════════════
+// SERVICII
+// ══════════════════════════════════════
+async function loadServicii() {
+  const { data } = await sb.from('services').select('*').order('order_num');
+  const el = document.getElementById('serviciiList');
+  if (!data) { el.innerHTML = '<p>Eroare.</p>'; return; }
+  el.innerHTML = data.map(s => `
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">Serviciu ${s.order_num} — ${s.title_ro}</div>
+      <div class="modal-grid">
+        <div class="f-group">
+          <label class="f-label">Titlu (RO)</label>
+          <input type="text" class="f-input" id="s-ro-${s.id}" value="${s.title_ro || ''}">
+        </div>
+        <div class="f-group">
+          <label class="f-label">Titlu (EN)</label>
+          <input type="text" class="f-input" id="s-en-${s.id}" value="${s.title_en || ''}">
+        </div>
+        <div class="f-group full">
+          <label class="f-label">Descriere (RO)</label>
+          <textarea class="f-textarea" id="sd-ro-${s.id}">${s.desc_ro || ''}</textarea>
+        </div>
+        <div class="f-group full">
+          <label class="f-label">Descriere (EN)</label>
+          <textarea class="f-textarea" id="sd-en-${s.id}">${s.desc_en || ''}</textarea>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+        <button class="btn-save-field" onclick="saveService('${s.id}')">Salvează Serviciu</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveService(id) {
+  const payload = {
+    title_ro: document.getElementById('s-ro-' + id).value.trim(),
+    title_en: document.getElementById('s-en-' + id).value.trim(),
+    desc_ro:  document.getElementById('sd-ro-' + id).value.trim(),
+    desc_en:  document.getElementById('sd-en-' + id).value.trim(),
+  };
+  const { error } = await sb.from('services').update(payload).eq('id', id);
+  if (error) { showToast('Eroare!', 'error'); return; }
+  showToast('Serviciu actualizat!');
+}
+
+// ══════════════════════════════════════
+// HERO & STATS
+// ══════════════════════════════════════
+async function loadHero() {
+  const [{ data: stats }, { data: settings }] = await Promise.all([
+    sb.from('hero_stats').select('*').order('order_num'),
+    sb.from('hero_settings').select('*').order('key'),
+  ]);
+  const el = document.getElementById('heroContent');
+  el.innerHTML = `
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Statistici Hero (numerele mari)</div>
+      ${(stats || []).map(s => `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <input type="text" class="f-input" style="width:100px;" id="hs-val-${s.id}" value="${s.value}" placeholder="20+">
+          <input type="text" class="f-input" id="hs-ro-${s.id}" value="${s.label_ro}" placeholder="Ani Experiență">
+          <input type="text" class="f-input" id="hs-en-${s.id}" value="${s.label_en || ''}" placeholder="Years Experience">
+          <button class="btn-save-field" onclick="saveHeroStat('${s.id}')">Salvează</button>
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-title">Setări Hero</div>
+      ${(settings || []).map(s => `
+        <div class="contact-field-card" style="margin-bottom:12px;">
+          <div class="contact-field-label">${s.label_ro || s.key}</div>
+          <div class="contact-field-row">
+            <input type="text" class="f-input" id="hset-${s.id}" value="${s.value}">
+            <button class="btn-save-field" onclick="saveHeroSetting('${s.id}', 'hset-${s.id}')">Salvează</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+async function saveHeroStat(id) {
+  const payload = {
+    value:    document.getElementById('hs-val-' + id).value.trim(),
+    label_ro: document.getElementById('hs-ro-' + id).value.trim(),
+    label_en: document.getElementById('hs-en-' + id).value.trim(),
+  };
+  const { error } = await sb.from('hero_stats').update(payload).eq('id', id);
+  if (error) { showToast('Eroare!', 'error'); return; }
+  showToast('Statistică actualizată!');
+}
+
+async function saveHeroSetting(id, inputId) {
+  const value = document.getElementById(inputId).value.trim();
+  const { error } = await sb.from('hero_settings').update({ value }).eq('id', id);
+  if (error) { showToast('Eroare!', 'error'); return; }
+  showToast('Setare salvată!');
+}
+
+// ══════════════════════════════════════
+// PARTENERI
+// ══════════════════════════════════════
+async function loadParteneri() {
+  const { data } = await sb.from('brands').select('*').order('order_num');
+  const el = document.getElementById('brandsTable');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Niciun brand adăugat.</p>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>Nume</th><th>Categorie RO</th><th>Categorie EN</th><th>Ordine</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map(b => `
+      <tr>
+        <td><strong>${b.name}</strong></td>
+        <td>${b.category_ro || '—'}</td>
+        <td>${b.category_en || '—'}</td>
+        <td>${b.order_num}</td>
+        <td><span class="badge ${b.is_active ? 'badge-green' : 'badge-gray'}">${b.is_active ? 'Activ' : 'Inactiv'}</span></td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn-sm btn-edit" onclick="editBrand('${b.id}')">✏️</button>
+          <button class="btn-sm btn-delete" onclick="deleteBrand('${b.id}')">🗑</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openBrandModal() {
+  editingId = null;
+  document.getElementById('brandModalTitle').textContent = 'Adaugă Brand';
+  ['b-name','b-cat-ro','b-cat-en','b-web'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('b-order').value = '0';
+  document.getElementById('b-active').checked = true;
+  document.getElementById('brandModal').classList.add('open');
+}
+
+async function editBrand(id) {
+  const { data } = await sb.from('brands').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('brandModalTitle').textContent = 'Editează Brand';
+  document.getElementById('b-name').value   = data.name || '';
+  document.getElementById('b-cat-ro').value = data.category_ro || '';
+  document.getElementById('b-cat-en').value = data.category_en || '';
+  document.getElementById('b-web').value    = data.website_url || '';
+  document.getElementById('b-order').value  = data.order_num || 0;
+  document.getElementById('b-active').checked = data.is_active !== false;
+  document.getElementById('brandModal').classList.add('open');
+}
+
+async function saveBrand() {
+  const payload = {
+    name:         document.getElementById('b-name').value.trim(),
+    category_ro:  document.getElementById('b-cat-ro').value.trim() || null,
+    category_en:  document.getElementById('b-cat-en').value.trim() || null,
+    website_url:  document.getElementById('b-web').value.trim() || null,
+    order_num:    parseInt(document.getElementById('b-order').value) || 0,
+    is_active:    document.getElementById('b-active').checked,
+  };
+  if (!payload.name) { showToast('Numele brandului este obligatoriu!', 'error'); return; }
+  const { error } = editingId
+    ? await sb.from('brands').update(payload).eq('id', editingId)
+    : await sb.from('brands').insert(payload);
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('brandModal');
+  showToast(editingId ? 'Brand actualizat!' : 'Brand adăugat!');
+  loadParteneri();
+}
+
+async function deleteBrand(id) {
+  if (!confirm('Ștergi acest brand?')) return;
+  await sb.from('brands').delete().eq('id', id);
+  showToast('Brand șters.');
+  loadParteneri();
+}
+
+// ══════════════════════════════════════
+// AVANSAT — CATEGORII
+// ══════════════════════════════════════
+async function loadAvansat() {
+  const { data } = await sb.from('portfolio_categories').select('*').order('order_num');
+  const el = document.getElementById('categoriiList');
+  if (!data || data.length === 0) { el.innerHTML = '<p style="color:var(--text-light)">Nicio categorie.</p>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>Nume</th><th>Slug</th><th>Ordine</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map(c => `
+      <tr>
+        <td><strong>${c.name}</strong></td>
+        <td><code style="font-size:0.78rem;background:var(--gray-light);padding:2px 8px;border-radius:6px;">${c.slug}</code></td>
+        <td>${c.order_num}</td>
+        <td><button class="btn-sm btn-delete" onclick="deleteCategory('${c.id}')">🗑 Șterge</button></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openCatModal() {
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-slug').value = '';
+  document.getElementById('catModal').classList.add('open');
+  document.getElementById('c-name').addEventListener('input', () => {
+    document.getElementById('c-slug').value = document.getElementById('c-name').value
+      .toLowerCase().replace(/ă/g,'a').replace(/â/g,'a').replace(/î/g,'i').replace(/ș/g,'s').replace(/ț/g,'t').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  });
+}
+
+async function saveCategory() {
+  const name = document.getElementById('c-name').value.trim();
+  const slug = document.getElementById('c-slug').value.trim();
+  if (!name || !slug) { showToast('Numele și slug-ul sunt obligatorii!', 'error'); return; }
+  const { error } = await sb.from('portfolio_categories').insert({ name, slug });
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('catModal');
+  showToast('Categorie adăugată!');
+  await loadCategories();
+  loadAvansat();
+}
+
+async function deleteCategory(id) {
+  if (!confirm('Atenție! Dacă ștergi această categorie, proiectele asociate nu vor mai avea categorie. Continui?')) return;
+  await sb.from('portfolio_categories').delete().eq('id', id);
+  showToast('Categorie ștearsă.');
+  await loadCategories();
+  loadAvansat();
+}
+
+// ══════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  editingId = null;
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
