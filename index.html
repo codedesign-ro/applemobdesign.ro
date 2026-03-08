@@ -739,7 +739,7 @@ const db = createClient(
   'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
 )
 
-// SVG icons for service cards (by position)
+// ── SVG icons for service cards (by index) ──
 const SVC_ICONS = [
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11h18v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z"/><path d="M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4"/><line x1="12" y1="11" x2="12" y2="21"/></svg>`,
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="16" width="20" height="5" rx="1"/><rect x="4" y="10" width="6" height="6" rx="1"/><rect x="14" y="7" width="6" height="9" rx="1"/></svg>`,
@@ -749,184 +749,216 @@ const SVC_ICONS = [
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`
 ]
 
-// Category labels for portfolio
 const CAT_LABELS = {
   ro: { bucatarie:'Bucătărie', living:'Living', dormitor:'Dormitor', mansarda:'Mansardă', baie:'Baie' },
-  en: { bucatarie:'Kitchen', living:'Living Room', dormitor:'Bedroom', mansarda:'Attic', baie:'Bathroom' }
+  en: { bucatarie:'Kitchen',   living:'Living Room', dormitor:'Bedroom', mansarda:'Attic', baie:'Bathroom' }
 }
 
-// Star helper
 const stars = n => '★'.repeat(Math.min(Math.max(n || 5, 1), 5))
 
-// Scroll-reveal observer for dynamically rendered elements
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis') })
-}, { threshold: 0.1 })
+// Observer for scroll-reveal on dynamically inserted elements
+const revealObs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis') }),
+  { threshold: 0.1 }
+)
+const reObserve = el => el.querySelectorAll('.reveal').forEach(n => revealObs.observe(n))
 
-function reObserve(container) {
-  container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el))
-}
+// ── In-memory cache: populated after fetch, used on lang switch ──
+const C = {}
 
-// ── Cached data for re-renders on language switch ──
-const _cache = {}
-let _lang = 'ro'
+// ── Current active language (kept in sync with setLang calls) ──
+let _lang = localStorage.getItem('amd_lang') || 'ro'
 
 // ══════════════════════════════════════════════════════
-// RENDER FUNCTIONS (called on load + on language switch)
+// RENDER FUNCTIONS
+// Each is pure: receives data + lang, writes to DOM.
+// Called once on load and again whenever language switches.
 // ══════════════════════════════════════════════════════
 
-function applyHeroStats(stats, lang) {
-  const container = document.querySelector('.hero-stats')
-  if (!container || !stats?.length) return
-  container.innerHTML = stats.map(s => `
-    <div>
-      <div class="hero-stat-num">${s.value}<span>${s.suffix || ''}</span></div>
-      <div class="hero-stat-label">${(lang === 'en' && s.label_en) ? s.label_en : s.label_ro}</div>
-    </div>`).join('')
+function renderHeroStats(stats, lang) {
+  const el = document.querySelector('.hero-stats')
+  if (!el || !stats?.length) return
+  el.innerHTML = stats.map(s => {
+    // suffix is optional — some setups store "20+" as value, others split value/suffix
+    const suffix = s.suffix ? `<span>${s.suffix}</span>` : ''
+    const label  = (lang === 'en' && s.label_en) ? s.label_en : (s.label_ro || '')
+    return `<div>
+      <div class="hero-stat-num">${s.value}${suffix}</div>
+      <div class="hero-stat-label">${label}</div>
+    </div>`
+  }).join('')
 }
 
-function applyServices(services, lang) {
+function renderServices(services, lang) {
   const grid = document.querySelector('.services-grid')
   if (!grid || !services?.length) return
   const delays = ['', ' d1', ' d2', '', ' d1', ' d2']
-  grid.innerHTML = services.map((s, i) => `
-    <div class="svc-card reveal${delays[i % 6]}">
+  grid.innerHTML = services.map((s, i) => {
+    const title = (lang === 'en' && s.title_en) ? s.title_en : (s.title_ro || '')
+    const desc  = (lang === 'en' && s.desc_en)  ? s.desc_en  : (s.desc_ro  || '')
+    return `<div class="svc-card reveal${delays[i % 6]}">
       <div class="svc-icon">${SVC_ICONS[i] || SVC_ICONS[0]}</div>
       <div class="svc-num">${String(i + 1).padStart(2, '0')}</div>
-      <div class="svc-title">${(lang === 'en' && s.title_en) ? s.title_en : s.title_ro}</div>
-      <p class="svc-desc">${(lang === 'en' && s.desc_en) ? s.desc_en : s.desc_ro}</p>
-    </div>`).join('')
-  reObserve(grid)
-}
-
-function applyTestimonials(testimonials, lang) {
-  const grid = document.querySelector('.testi-grid')
-  if (!grid || !testimonials?.length) return
-  grid.innerHTML = testimonials.map((t, i) => {
-    const text = (lang === 'en' && t.text_en) ? t.text_en : t.text_ro
-    const role = (lang === 'en' && t.role_en) ? t.role_en : t.role_ro
-    const initial = (t.client_name || '?').charAt(0).toUpperCase()
-    if (i === 0 && t.image_url) {
-      return `
-        <div class="testi-card featured reveal">
-          <div>
-            <div class="testi-stars">${stars(t.rating)}</div>
-            <p class="testi-text">${text}</p>
-            <div class="testi-author">
-              <div class="testi-avatar" style="background:rgba(255,255,255,0.2);color:white;">${initial}</div>
-              <div>
-                <div class="testi-name">${t.client_name}</div>
-                <div class="testi-role">${role}</div>
-              </div>
-            </div>
-          </div>
-          <div class="featured-img"><img src="${t.image_url}" alt="${t.client_name}"></div>
-        </div>`
-    }
-    const delay = i === 2 ? ' d1' : ''
-    return `
-      <div class="testi-card reveal${delay}">
-        <div class="testi-stars">${stars(t.rating)}</div>
-        <p class="testi-text">${text}</p>
-        <div class="testi-author">
-          <div class="testi-avatar">${initial}</div>
-          <div>
-            <div class="testi-name">${t.client_name}</div>
-            <div class="testi-role">${role}</div>
-          </div>
-        </div>
-      </div>`
+      <div class="svc-title">${title}</div>
+      <p class="svc-desc">${desc}</p>
+    </div>`
   }).join('')
   reObserve(grid)
 }
 
-function applyPortfolio(items, lang) {
+function renderTestimonials(list, lang) {
+  const grid = document.querySelector('.testi-grid')
+  if (!grid || !list?.length) return
+  grid.innerHTML = list.map((t, i) => {
+    const text    = (lang === 'en' && t.text_en) ? t.text_en : (t.text_ro || '')
+    const role    = (lang === 'en' && t.role_en) ? t.role_en : (t.role_ro || '')
+    const initial = (t.client_name || '?').charAt(0).toUpperCase()
+    // First item is featured if it has an image
+    if (i === 0 && t.image_url) {
+      return `<div class="testi-card featured reveal">
+        <div>
+          <div class="testi-stars">${stars(t.rating)}</div>
+          <p class="testi-text">${text}</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:rgba(255,255,255,0.2);color:white;">${initial}</div>
+            <div>
+              <div class="testi-name">${t.client_name || ''}</div>
+              <div class="testi-role">${role}</div>
+            </div>
+          </div>
+        </div>
+        <div class="featured-img"><img src="${t.image_url}" alt="${t.client_name || ''}"></div>
+      </div>`
+    }
+    const delay = i === 2 ? ' d1' : ''
+    return `<div class="testi-card reveal${delay}">
+      <div class="testi-stars">${stars(t.rating)}</div>
+      <p class="testi-text">${text}</p>
+      <div class="testi-author">
+        <div class="testi-avatar">${initial}</div>
+        <div>
+          <div class="testi-name">${t.client_name || ''}</div>
+          <div class="testi-role">${role}</div>
+        </div>
+      </div>
+    </div>`
+  }).join('')
+  reObserve(grid)
+}
+
+function renderPortfolio(items, lang) {
   const grid = document.querySelector('.portfolio-grid')
   if (!grid || !items?.length) return
   grid.innerHTML = items.map(item => {
-    const title = (lang === 'en' && item.title_en) ? item.title_en : item.title_ro
+    const title    = (lang === 'en' && item.title_en) ? item.title_en : (item.title_ro || '')
     const catLabel = CAT_LABELS[lang]?.[item.category] || item.category || ''
-    return `
-      <div class="p-item" data-cat="${item.category || ''}">
-        <img src="${item.image_url}" alt="${item.alt_text || title}">
-        <div class="p-overlay">
-          <div class="p-cat">${catLabel}</div>
-          <div class="p-name">${title}</div>
-        </div>
-        <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
-      </div>`
+    return `<div class="p-item" data-cat="${item.category || ''}">
+      <img src="${item.image_url}" alt="${item.alt_text || title}">
+      <div class="p-overlay">
+        <div class="p-cat">${catLabel}</div>
+        <div class="p-name">${title}</div>
+      </div>
+      <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+    </div>`
   }).join('')
+  // Portfolio items don't have .reveal class — no reObserve needed
 }
 
-function applyContactDetails(d, lang) {
+// contact_details is a key-value table: rows have { key, value }
+// We receive it pre-converted to a plain object: { phone, email, address, hours, whatsapp, ... }
+function renderContactDetails(d, lang) {
   if (!d) return
-  // Contact info cards (phone, email, address, hours)
+
+  // Helper: phone digits only for tel: href
+  const telHref = v => v.replace(/[\s\-().]/g, '')
+
+  // hours may be bilingual via separate keys hours_ro / hours_en, or a single hours key
+  const hours = (lang === 'en' && d.hours_en) ? d.hours_en : (d.hours_ro || d.hours || '')
+
+  // ── Contact section info cards ──
   document.querySelectorAll('.ci-card').forEach(card => {
     const labelEl = card.querySelector('.ci-label')
-    const valEl = card.querySelector('.ci-val')
+    const valEl   = card.querySelector('.ci-val')
     if (!labelEl || !valEl) return
-    const key = labelEl.dataset.i18n || ''
-    if (key === 'ciPhone' && d.phone) valEl.textContent = d.phone
-    if (!key && labelEl.textContent.includes('Email') && d.email) valEl.textContent = d.email
-    if (key === 'ciShowroom' && d.address) valEl.textContent = d.address
-    if (key === 'ciHours') {
-      const hrs = (lang === 'en' && d.hours_en) ? d.hours_en : d.hours_ro
-      if (hrs) valEl.textContent = hrs
-    }
+    const i18nKey = labelEl.dataset.i18n || ''
+    if (i18nKey === 'ciPhone'    && d.phone)   valEl.textContent = d.phone
+    if (i18nKey === 'ciShowroom' && d.address)  valEl.textContent = d.address
+    if (i18nKey === 'ciHours'    && hours)       valEl.textContent = hours
+    // Email has no data-i18n — match by label text
+    if (!i18nKey && labelEl.textContent.trim() === 'Email' && d.email) valEl.textContent = d.email
   })
-  // Footer contact items
+
+  // ── Footer contact items ──
   document.querySelectorAll('.footer-contact-item').forEach(item => {
     const labelEl = item.querySelector('.fci-label')
-    const valEl = item.querySelector('.fci-val')
+    const valEl   = item.querySelector('.fci-val')
     if (!labelEl || !valEl) return
-    const key = labelEl.dataset.i18n || ''
-    if (key === 'ciPhone' && d.phone) {
-      valEl.innerHTML = `<a href="tel:${d.phone.replace(/\s/g,'')}">${d.phone}</a>`
+    const i18nKey = labelEl.dataset.i18n || ''
+    if (i18nKey === 'ciPhone' && d.phone) {
+      valEl.innerHTML = `<a href="tel:${telHref(d.phone)}">${d.phone}</a>`
     }
-    if (!key && labelEl.textContent.includes('Email') && d.email) valEl.textContent = d.email
-    if (key === 'fciAddr' && d.address) {
-      valEl.innerHTML = (lang === 'en' && d.address_en) ? d.address_en : d.address.replace(/\n/g,'<br>')
+    if (i18nKey === 'fciAddr' && d.address) {
+      valEl.innerHTML = d.address.replace(/\n/g, '<br>')
     }
+    if (!i18nKey && labelEl.textContent.trim() === 'Email' && d.email) valEl.textContent = d.email
   })
-  // Daniel card phone link
+
+  // ── Daniel card phone link ──
   if (d.phone) {
     const danielCta = document.querySelector('.daniel-cta')
-    if (danielCta) danielCta.href = `tel:${d.phone.replace(/\s/g,'')}`
+    if (danielCta) danielCta.href = `tel:${telHref(d.phone)}`
   }
 }
 
-function applyBrands(brands, lang) {
+function renderBrands(brands, lang) {
   const row = document.querySelector('.brands-row')
   if (!row || !brands?.length) return
   const delays = ['', ' d1', ' d2', ' d1', ' d2', ' d3']
   row.innerHTML = brands.map((b, i) => {
-    const tag = (lang === 'en' && b.tag_en) ? b.tag_en : b.tag_ro
-    return `
-      <div class="brand-card reveal${delays[i % 6]}">
-        <div class="brand-name">${b.name}</div>
-        <div class="brand-tag">${tag}</div>
-      </div>`
+    const tag = (lang === 'en' && b.tag_en) ? b.tag_en : (b.tag_ro || '')
+    // Show logo image if available, otherwise text name
+    const nameHTML = b.logo_url
+      ? `<img src="${b.logo_url}" alt="${b.name}" style="max-height:36px;object-fit:contain;">`
+      : `<div class="brand-name">${b.name}</div>`
+    return `<div class="brand-card reveal${delays[i % 6]}">
+      ${nameHTML}
+      <div class="brand-tag">${tag}</div>
+    </div>`
   }).join('')
   reObserve(row)
 }
 
-function applyHeroImages(settings) {
+function renderHeroImages(settings) {
   if (!settings) return
-  // Hero section images
+  // Hero right-side images
   const heroImgs = document.querySelectorAll('.hero-img img')
-  if (settings.hero_image_primary && heroImgs[0]) heroImgs[0].src = settings.hero_image_primary
+  if (settings.hero_image_primary   && heroImgs[0]) heroImgs[0].src = settings.hero_image_primary
   if (settings.hero_image_secondary && heroImgs[1]) heroImgs[1].src = settings.hero_image_secondary
-  // About section images
+  // About section images (same source per spec)
   const aboutMain = document.querySelector('.about-img-main img')
   const aboutSec  = document.querySelector('.about-img-sec img')
-  if (settings.hero_image_primary && aboutMain) aboutMain.src = settings.hero_image_primary
-  if (settings.hero_image_secondary && aboutSec) aboutSec.src = settings.hero_image_secondary
+  if (settings.hero_image_primary   && aboutMain) aboutMain.src = settings.hero_image_primary
+  if (settings.hero_image_secondary && aboutSec)  aboutSec.src  = settings.hero_image_secondary
+}
+
+// ══════════════════════════════════════════════════════
+// LANGUAGE RE-RENDER HOOK
+// Exposed as window._amdRender so the regular setLang()
+// can call it directly — no fragile patching needed.
+// ══════════════════════════════════════════════════════
+window._amdRender = function(lang) {
+  _lang = lang
+  if (C.heroStats)    renderHeroStats(C.heroStats, lang)
+  if (C.services)     renderServices(C.services, lang)
+  if (C.testimonials) renderTestimonials(C.testimonials, lang)
+  if (C.portfolio)    renderPortfolio(C.portfolio, lang)
+  if (C.contact)      renderContactDetails(C.contact, lang)
+  if (C.brands)       renderBrands(C.brands, lang)
 }
 
 // ══════════════════════════════════════════════════════
 // FORM HANDLERS
 // ══════════════════════════════════════════════════════
-
 function setupContactForm() {
   const btn = document.querySelector('.form-submit')
   if (!btn) return
@@ -956,12 +988,9 @@ function setupContactForm() {
     } else {
       btn.textContent = _lang === 'ro' ? '✓ Mesaj trimis! Vă contactăm în curând.' : '✓ Message sent! We will contact you soon.'
       btn.style.cssText = 'background:var(--green);cursor:default;'
-      // Clear fields
       document.querySelectorAll('.form-input').forEach(i => i.value = '')
-      const ta = document.querySelector('.form-textarea')
-      if (ta) ta.value = ''
-      const sel = document.querySelector('.form-select')
-      if (sel) sel.selectedIndex = 0
+      const ta = document.querySelector('.form-textarea'); if (ta) ta.value = ''
+      const sel = document.querySelector('.form-select'); if (sel) sel.selectedIndex = 0
     }
   })
 }
@@ -996,55 +1025,59 @@ function setupNewsletterForm() {
 }
 
 // ══════════════════════════════════════════════════════
-// PATCH setLang TO RE-RENDER DYNAMIC SECTIONS
-// ══════════════════════════════════════════════════════
-function patchSetLang() {
-  const original = window.setLang
-  if (!original) return
-  window.setLang = function(lang) {
-    _lang = lang
-    original(lang)
-    if (_cache.heroStats)    applyHeroStats(_cache.heroStats, lang)
-    if (_cache.services)     applyServices(_cache.services, lang)
-    if (_cache.testimonials) applyTestimonials(_cache.testimonials, lang)
-    if (_cache.portfolio)    applyPortfolio(_cache.portfolio, lang)
-    if (_cache.contactDetails) applyContactDetails(_cache.contactDetails, lang)
-    if (_cache.brands)       applyBrands(_cache.brands, lang)
-  }
-}
-
-// ══════════════════════════════════════════════════════
-// MAIN INIT
+// MAIN INIT — runs on DOMContentLoaded
 // ══════════════════════════════════════════════════════
 async function init() {
-  // Patch setLang (regular script has already run and defined it)
-  patchSetLang()
   _lang = localStorage.getItem('amd_lang') || 'ro'
 
-  const [heroStats, services, testimonials, portfolio, contactDetails, brands, heroSettings] =
-    await Promise.all([
-      db.from('hero_stats').select('*').order('sort_order'),
-      db.from('services').select('*').order('sort_order'),
-      db.from('testimonials').select('*').eq('is_published', true).order('sort_order'),
-      db.from('portfolio_items').select('*').eq('is_published', true).order('sort_order').limit(6),
-      db.from('contact_details').select('*').limit(1).maybeSingle(),
-      db.from('brands').select('*').eq('is_active', true).order('sort_order'),
-      db.from('hero_settings').select('hero_image_primary,hero_image_secondary').limit(1).maybeSingle(),
-    ])
+  // Fetch everything in parallel
+  const [
+    { data: heroStats,    error: e1 },
+    { data: services,     error: e2 },
+    { data: testimonials, error: e3 },
+    { data: portfolio,    error: e4 },
+    { data: contactRows,  error: e5 },
+    { data: brands,       error: e6 },
+    { data: heroSettings, error: e7 },
+  ] = await Promise.all([
+    db.from('hero_stats').select('*').order('order_num'),
+    db.from('services').select('*').eq('is_active', true).order('order_num'),
+    db.from('testimonials').select('*').eq('is_published', true).order('order_num'),
+    db.from('portfolio_items').select('*').eq('is_published', true).order('order_num').limit(6),
+    db.from('contact_details').select('key,value'),   // key-value rows
+    db.from('brands').select('*').eq('is_active', true).order('order_num'),
+    db.from('hero_settings').select('hero_image_primary,hero_image_secondary').limit(1).maybeSingle(),
+  ])
 
-  if (heroStats.data?.length)    { _cache.heroStats    = heroStats.data;    applyHeroStats(_cache.heroStats, _lang) }
-  if (services.data?.length)     { _cache.services     = services.data;     applyServices(_cache.services, _lang) }
-  if (testimonials.data?.length) { _cache.testimonials = testimonials.data; applyTestimonials(_cache.testimonials, _lang) }
-  if (portfolio.data?.length)    { _cache.portfolio    = portfolio.data;    applyPortfolio(_cache.portfolio, _lang) }
-  if (contactDetails.data)       { _cache.contactDetails = contactDetails.data; applyContactDetails(_cache.contactDetails, _lang) }
-  if (brands.data?.length)       { _cache.brands       = brands.data;       applyBrands(_cache.brands, _lang) }
-  if (heroSettings.data)         { applyHeroImages(heroSettings.data) }
+  // Log any errors to console for debugging — sections gracefully fall back to static HTML
+  if (e1) console.warn('hero_stats:', e1.message)
+  if (e2) console.warn('services:', e2.message)
+  if (e3) console.warn('testimonials:', e3.message)
+  if (e4) console.warn('portfolio_items:', e4.message)
+  if (e5) console.warn('contact_details:', e5.message)
+  if (e6) console.warn('brands:', e6.message)
+  if (e7) console.warn('hero_settings:', e7.message)
+
+  // Convert contact_details key-value rows → plain object
+  // e.g. [{ key:'phone', value:'...' }, ...] → { phone:'...', ... }
+  const contact = contactRows?.length
+    ? contactRows.reduce((acc, r) => { acc[r.key] = r.value; return acc }, {})
+    : null
+
+  // Cache and render each section
+  if (heroStats?.length)    { C.heroStats    = heroStats;    renderHeroStats(C.heroStats, _lang) }
+  if (services?.length)     { C.services     = services;     renderServices(C.services, _lang) }
+  if (testimonials?.length) { C.testimonials = testimonials; renderTestimonials(C.testimonials, _lang) }
+  if (portfolio?.length)    { C.portfolio    = portfolio;    renderPortfolio(C.portfolio, _lang) }
+  if (contact)              { C.contact      = contact;      renderContactDetails(C.contact, _lang) }
+  if (brands?.length)       { C.brands       = brands;       renderBrands(C.brands, _lang) }
+  if (heroSettings)         { renderHeroImages(heroSettings) }
 
   setupContactForm()
   setupNewsletterForm()
 }
 
-init()
+document.addEventListener('DOMContentLoaded', init)
 </script>
 
 <script>
@@ -1497,6 +1530,9 @@ function setLang(lang) {
 
   // Persist preference
   localStorage.setItem('amd_lang', lang);
+
+  // Re-render Supabase-backed sections in the new language
+  if (window._amdRender) window._amdRender(lang);
 }
 
 // ── Load saved language on page load ──
