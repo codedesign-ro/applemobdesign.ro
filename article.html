@@ -7,16 +7,18 @@
 <meta name="description" content="Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan cu insulă centrală și fronturi MDF mat.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet"></head>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
 <body>
 
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
   <span class="mob-close" onclick="closeMob()">×</span>
   <div class="mob-lang">
-    <button class="mob-lang-btn active" onclick="closeMob()">RO</button>
+    <button class="mob-lang-btn active" onclick="setLang('ro');closeMob()">RO</button>
     <span class="mob-lang-sep">|</span>
-    <button class="mob-lang-btn" onclick="closeMob()">EN</button>
+    <button class="mob-lang-btn" onclick="setLang('en');closeMob()">EN</button>
   </div>
   <a href="index.html" onclick="closeMob()">Acasă</a>
   <a href="index.html#services" onclick="closeMob()">Servicii</a>
@@ -43,8 +45,8 @@
   </ul>
   <div class="nav-right">
     <div class="lang-wrap">
-      <button class="lang-btn active">RO</button>
-      <button class="lang-btn">EN</button>
+      <button class="lang-btn active" onclick="setLang('ro')">RO</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
     <a href="index.html#contact" class="btn-nav">Contact</a>
   </div>
@@ -344,4 +346,82 @@ function closeMob() { document.getElementById('mobMenu').classList.remove('open'
 // TOC active state on scroll
 const tocLinks = document.querySelectorAll('.toc-list a');
 const sections = ['concept','materiale','productie','montaj'].map(id => document.getElementById(id)).filter(Boolean);
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', () => {  let activeIdx = 0;
+  sections.forEach((sec, i) => {
+    if (sec && window.scrollY + 120 >= sec.offsetTop) activeIdx = i;
+  });
+  tocLinks.forEach((l, i) => l.classList.toggle('active', i === activeIdx));
+});
+</script>
+
+<script>
+// ── Supabase newsletter ──
+const { createClient } = window.supabase;
+const db = createClient(
+  'https://nhuxlpwjuqeolflrugvu.supabase.co',
+  'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
+);
+
+// ── Newsletter form ──
+document.addEventListener('DOMContentLoaded', () => {
+  const btn   = document.querySelector('.nl-btn');
+  const input = document.querySelector('.nl-input');
+  if (btn && input) {
+    btn.addEventListener('click', async () => {
+      const email = input.value.trim();
+      if (!email || !email.includes('@')) {
+        alert('Introduceți o adresă de email validă.');
+        return;
+      }
+      const origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Se procesează…';
+      const { error } = await db.from('newsletter_subscribers').insert([{ email }]);
+      if (error?.code === '23505') {
+        btn.textContent = 'Ești deja abonat!';
+        btn.disabled = false;
+      } else if (error) {
+        alert('Eroare. Încearcă din nou.');
+        btn.disabled = false;
+        btn.textContent = origText;
+      } else {
+        btn.textContent = '✓ Mulțumim!';
+        input.value = '';
+      }
+    });
+  }
+
+  // ── Restore language preference ──
+  const saved = localStorage.getItem('amd_lang') || 'ro';
+  setLang(saved);
+});
+
+// ── Language switching ──
+function setLang(lang) {
+  localStorage.setItem('amd_lang', lang);
+
+  // Update lang button states
+  document.querySelectorAll('.lang-btn').forEach((b, i) => {
+    b.classList.toggle('active', (lang === 'ro' && i === 0) || (lang === 'en' && i === 1));
+  });
+  document.querySelectorAll('.mob-lang-btn').forEach((b, i) => {
+    b.classList.toggle('active', (lang === 'ro' && i === 0) || (lang === 'en' && i === 1));
+  });
+
+  // Newsletter text
+  const nlTitle = document.querySelector('.nl-title');
+  const nlBtn   = document.querySelector('.nl-btn');
+  const nlInput = document.querySelector('.nl-input');
+  if (lang === 'en') {
+    if (nlTitle) nlTitle.innerHTML = 'Subscribe to our newsletter<br>for the latest interior design trends';
+    if (nlBtn && (nlBtn.textContent === 'Înscrie-te' || nlBtn.textContent === 'Subscribe')) nlBtn.textContent = 'Subscribe';
+    if (nlInput) nlInput.placeholder = 'Your email address';
+  } else {
+    if (nlTitle) nlTitle.innerHTML = 'Înscrie-te și primești articole noi<br>direct în căsuța ta de email';
+    if (nlBtn && (nlBtn.textContent === 'Înscrie-te' || nlBtn.textContent === 'Subscribe')) nlBtn.textContent = 'Înscrie-te';
+    if (nlInput) nlInput.placeholder = 'Adresa ta de email';
+  }
+}
+</script>
+</body>
+</html>

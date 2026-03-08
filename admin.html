@@ -364,6 +364,10 @@ tr:hover td { background: var(--off); }
         Mesaje
         <span class="nav-badge" id="unreadBadge" style="display:none">0</span>
       </div>
+      <div class="nav-item" onclick="showPage('abonati')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Abonați Newsletter
+      </div>
       <div class="nav-section-label">Setări Site</div>
       <div class="nav-item" onclick="showPage('contact')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
@@ -442,6 +446,15 @@ tr:hover td { background: var(--off); }
         Adaugă Testimonial
       </button>
       <div id="testiList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+    </div>
+
+    <!-- ── ABONATI NEWSLETTER ── -->
+    <div class="page" id="page-abonati">
+      <div class="page-header">
+        <div class="page-title">Abonați Newsletter</div>
+        <div class="page-sub">Lista persoanelor înscrise la newsletter-ul site-ului.</div>
+      </div>
+      <div id="abonatiList"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
     </div>
 
     <!-- ── MESAJE ── -->
@@ -809,6 +822,7 @@ function showPage(name) {
     portofoliu:   loadPortfolio,
     testimoniale: loadTestimoniale,
     mesaje:       loadMessages,
+    abonati:      loadAbonati,
     contact:      loadContact,
     servicii:     loadServicii,
     hero:         loadHero,
@@ -1039,6 +1053,38 @@ async function deleteTestimonial(id) {
 }
 
 // ══════════════════════════════════════
+// ABONATI NEWSLETTER
+// ══════════════════════════════════════
+async function loadAbonati() {
+  const { data } = await sb.from('newsletter_subscribers').select('*').order('subscribed_at', { ascending: false });
+  const el = document.getElementById('abonatiList');
+  if (!data || data.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Niciun abonat înregistrat.</p>';
+    return;
+  }
+  const active = data.filter(s => s.is_active !== false).length;
+  el.innerHTML = `
+    <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+      <div class="dash-stat" style="flex:none;min-width:100px;"><div class="dash-stat-num">${data.length}</div><div class="dash-stat-label">Total</div></div>
+      <div class="dash-stat" style="flex:none;min-width:100px;"><div class="dash-stat-num">${active}</div><div class="dash-stat-label">Activi</div></div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Email</th><th>Data Înscrierii</th><th>Status</th></tr></thead>
+          <tbody>${data.map(s => `
+            <tr>
+              <td><strong>${s.email}</strong></td>
+              <td>${s.subscribed_at ? new Date(s.subscribed_at).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}</td>
+              <td><span class="badge ${s.is_active !== false ? 'badge-green' : 'badge-gray'}">${s.is_active !== false ? 'Activ' : 'Inactiv'}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════
 // MESAJE
 // ══════════════════════════════════════
 async function loadMessages() {
@@ -1088,7 +1134,10 @@ async function loadServicii() {
   if (!data) { el.innerHTML = '<p>Eroare.</p>'; return; }
   el.innerHTML = data.map(s => `
     <div class="card" style="margin-bottom:12px;">
-      <div class="card-title">Serviciu ${s.order_num} — ${s.title_ro}</div>
+      <div class="card-title" style="display:flex;align-items:center;gap:12px;">
+        Serviciu ${s.order_num || '?'} — ${s.title_ro}
+        ${!s.is_active ? '<span class="badge badge-gray">Inactiv</span>' : ''}
+      </div>
       <div class="modal-grid">
         <div class="f-group">
           <label class="f-label">Titlu (RO)</label>
@@ -1106,6 +1155,12 @@ async function loadServicii() {
           <label class="f-label">Descriere (EN)</label>
           <textarea class="f-textarea" id="sd-en-${s.id}">${s.desc_en || ''}</textarea>
         </div>
+        <div class="f-group">
+          <label class="f-toggle">
+            <label class="toggle"><input type="checkbox" id="s-active-${s.id}" ${s.is_active !== false ? 'checked' : ''}><span class="toggle-slider"></span></label>
+            <span class="f-toggle-label">Activ (vizibil pe site)</span>
+          </label>
+        </div>
       </div>
       <div style="display:flex;justify-content:flex-end;margin-top:14px;">
         <button class="btn-save-field" onclick="saveService('${s.id}')">Salvează Serviciu</button>
@@ -1115,14 +1170,16 @@ async function loadServicii() {
 
 async function saveService(id) {
   const payload = {
-    title_ro: document.getElementById('s-ro-' + id).value.trim(),
-    title_en: document.getElementById('s-en-' + id).value.trim(),
-    desc_ro:  document.getElementById('sd-ro-' + id).value.trim(),
-    desc_en:  document.getElementById('sd-en-' + id).value.trim(),
+    title_ro:  document.getElementById('s-ro-' + id).value.trim(),
+    title_en:  document.getElementById('s-en-' + id).value.trim(),
+    desc_ro:   document.getElementById('sd-ro-' + id).value.trim(),
+    desc_en:   document.getElementById('sd-en-' + id).value.trim(),
+    is_active: document.getElementById('s-active-' + id).checked,
   };
   const { error } = await sb.from('services').update(payload).eq('id', id);
   if (error) { showToast('Eroare!', 'error'); return; }
   showToast('Serviciu actualizat!');
+  loadServicii();
 }
 
 // ══════════════════════════════════════

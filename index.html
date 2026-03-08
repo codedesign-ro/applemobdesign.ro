@@ -607,19 +607,19 @@
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label" data-i18n="fldFirst">Prenume</label>
-            <input type="text" class="form-input" placeholder="Ion">
+            <input type="text" id="form-first-name" class="form-input" placeholder="Ion">
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="fldLast">Nume</label>
-            <input type="text" class="form-input" placeholder="Popescu">
+            <input type="text" id="form-last-name" class="form-input" placeholder="Popescu">
           </div>
           <div class="form-group full">
             <label class="form-label">Email</label>
-            <input type="email" class="form-input" placeholder="ion@example.com">
+            <input type="email" id="form-email" class="form-input" placeholder="ion@example.com">
           </div>
           <div class="form-group full">
             <label class="form-label" data-i18n="fldPhone">Telefon</label>
-            <input type="tel" class="form-input" placeholder="0040 7XX XXX XXX">
+            <input type="tel" id="form-phone" class="form-input" placeholder="0040 7XX XXX XXX">
           </div>
           <div class="form-group full">
             <label class="form-label" data-i18n="fldType">Tipul Proiectului</label>
@@ -783,11 +783,9 @@ function renderHeroStats(stats, lang) {
   const el = document.querySelector('.hero-stats')
   if (!el || !stats?.length) return
   el.innerHTML = stats.map(s => {
-    // suffix is optional — some setups store "20+" as value, others split value/suffix
-    const suffix = s.suffix ? `<span>${s.suffix}</span>` : ''
-    const label  = (lang === 'en' && s.label_en) ? s.label_en : (s.label_ro || '')
+    const label = (lang === 'en' && s.label_en) ? s.label_en : (s.label_ro || '')
     return `<div>
-      <div class="hero-stat-num">${s.value}${suffix}</div>
+      <div class="hero-stat-num">${s.value}</div>
       <div class="hero-stat-label">${label}</div>
     </div>`
   }).join('')
@@ -813,13 +811,14 @@ function renderServices(services, lang) {
 function renderTestimonials(list, lang) {
   const grid = document.querySelector('.testi-grid')
   if (!grid || !list?.length) return
+  // Use testimonial marked featured:true; fallback to first item
+  const featIdx = list.findIndex(t => t.featured) >= 0 ? list.findIndex(t => t.featured) : 0
   grid.innerHTML = list.map((t, i) => {
-    // Actual columns: name, text, city, project_type, stars, photo_url
+    // Actual columns: name, text, city, project_type, stars, photo_url, featured
     const text    = t.text || ''
     const role    = [t.city, t.project_type].filter(Boolean).join(' • ')
     const initial = (t.name || '?').charAt(0).toUpperCase()
-    // First item is always featured (photo optional)
-    if (i === 0) {
+    if (i === featIdx) {
       const imgHTML = t.photo_url
         ? `<div class="featured-img"><img src="${t.photo_url}" alt="${t.name || ''}"></div>`
         : ''
@@ -929,22 +928,22 @@ function renderBrands(brands, lang) {
   if (!row || !brands?.length) return
   const delays = ['', ' d1', ' d2', ' d1', ' d2', ' d3']
   row.innerHTML = brands.map((b, i) => {
-    // Actual columns: category_ro, category_en (not tag_ro/tag_en)
+    // Actual columns: category_ro, category_en, website_url
     const tag = (lang === 'en' && b.category_en) ? b.category_en : (b.category_ro || '')
     const nameHTML = b.logo_url
       ? `<img src="${b.logo_url}" alt="${b.name}" style="max-height:36px;object-fit:contain;">`
       : `<div class="brand-name">${b.name}</div>`
-    return `<div class="brand-card reveal${delays[i % 6]}">
-      ${nameHTML}
-      <div class="brand-tag">${tag}</div>
-    </div>`
+    const inner = `${nameHTML}<div class="brand-tag">${tag}</div>`
+    if (b.website_url) {
+      return `<a href="${b.website_url}" target="_blank" rel="noopener" class="brand-card reveal${delays[i % 6]}">${inner}</a>`
+    }
+    return `<div class="brand-card reveal${delays[i % 6]}">${inner}</div>`
   }).join('')
   reObserve(row)
 }
 
 function renderHeroImages(settings) {
   // hero_settings is a key-value table — settings is already a plain object
-  // e.g. { hero_image_primary: 'https://...', hero_image_secondary: 'https://...' }
   if (!settings) return
   const heroImgs = document.querySelectorAll('.hero-img img')
   if (settings.hero_image_primary   && heroImgs[0]) heroImgs[0].src = settings.hero_image_primary
@@ -953,6 +952,22 @@ function renderHeroImages(settings) {
   const aboutSec  = document.querySelector('.about-img-sec img')
   if (settings.hero_image_primary   && aboutMain) aboutMain.src = settings.hero_image_primary
   if (settings.hero_image_secondary && aboutSec)  aboutSec.src  = settings.hero_image_secondary
+  // Render years_in_industry into the green card
+  if (settings.years_in_industry) {
+    const greenNum = document.querySelector('.hero-green-card-num')
+    if (greenNum) greenNum.textContent = settings.years_in_industry
+  }
+  // Render founded_year into heroTag and update translations for lang-switch persistence
+  if (settings.founded_year) {
+    const yr = settings.founded_year
+    document.querySelectorAll('[data-i18n="heroTag"]').forEach(el => {
+      el.textContent = el.textContent.replace(/Est\.\s*\d+/, 'Est. ' + yr)
+    })
+    if (typeof translations !== 'undefined') {
+      if (translations.ro) translations.ro.heroTag = 'Baia Mare, România \u2022 Est. ' + yr
+      if (translations.en) translations.en.heroTag = 'Baia Mare, Romania \u2022 Est. ' + yr
+    }
+  }
 }
 
 // ══════════════════════════════════════════════════════
@@ -977,12 +992,11 @@ function setupContactForm() {
   const btn = document.querySelector('.form-submit')
   if (!btn) return
   btn.addEventListener('click', async () => {
-    const inputs = document.querySelectorAll('.form-input')
     const payload = {
-      first_name:   inputs[0]?.value?.trim() || null,
-      last_name:    inputs[1]?.value?.trim() || null,
-      email:        inputs[2]?.value?.trim() || null,
-      phone:        inputs[3]?.value?.trim() || null,
+      first_name:   document.getElementById('form-first-name')?.value?.trim() || null,
+      last_name:    document.getElementById('form-last-name')?.value?.trim() || null,
+      email:        document.getElementById('form-email')?.value?.trim() || null,
+      phone:        document.getElementById('form-phone')?.value?.trim() || null,
       project_type: document.querySelector('.form-select')?.value || null,
       message:      document.querySelector('.form-textarea')?.value?.trim() || null,
     }
@@ -1060,7 +1074,7 @@ async function init() {
     // Join portfolio_categories to get the slug for filtering
     db.from('portfolio_items')
       .select('id, title, cover_image, order_num, portfolio_categories(slug)')
-      .eq('is_published', true).order('order_num').limit(6),
+      .eq('is_published', true).order('order_num'),
     db.from('contact_details').select('key,value'),
     db.from('brands').select('*').eq('is_active', true).order('order_num'),
     // hero_settings is also a key-value table
