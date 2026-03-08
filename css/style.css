@@ -840,11 +840,11 @@ footer {
   #about, #contact { overflow-x: hidden; }
   .about-float-card {
     position: absolute;
-    top: auto !important;
-    bottom: 20px;
-    left: 50%;
+    top: 50% !important;
+    bottom: auto;
+    left: 16px;
     right: auto;
-    transform: translateX(-50%);
+    transform: none;
     margin: 0;
     white-space: nowrap;
     z-index: 10;
