@@ -633,8 +633,19 @@ function setupNewsletter() {
   });
 }
 
+// ── Show "not found" state ────────────────────────────
+function showNotFound(lang) {
+  document.getElementById('articleTitle').textContent = T[lang].notFound;
+  document.getElementById('articleContent').innerHTML = `
+    <p style="text-align:center;padding:40px 0;color:var(--text-light)">
+      ${lang === 'ro' ? 'Articolul nu a fost găsit. ' : 'Article not found. '}
+      <a href="blog.html" style="color:var(--accent)">${lang === 'ro' ? 'Înapoi la blog' : 'Back to blog'}</a>
+    </p>`;
+}
+
 // ── Main init ─────────────────────────────────────────
 async function init() {
+  console.log('[article] init() started');
   _lang = localStorage.getItem('amd_lang') || 'ro';
 
   // Apply lang UI chrome immediately
@@ -644,50 +655,72 @@ async function init() {
 
   // Get slug from URL — e.g. article.html?slug=bucatarie-moderna-insula
   const slug = new URLSearchParams(window.location.search).get('slug');
+  console.log('[article] slug from URL:', slug);
 
   // Fetch all published posts for prev/next and related
-  const { data: allPosts, error: allError } = await db
-    .from('blog_posts')
-    .select('id, title_ro, title_en, slug, excerpt_ro, excerpt_en, cover_image, category, author, read_time_min, featured, published_at')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false });
+  try {
+    const { data: allPosts, error: allError } = await db
+      .from('blog_posts')
+      .select('id, title_ro, title_en, slug, excerpt_ro, excerpt_en, cover_image, category, author, read_time_min, featured, published_at')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
 
-  if (allError) console.warn('blog_posts (all):', allError.message);
-  _allPosts = allPosts || [];
+    console.log('[article] allPosts fetch — count:', allPosts?.length, 'error:', allError?.message || 'none');
+    if (allError) console.warn('blog_posts (all):', allError.message);
+    _allPosts = allPosts || [];
+  } catch (err) {
+    console.error('[article] allPosts fetch threw:', err);
+    _allPosts = [];
+  }
 
   // Fetch target post — by slug, or first post if no slug provided
   let post = null;
   if (slug) {
-    const { data, error } = await db
-      .from('blog_posts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('is_published', true)
-      .single();
-    if (error) console.warn('blog_posts (single):', error.message);
-    post = data;
+    try {
+      const { data, error } = await db
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .maybeSingle();
+      console.log('[article] slug fetch — data:', !!data, 'error:', error?.message || 'none');
+      if (error) console.warn('blog_posts (slug):', error.message);
+      post = data;
+    } catch (err) {
+      console.error('[article] slug fetch threw:', err);
+      post = null;
+    }
   } else if (_allPosts.length > 0) {
     // No slug — load the most recent/featured post as fallback
     post = _allPosts.find(p => p.featured) || _allPosts[0];
     if (post) {
-      // Fetch full content for the fallback post
-      const { data } = await db.from('blog_posts').select('*').eq('id', post.id).single();
-      if (data) post = data;
+      try {
+        // Fetch full content for the fallback post
+        const { data, error } = await db
+          .from('blog_posts')
+          .select('*')
+          .eq('id', post.id)
+          .maybeSingle();
+        console.log('[article] fallback fetch — data:', !!data, 'error:', error?.message || 'none');
+        if (error) console.warn('blog_posts (fallback):', error.message);
+        if (data) post = data;
+      } catch (err) {
+        console.error('[article] fallback fetch threw:', err);
+        // Keep the partial post from _allPosts so we can still render something
+      }
     }
   }
 
-  // Not found — redirect to blog
+  // Not found — show message with link back to blog
   if (!post) {
-    document.getElementById('articleTitle').textContent = T[_lang].notFound;
-    document.getElementById('articleContent').innerHTML = `
-      <p style="text-align:center;padding:40px 0;color:var(--text-light)">
-        ${_lang === 'ro' ? 'Articolul nu a fost găsit. ' : 'Article not found. '}
-        <a href="blog.html" style="color:var(--accent)">${_lang === 'ro' ? 'Înapoi la blog' : 'Back to blog'}</a>
-      </p>`;
+    console.log('[article] no post found — showing not-found state');
+    showNotFound(_lang);
+    setupNewsletter();
     return;
   }
 
   _post = post;
+  console.log('[article] rendering post:', post.slug);
 
   // Update <head>, inject schema, render
   updateMeta(post, _lang);
