@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
@@ -24,10 +25,114 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<!-- ── STRUCTURED DATA: LocalBusiness + FurnitureStore ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "FurnitureStore"],
+  "name": "Apple Mob Design",
+  "url": "https://applemobdesign.ro",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://applemobdesign.ro/images/logo/applemobdesign-logo.png"
+  },
+  "image": [
+    "https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6789-HDR-Edit.jpg",
+    "https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6636-HDR-Edit.jpg"
+  ],
+  "description": "Mobilier la comandă în Baia Mare — bucătării, dormitoare și living-uri custom din materiale premium. Peste 20 de ani de experiență, 500+ proiecte finalizate.",
+  "telephone": "+40747520185",
+  "email": "contact@applemobdesign.ro",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Str. Vasile Lucaciu 163",
+    "addressLocality": "Baia Mare",
+    "addressRegion": "Maramureș",
+    "postalCode": "430401",
+    "addressCountry": "RO"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 47.66247,
+    "longitude": 23.59878
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:00",
+      "closes": "17:00"
+    }
+  ],
+  "priceRange": "$$$",
+  "currenciesAccepted": "RON",
+  "paymentAccepted": "Cash, Bank Transfer",
+  "areaServed": {
+    "@type": "GeoCircle",
+    "geoMidpoint": {
+      "@type": "GeoCoordinates",
+      "latitude": 47.66247,
+      "longitude": 23.59878
+    },
+    "geoRadius": "100000"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.7",
+    "reviewCount": "64",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Daniel Marosan"
+  },
+  "foundingDate": "2005",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Mobilier la Comandă",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Bucătării la Comandă",
+          "description": "Bucătării custom proiectate și executate la comandă din materiale premium."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Dormitoare la Comandă",
+          "description": "Dormitoare complete la comandă — dulapuri, paturi, noptiere, toalete."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Living la Comandă",
+          "description": "Mobilier de living personalizat — biblioteci, comode, corpuri TV, canapele."
+        }
+      }
+    ]
+  },
+  "sameAs": [
+    "https://www.facebook.com/applemobdesign",
+    "https://instagram.com/applemobdesign/",
+    "https://ro.linkedin.com/in/daniel-marosan-52a08b191",
+    "https://www.tiktok.com/@apple_mob_design",
+    "https://www.youtube.com/channel/UCKLOZPFd_l-Inokjqmv0L6Q",
+    "https://share.google/YnWP9zLvh9Aa49jrM"
+  ]
+}
+</script>
 </head>
 <body>
 
 <!-- MOBILE MENU -->
+
 <div class="mob-menu" id="mobMenu">
   <span class="mob-close" onclick="closeMob()">×</span>
   <div class="mob-lang">
@@ -44,6 +149,7 @@
 </div>
 
 <!-- NAV -->
+
 <nav id="nav">
   <a href="#" class="nav-logo">
     <img src="images/logo/applemobdesign-logo.png" alt="AppleMob Design" height="48">
@@ -69,6 +175,7 @@
 </nav>
 
 <!-- ── HERO ── -->
+
 <section style="background:var(--white); overflow:hidden;">
   <div id="hero">
     <div class="hero-left">
@@ -128,6 +235,7 @@
 </section>
 
 <!-- ── SERVICES BAND ── -->
+
 <div class="services-band">
   <div class="service-pill">
     <div class="service-pill-icon">
@@ -168,6 +276,7 @@
 </div>
 
 <!-- ── ABOUT ── -->
+
 <section id="about">
   <div class="section-wrap">
     <div class="about-grid">
@@ -247,6 +356,7 @@
 </section>
 
 <!-- ── PORTFOLIO ── -->
+
 <section id="portfolio">
   <div class="section-wrap">
     <div class="portfolio-header">
@@ -355,6 +465,7 @@
 </section>
 
 <!-- ── SERVICES ── -->
+
 <section id="services">
   <div class="section-wrap">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:0;">
@@ -420,6 +531,7 @@
 </section>
 
 <!-- ── PROCESS ── -->
+
 <section id="process">
   <div class="section-wrap">
     <div style="text-align:center;max-width:560px;margin:0 auto;">
@@ -452,6 +564,7 @@
 </section>
 
 <!-- ── BRANDS ── -->
+
 <section id="brands">
   <div class="brands-inner">
     <div class="brands-title">
@@ -488,6 +601,7 @@
 </section>
 
 <!-- ── TESTIMONIALS ── -->
+
 <section id="testimonials">
   <div class="section-wrap">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0;">
@@ -546,6 +660,7 @@
 </section>
 
 <!-- ── CONTACT ── -->
+
 <section id="contact">
   <div class="section-wrap">
     <div class="contact-grid">
@@ -654,6 +769,7 @@
 </section>
 
 <!-- ── NEWSLETTER ── -->
+
 <div class="newsletter">
   <div class="nl-left">
     <div class="nl-tag">Newsletter</div>
@@ -666,6 +782,7 @@
 </div>
 
 <!-- ── FOOTER ── -->
+
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -1611,5 +1728,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 </script>
+
 </body>
 </html>
