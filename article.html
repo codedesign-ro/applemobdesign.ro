@@ -1,22 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bucătărie modernă cu insulă în Baia Mare — Apple Mob Design Blog</title>
-<meta name="description" content="Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan cu insulă centrală și fronturi MDF mat.">
-<meta name="keywords" content="bucătărie modernă, insulă bucătărie, mobilier Baia Mare, renovare bucătărie, Apple Mob Design, MDF mat">
+<!-- Dynamic meta — updated by JS after Supabase fetch -->
+<title>Blog — Apple Mob Design</title>
+<meta name="description" content="Articole despre design interior, mobilier la comandă și proiecte recente — Apple Mob Design, Baia Mare.">
 <meta name="author" content="Daniel Marosan">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://applemobdesign.ro/article.html">
-<link rel="alternate" hreflang="ro" href="https://applemobdesign.ro/article.html">
-<link rel="alternate" hreflang="en" href="https://applemobdesign.ro/article.html?lang=en">
-<meta property="og:title" content="Bucătărie modernă cu insulă în Baia Mare — Apple Mob Design">
-<meta property="og:description" content="Cum am transformat o bucătărie veche de 30 de ani într-un spațiu contemporan cu insulă centrală și fronturi MDF mat.">
-<meta property="og:image" content="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6789-HDR-Edit.jpg">
-<meta property="og:url" content="https://applemobdesign.ro/article.html">
+<link rel="canonical" href="https://applemobdesign.ro/article.html" id="meta-canonical">
+<link rel="alternate" hreflang="ro" href="https://applemobdesign.ro/article.html" id="meta-hreflang-ro">
+<link rel="alternate" hreflang="en" href="https://applemobdesign.ro/article.html" id="meta-hreflang-en">
+<meta property="og:title" content="Blog — Apple Mob Design" id="meta-og-title">
+<meta property="og:description" content="Articole despre design interior și mobilier la comandă." id="meta-og-desc">
+<meta property="og:image" content="https://applemobdesign.ro/images/logo/applemobdesign-logo.png" id="meta-og-image">
+<meta property="og:url" content="https://applemobdesign.ro/article.html" id="meta-og-url">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — Apple Mob Design" id="meta-tw-title">
+<meta name="twitter:description" content="Articole despre design interior și mobilier la comandă." id="meta-tw-desc">
+<meta name="twitter:image" content="https://applemobdesign.ro/images/logo/applemobdesign-logo.png" id="meta-tw-image">
 <link rel="icon" type="image/png" sizes="32x32" href="images/logo/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/logo/favicon-16x16.png">
 <link rel="apple-touch-icon" href="images/logo/apple-touch-icon.png">
@@ -28,6 +33,7 @@
 <body>
 
 <!-- MOBILE MENU -->
+
 <div class="mob-menu" id="mobMenu">
   <span class="mob-close" onclick="closeMob()">×</span>
   <div class="mob-lang">
@@ -43,6 +49,7 @@
 </div>
 
 <!-- NAV -->
+
 <nav id="nav">
   <a href="index.html" class="nav-logo">
     <img src="images/logo/applemobdesign-logo.png" alt="AppleMob Design" height="48">
@@ -68,210 +75,97 @@
 </nav>
 
 <!-- ── ARTICLE HERO ── -->
-<div class="article-hero">
-  <div class="breadcrumb">
+
+<div class="article-hero" id="articleHero">
+  <div class="breadcrumb" id="articleBreadcrumb">
     <a href="index.html">Acasă</a>
     <span class="breadcrumb-sep">›</span>
     <a href="blog.html">Blog</a>
     <span class="breadcrumb-sep">›</span>
-    <span>Proiecte Recente</span>
+    <span id="breadcrumbCat">...</span>
   </div>
-  <div class="article-cat-pill">Proiecte Recente</div>
-  <h1 class="article-main-title">
-    Bucătărie modernă cu insulă în <em>Baia Mare</em> —<br>de la concept la realitate
+  <div class="article-cat-pill" id="articleCatPill"></div>
+  <h1 class="article-main-title" id="articleTitle">
+    <span style="opacity:0.3">Se încarcă...</span>
   </h1>
   <div class="article-main-meta">
     <div class="meta-author">
-      <div class="meta-avatar">D</div>
+      <div class="meta-avatar" id="metaAvatar">D</div>
       <div>
-        <div class="meta-author-name">Daniel Marosan</div>
+        <div class="meta-author-name" id="metaAuthorName">Daniel Marosan</div>
         <div class="meta-author-role">Director Executiv & Designer</div>
       </div>
     </div>
     <div class="meta-sep"></div>
-    <div class="meta-item">
+    <div class="meta-item" id="metaDate">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      15 Ianuarie 2025
+      <span id="metaDateText">...</span>
     </div>
     <div class="meta-sep"></div>
-    <div class="meta-item">
+    <div class="meta-item" id="metaReadTime">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-      7 min lectură
+      <span id="metaReadTimeText">...</span>
     </div>
   </div>
 </div>
 
 <!-- ── COVER IMAGE ── -->
-<div class="article-cover">
-  <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6789-HDR-Edit.jpg" alt="Bucătărie modernă cu insulă Baia Mare — Apple Mob Design">
-  <div class="cover-caption">Bucătărie la comandă, 28mp, Baia Mare 2024 — Apple Mob Design</div>
+
+<div class="article-cover" id="articleCover" style="display:none">
+  <img id="articleCoverImg" src="" alt="">
+  <div class="cover-caption" id="articleCoverCaption"></div>
 </div>
 
 <!-- ── ARTICLE LAYOUT ── -->
+
 <div class="article-layout">
 
   <!-- CONTENT -->
-  <article class="article-content">
 
-    <p>Când familia Ionescu ne-a contactat în primăvara lui 2024, bucătăria lor arăta exact ca în 1994 — dulapuri din PAL melaminat maro, blat din granit negru și o chiuvetă sub fereastră care bloca complet circulația. Spațiul era de 28mp dar se simțea ca un coridor îngust.</p>
-
-    <p>Provocarea noastră: să transformăm acest spațiu într-o bucătărie contemporană cu insulă centrală, fără a muta nicio conductă și cu un buget rezonabil. Iată cum am făcut-o.</p>
-
-    <div class="tip-box">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
-      <div class="tip-text"><strong>Sfat profesionist:</strong> Înainte de orice proiect de bucătărie, fă o fotografiere completă a spațiului — inclusiv instalații, poziția prizelor și direcția de deschidere a ușilor. Economisești minimum 2 săptămâni de revizuiri.</div>
+  <article class="article-content" id="articleContent">
+    <div style="padding:60px 0;text-align:center;color:var(--text-light);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;margin:0 auto 12px;display:block;opacity:0.4"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+      Se încarcă articolul...
     </div>
-
-    <h2 id="concept">Faza 1 — <em>Conceptul și Măsurătorile</em></h2>
-
-    <p>Prima vizită la client a durat 3 ore. Am măsurat tot — nu doar dimensiunile bucătăriei, ci și înălțimea tavanului în fiecare colț (diferă mai des decât crezi), pozițiile centralei termice, ale țevilor de gaz și ale cablurilor electrice.</p>
-
-    <p>Am propus trei concepte în programul de design 3D. Clientul a ales varianta cu insula perpendiculară pe fereastra principală — decizie excelentă, pentru că permite lumina naturală să ajungă pe toată suprafața de lucru.</p>
-
-    <div class="article-img-full">
-      <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6636-HDR-Edit.jpg" alt="Design 3D bucătărie Baia Mare" loading="lazy">
-    </div>
-    <div class="img-caption">Render 3D final — varianta aprobată de client înainte de producție</div>
-
-    <h2 id="materiale">Faza 2 — <em>Alegerea Materialelor</em></h2>
-
-    <p>Pentru fronturi am ales MDF vopsit mat în nuanța Alb Pur RAL 9010. Nu e cea mai ieftină opțiune, dar este cea mai rezistentă la grăsimi și amprente — esențial pentru o bucătărie cu insula care devine centrul de activitate al casei.</p>
-
-    <h3>Ce am folosit în acest proiect</h3>
-    <ul>
-      <li><strong>Corpuri:</strong> PAL Egger 18mm cu cant ABS 2mm — rezistă la umiditate și impact</li>
-      <li><strong>Fronturi:</strong> MDF vopsit mat RAL 9010, grosime 19mm, finisaj soft-touch</li>
-      <li><strong>Blat:</strong> Quartz alb cu venă gri subtilă, 30mm grosime, rezistent la zgârieturi și căldură</li>
-      <li><strong>Feronerie:</strong> Sisteme Blum Legrabox pentru sertare, Clip Top pentru uși</li>
-      <li><strong>Chiuvetă:</strong> Franke inox satinat 1.5 cuve, montaj sub blat</li>
-      <li><strong>Electrocasnice:</strong> Teka — cuptor cu aburi, plită inductivă și hotă incorporată în insula</li>
-    </ul>
-
-    <div class="pull-quote">
-      <p>"Nu există materiale perfecte — există materiale potrivite pentru stilul tău de viață. O familie cu doi copii mici are nevoie de alte finisaje decât un cuplu fără copii."</p>
-    </div>
-
-    <h2 id="productie">Faza 3 — <em>Producția în Atelier</em></h2>
-
-    <p>Producția a durat 3 săptămâni. Toate piesele au fost tăiate CNC în atelierul nostru din Baia Mare — precizie la 0.1mm. Fronturi vopsite separat, cu 3 straturi de vopsea mat și un strat de lac de protecție UV.</p>
-
-    <p>Insula a fost asamblată în atelier și testată complet înainte de transport — verificăm că toate sertarele funcționează corect, că distanțele sunt exacte și că fronturi sunt aliniate perfect.</p>
-
-    <div class="article-img-grid">
-      <div class="article-img-full">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6679-HDR.jpg" alt="Producție atelier Baia Mare" loading="lazy">
-        <div class="img-caption">Atelier CNC — tăiere precisă</div>
-      </div>
-      <div class="article-img-full">
-        <img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6813.jpg" alt="Montaj bucătărie" loading="lazy">
-        <div class="img-caption">Asamblare finală în spațiu</div>
-      </div>
-    </div>
-
-    <h2 id="montaj">Faza 4 — <em>Montajul Final</em></h2>
-
-    <p>Montajul a durat 2 zile. Echipa de 3 persoane a montat mai întâi corpurile de jos, apoi insula, apoi corpurile superioare. Ultimul pas: instalarea electrocasnicelor și racordarea la rețeaua de gaz și apă — efectuată de instalatorul nostru autorizat.</p>
-
-    <p>La final am făcut o curățenie completă și o prezentare pas cu pas a tuturor funcționalităților — de la setările cuptorului cu aburi până la instrucțiunile de întreținere a fronturilor mat.</p>
-
-    <div class="tip-box">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-      <div class="tip-text"><strong>Rezultatul final:</strong> Clientul a dat un singur feedback după predare — „E mai frumos decât în render." Ăsta e scopul fiecărui proiect Apple Mob Design.</div>
-    </div>
-
-    <!-- Tags -->
-    <div class="article-tags">
-      <span class="article-tag">bucatarie-la-comanda</span>
-      <span class="article-tag">insula-bucatarie</span>
-      <span class="article-tag">MDF-vopsit</span>
-      <span class="article-tag">Blum</span>
-      <span class="article-tag">design-interior</span>
-      <span class="article-tag">Baia-Mare</span>
-    </div>
-
-    <!-- Share -->
-    <div class="article-share">
-      <span class="share-label">Distribuie</span>
-      <a class="share-btn" href="#" title="Facebook">FB</a>
-      <a class="share-btn" href="#" title="WhatsApp">WA</a>
-      <a class="share-btn" href="#" title="LinkedIn">LI</a>
-      <a class="share-btn" href="#" title="Email">✉</a>
-    </div>
-
   </article>
 
   <!-- SIDEBAR -->
+
   <aside class="article-sidebar">
 
-    <!-- TOC -->
-    <div class="sidebar-card">
-      <div class="sidebar-title">Cuprins</div>
-      <ul class="toc-list">
-        <li><a href="#concept">Conceptul și Măsurătorile</a></li>
-        <li><a href="#materiale">Alegerea Materialelor</a></li>
-        <li><a href="#productie">Producția în Atelier</a></li>
-        <li><a href="#montaj">Montajul Final</a></li>
-      </ul>
-    </div>
+```
+<!-- TOC -->
+<div class="sidebar-card" id="tocCard">
+  <div class="sidebar-title" id="tocTitle">Cuprins</div>
+  <ul class="toc-list" id="tocList"></ul>
+</div>
 
-    <!-- CTA -->
-    <div class="sidebar-cta">
-      <div class="sidebar-cta-title">Vrei o bucătărie similară?</div>
-      <div class="sidebar-cta-sub">Solicită o consultație gratuită și îți facem un proiect 3D fără obligații.</div>
-      <a href="index.html#contact" class="sidebar-cta-btn">
-        Solicită Ofertă
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-    </div>
+<!-- CTA -->
+<div class="sidebar-cta" id="sidebarCta">
+  <div class="sidebar-cta-title" id="sidebarCtaTitle">Vrei un proiect similar?</div>
+  <div class="sidebar-cta-sub" id="sidebarCtaSub">Solicită o consultație gratuită și îți facem un proiect 3D fără obligații.</div>
+  <a href="index.html#contact" class="sidebar-cta-btn">
+    <span id="sidebarCtaBtn">Solicită Ofertă</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
 
-    <!-- Related -->
-    <div class="sidebar-card">
-      <div class="sidebar-title">Articole Similare</div>
-      <a href="article.html" class="related-art">
-        <div class="related-thumb"><img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6636-HDR-Edit.jpg" alt="Dormitor" loading="lazy"></div>
-        <div class="related-info">
-          <div class="related-cat">Sfaturi Design</div>
-          <div class="related-title">5 greșeli pe care le faci când alegi mobilier dormitor</div>
-        </div>
-      </a>
-      <a href="article.html" class="related-art">
-        <div class="related-thumb"><img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6813.jpg" alt="Materiale" loading="lazy"></div>
-        <div class="related-info">
-          <div class="related-cat">Ghid Materiale</div>
-          <div class="related-title">PAL melaminat vs MDF vopsit — ce alegi?</div>
-        </div>
-      </a>
-      <a href="article.html" class="related-art">
-        <div class="related-thumb"><img src="https://applemobdesign.ro/wp-content/uploads/2021/12/DSC_6544-HDR-Edit.jpg" alt="Blum" loading="lazy"></div>
-        <div class="related-info">
-          <div class="related-cat">Ghid Materiale</div>
-          <div class="related-title">De ce folosim sisteme Blum în toate proiectele noastre</div>
-        </div>
-      </a>
-    </div>
+<!-- Related -->
+<div class="sidebar-card" id="relatedCard">
+  <div class="sidebar-title" id="relatedTitle">Articole Similare</div>
+  <div id="relatedList"></div>
+</div>
+```
 
   </aside>
 </div>
 
 <!-- PREV / NEXT -->
-<div class="article-nav">
-  <a href="article.html" class="art-nav-card prev">
-    <div class="art-nav-dir">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Articolul anterior
-    </div>
-    <div class="art-nav-title">PAL melaminat vs MDF vopsit — ce alegi pentru bucătăria ta?</div>
-  </a>
-  <a href="article.html" class="art-nav-card next">
-    <div class="art-nav-dir">
-      Articolul următor
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </div>
-    <div class="art-nav-title">5 greșeli pe care le fac toți clienții când aleg mobilier dormitor</div>
-  </a>
-</div>
+
+<div class="article-nav" id="articleNav"></div>
 
 <!-- NEWSLETTER -->
+
 <div class="newsletter">
   <div class="nl-left">
     <div class="nl-tag">Newsletter</div>
@@ -284,6 +178,7 @@
 </div>
 
 <!-- FOOTER -->
+
 <footer>
   <div class="footer-grid">
     <div>
@@ -351,86 +246,458 @@ const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
 function openMob() { document.getElementById('mobMenu').classList.add('open'); }
 function closeMob() { document.getElementById('mobMenu').classList.remove('open'); }
-
-// TOC active state on scroll
-const tocLinks = document.querySelectorAll('.toc-list a');
-const sections = ['concept','materiale','productie','montaj'].map(id => document.getElementById(id)).filter(Boolean);
-window.addEventListener('scroll', () => {  let activeIdx = 0;
-  sections.forEach((sec, i) => {
-    if (sec && window.scrollY + 120 >= sec.offsetTop) activeIdx = i;
-  });
-  tocLinks.forEach((l, i) => l.classList.toggle('active', i === activeIdx));
-});
 </script>
 
 <script>
-// ── Supabase newsletter ──
+// ══════════════════════════════════════════════════════
+// ARTICLE — Dynamic engine powered by Supabase
+// Every article.html?slug=some-slug renders from the DB
+// ══════════════════════════════════════════════════════
+
 const { createClient } = window.supabase;
 const db = createClient(
   'https://nhuxlpwjuqeolflrugvu.supabase.co',
   'sb_publishable_2J0zhzybrJ0p3AZ5emecpw_refeMVCK'
 );
 
-// ── Newsletter form ──
-document.addEventListener('DOMContentLoaded', () => {
-  const btn   = document.querySelector('.nl-btn');
-  const input = document.querySelector('.nl-input');
-  if (btn && input) {
-    btn.addEventListener('click', async () => {
-      const email = input.value.trim();
-      if (!email || !email.includes('@')) {
-        alert('Introduceți o adresă de email validă.');
-        return;
-      }
-      const origText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Se procesează…';
-      const { error } = await db.from('newsletter_subscribers').insert([{ email }]);
-      if (error?.code === '23505') {
-        btn.textContent = 'Ești deja abonat!';
-        btn.disabled = false;
-      } else if (error) {
-        alert('Eroare. Încearcă din nou.');
-        btn.disabled = false;
-        btn.textContent = origText;
-      } else {
-        btn.textContent = '✓ Mulțumim!';
-        input.value = '';
-      }
-    });
+// ── Category config ──────────────────────────────────
+const CAT = {
+  ro: { inspiratie: 'Sfaturi & Inspirație', proiecte: 'Proiecte Recente', materiale: 'Ghiduri Materiale', 'despre-noi': 'Despre Noi' },
+  en: { inspiratie: 'Tips & Inspiration',   proiecte: 'Recent Projects',   materiale: 'Material Guides',   'despre-noi': 'About Us'   }
+};
+
+// ── CTA copy per category ────────────────────────────
+const CTA = {
+  ro: {
+    bucatarii:   { title: 'Vrei o bucătărie similară?',  sub: 'Solicită o consultație gratuită și îți facem un proiect 3D fără obligații.', btn: 'Solicită Ofertă' },
+    dormitoare:  { title: 'Vrei un dormitor la comandă?', sub: 'Proiectăm și executăm dormitorul tău complet, de la concept la montaj.', btn: 'Solicită Ofertă' },
+    living:      { title: 'Vrei un living personalizat?', sub: 'Creăm mobilier de living unic, adaptat spațiului și stilului tău.', btn: 'Solicită Ofertă' },
+    default:     { title: 'Vrei un proiect similar?',    sub: 'Solicită o consultație gratuită și îți facem un proiect 3D fără obligații.', btn: 'Solicită Ofertă' }
+  },
+  en: {
+    bucatarii:   { title: 'Want a similar kitchen?',   sub: 'Request a free consultation and we'll create a 3D project with no obligations.', btn: 'Request a Quote' },
+    dormitoare:  { title: 'Want a custom bedroom?',    sub: 'We design and build your complete bedroom, from concept to installation.', btn: 'Request a Quote' },
+    living:      { title: 'Want a custom living room?', sub: 'We create unique living room furniture, tailored to your space and style.', btn: 'Request a Quote' },
+    default:     { title: 'Want a similar project?',   sub: 'Request a free consultation and we'll create a 3D project with no obligations.', btn: 'Request a Quote' }
+  }
+};
+
+// ── Translations ─────────────────────────────────────
+const T = {
+  ro: {
+    loading: 'Se încarcă articolul...',
+    notFound: 'Articolul nu a fost găsit.',
+    tocTitle: 'Cuprins',
+    relatedTitle: 'Articole Similare',
+    minRead: 'min lectură',
+    shareLabel: 'Distribuie',
+    prevLabel: 'Articolul anterior',
+    nextLabel: 'Articolul următor',
+    breadHome: 'Acasă',
+    noRelated: 'Explorează blogul pentru mai multe articole.',
+  },
+  en: {
+    loading: 'Loading article...',
+    notFound: 'Article not found.',
+    tocTitle: 'Contents',
+    relatedTitle: 'Related Articles',
+    minRead: 'min read',
+    shareLabel: 'Share',
+    prevLabel: 'Previous article',
+    nextLabel: 'Next article',
+    breadHome: 'Home',
+    noRelated: 'Explore the blog for more articles.',
+  }
+};
+
+// ── State ────────────────────────────────────────────
+let _lang  = 'ro';
+let _post  = null;
+let _allPosts = [];
+
+// ── Helpers ──────────────────────────────────────────
+function formatDate(iso, lang) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString(lang === 'ro' ? 'ro-RO' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function getTitle(post, lang)   { return (lang === 'en' && post.title_en)   ? post.title_en   : post.title_ro; }
+function getExcerpt(post, lang) { return (lang === 'en' && post.excerpt_en) ? post.excerpt_en : (post.excerpt_ro || ''); }
+function getContent(post, lang) { return (lang === 'en' && post.content_en) ? post.content_en : (post.content_ro || ''); }
+
+// ── Inject / update JSON-LD schema ───────────────────
+function injectSchema(post, lang) {
+  // Remove any previously injected schema
+  document.querySelectorAll('script[data-schema="dynamic"]').forEach(el => el.remove());
+
+  const title   = getTitle(post, lang);
+  const excerpt = getExcerpt(post, lang);
+  const url     = `https://applemobdesign.ro/article.html?slug=${post.slug}`;
+  const catLabel = CAT[lang]?.[post.category] || post.category;
+
+  const blogPosting = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description: excerpt,
+    image: { '@type': 'ImageObject', url: post.cover_image || 'https://applemobdesign.ro/images/logo/applemobdesign-logo.png' },
+    url,
+    datePublished: post.published_at,
+    dateModified: post.published_at,
+    author: {
+      '@type': 'Person',
+      name: post.author || 'Daniel Marosan',
+      jobTitle: 'Director Executiv & Designer',
+      url: 'https://ro.linkedin.com/in/daniel-marosan-52a08b191'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Apple Mob Design',
+      url: 'https://applemobdesign.ro',
+      logo: { '@type': 'ImageObject', url: 'https://applemobdesign.ro/images/logo/applemobdesign-logo.png' }
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    articleSection: catLabel,
+    inLanguage: lang === 'ro' ? 'ro-RO' : 'en-US',
+    timeRequired: `PT${post.read_time_min || 5}M`
+  };
+
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: lang === 'ro' ? 'Acasă' : 'Home', item: 'https://applemobdesign.ro/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://applemobdesign.ro/blog.html' },
+      { '@type': 'ListItem', position: 3, name: title, item: url }
+    ]
+  };
+
+  [blogPosting, breadcrumb].forEach(schema => {
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.dataset.schema = 'dynamic';
+    s.textContent = JSON.stringify(schema);
+    document.head.appendChild(s);
+  });
+}
+
+// ── Update <head> meta tags ───────────────────────────
+function updateMeta(post, lang) {
+  const title   = getTitle(post, lang);
+  const excerpt = getExcerpt(post, lang);
+  const url     = `https://applemobdesign.ro/article.html?slug=${post.slug}`;
+  const img     = post.cover_image || 'https://applemobdesign.ro/images/logo/applemobdesign-logo.png';
+  const pageTitle = `${title} — Apple Mob Design Blog`;
+
+  document.title = pageTitle;
+  document.documentElement.lang = lang;
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.content = val; };
+  const setHref = (id, val) => { const el = document.getElementById(id); if (el) el.href = val; };
+
+  document.querySelector('meta[name="description"]').content = excerpt;
+  setHref('meta-canonical', url);
+  setHref('meta-hreflang-ro', `https://applemobdesign.ro/article.html?slug=${post.slug}`);
+  setHref('meta-hreflang-en', `https://applemobdesign.ro/article.html?slug=${post.slug}`);
+  set('meta-og-title', pageTitle);
+  set('meta-og-desc', excerpt);
+  set('meta-og-image', img);
+  set('meta-og-url', url);
+  set('meta-tw-title', pageTitle);
+  set('meta-tw-desc', excerpt);
+  set('meta-tw-image', img);
+}
+
+// ── Generate TOC from rendered h2 tags ───────────────
+function buildTOC(lang) {
+  const content = document.getElementById('articleContent');
+  const tocList = document.getElementById('tocList');
+  const tocTitle = document.getElementById('tocTitle');
+  const tocCard = document.getElementById('tocCard');
+  if (!content || !tocList) return;
+
+  tocTitle.textContent = T[lang].tocTitle;
+  const headings = content.querySelectorAll('h2');
+
+  if (headings.length === 0) { tocCard.style.display = 'none'; return; }
+  tocCard.style.display = '';
+
+  // Ensure each h2 has an id
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = `section-${i}`;
+  });
+
+  tocList.innerHTML = Array.from(headings).map(h =>
+    `<li><a href="#${h.id}">${h.textContent}</a></li>`
+  ).join('');
+
+  // Active state on scroll
+  const links = tocList.querySelectorAll('a');
+  window.addEventListener('scroll', () => {
+    let activeIdx = 0;
+    headings.forEach((h, i) => { if (window.scrollY + 140 >= h.offsetTop) activeIdx = i; });
+    links.forEach((l, i) => l.classList.toggle('active', i === activeIdx));
+  });
+}
+
+// ── Render the sidebar CTA ────────────────────────────
+function renderCTA(post, lang) {
+  const catKey = post.category === 'proiecte' ? 'default' : (CTA[lang][post.category] ? post.category : 'default');
+  const c = CTA[lang][catKey];
+  document.getElementById('sidebarCtaTitle').textContent = c.title;
+  document.getElementById('sidebarCtaSub').textContent   = c.sub;
+  document.getElementById('sidebarCtaBtn').textContent   = c.btn;
+}
+
+// ── Render related articles ───────────────────────────
+function renderRelated(posts, currentId, lang) {
+  const container = document.getElementById('relatedList');
+  const title     = document.getElementById('relatedTitle');
+  const t = T[lang];
+  if (title) title.textContent = t.relatedTitle;
+  if (!container) return;
+
+  const related = posts.filter(p => p.id !== currentId).slice(0, 3);
+  if (related.length === 0) {
+    container.innerHTML = `<p style="font-size:0.82rem;color:var(--text-light);padding:8px 0">${t.noRelated}</p>`;
+    return;
   }
 
-  // ── Restore language preference ──
-  const saved = localStorage.getItem('amd_lang') || 'ro';
-  setLang(saved);
-});
+  container.innerHTML = related.map(p => {
+    const rtitle = getTitle(p, lang);
+    const catLabel = CAT[lang]?.[p.category] || p.category;
+    return `<a href="article.html?slug=${p.slug}" class="related-art">
+      <div class="related-thumb">
+        <img src="${p.cover_image || ''}" alt="${rtitle}" loading="lazy"
+          onerror="this.parentElement.style.background='var(--gray)'">
+      </div>
+      <div class="related-info">
+        <div class="related-cat">${catLabel}</div>
+        <div class="related-title">${rtitle}</div>
+      </div>
+    </a>`;
+  }).join('');
+}
 
-// ── Language switching ──
+// ── Render prev / next navigation ────────────────────
+function renderPrevNext(posts, currentId, lang) {
+  const nav = document.getElementById('articleNav');
+  if (!nav) return;
+  const t = T[lang];
+
+  const idx  = posts.findIndex(p => p.id === currentId);
+  const next = idx > 0            ? posts[idx - 1] : null; // newer
+  const prev = idx < posts.length - 1 ? posts[idx + 1] : null; // older
+
+  if (!prev && !next) { nav.style.display = 'none'; return; }
+  nav.style.display = '';
+
+  nav.innerHTML = `
+    ${prev ? `<a href="article.html?slug=${prev.slug}" class="art-nav-card prev">
+      <div class="art-nav-dir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        ${t.prevLabel}
+      </div>
+      <div class="art-nav-title">${getTitle(prev, lang)}</div>
+    </a>` : '<div></div>'}
+    ${next ? `<a href="article.html?slug=${next.slug}" class="art-nav-card next">
+      <div class="art-nav-dir">
+        ${t.nextLabel}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="art-nav-title">${getTitle(next, lang)}</div>
+    </a>` : '<div></div>'}
+  `;
+}
+
+// ── Render share buttons ──────────────────────────────
+function renderShare(post, lang) {
+  const t = T[lang];
+  const url     = encodeURIComponent(`https://applemobdesign.ro/article.html?slug=${post.slug}`);
+  const title   = encodeURIComponent(getTitle(post, lang));
+  return `<div class="article-share">
+    <span class="share-label">${t.shareLabel}</span>
+    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener" title="Facebook">FB</a>
+    <a class="share-btn" href="https://wa.me/?text=${title}%20${url}" target="_blank" rel="noopener" title="WhatsApp">WA</a>
+    <a class="share-btn" href="https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}" target="_blank" rel="noopener" title="LinkedIn">LI</a>
+    <a class="share-btn" href="mailto:?subject=${title}&body=${url}" title="Email">✉</a>
+  </div>`;
+}
+
+// ── Render the full article ───────────────────────────
+function renderArticle(post, lang) {
+  const t       = T[lang];
+  const title   = getTitle(post, lang);
+  const content = getContent(post, lang);
+  const catLabel = CAT[lang]?.[post.category] || post.category;
+
+  // Hero
+  document.getElementById('breadcrumbCat').textContent    = catLabel;
+  document.getElementById('articleCatPill').textContent   = catLabel;
+  document.getElementById('articleTitle').textContent     = title;
+  document.getElementById('metaAvatar').textContent       = (post.author || 'D').charAt(0).toUpperCase();
+  document.getElementById('metaAuthorName').textContent   = post.author || 'Daniel Marosan';
+  document.getElementById('metaDateText').textContent     = formatDate(post.published_at, lang);
+  document.getElementById('metaReadTimeText').textContent = `${post.read_time_min || 5} ${t.minRead}`;
+
+  // Cover image
+  const coverWrap = document.getElementById('articleCover');
+  if (post.cover_image) {
+    document.getElementById('articleCoverImg').src = post.cover_image;
+    document.getElementById('articleCoverImg').alt = title;
+    coverWrap.style.display = '';
+  } else {
+    coverWrap.style.display = 'none';
+  }
+
+  // Article content + share
+  const articleEl = document.getElementById('articleContent');
+  if (content) {
+    articleEl.innerHTML = content + renderShare(post, lang);
+  } else {
+    articleEl.innerHTML = `<p style="color:var(--text-light);padding:40px 0;text-align:center">
+      ${lang === 'ro' ? 'Conținut indisponibil pentru această limbă.' : 'Content not available in this language.'}
+    </p>` + renderShare(post, lang);
+  }
+
+  // TOC — built after content is in DOM
+  buildTOC(lang);
+
+  // Sidebar CTA
+  renderCTA(post, lang);
+
+  // Related (same category, exclude self)
+  const related = _allPosts.filter(p => p.category === post.category && p.id !== post.id);
+  const fallback = related.length >= 3 ? related : [...related, ..._allPosts.filter(p => p.id !== post.id && !related.find(r => r.id === p.id))];
+  renderRelated(fallback, post.id, lang);
+
+  // Prev / Next
+  renderPrevNext(_allPosts, post.id, lang);
+}
+
+// ── Language switcher ─────────────────────────────────
 function setLang(lang) {
+  _lang = lang;
   localStorage.setItem('amd_lang', lang);
 
-  // Update lang button states
-  document.querySelectorAll('.lang-btn').forEach((b, i) => {
-    b.classList.toggle('active', (lang === 'ro' && i === 0) || (lang === 'en' && i === 1));
-  });
-  document.querySelectorAll('.mob-lang-btn').forEach((b, i) => {
-    b.classList.toggle('active', (lang === 'ro' && i === 0) || (lang === 'en' && i === 1));
+  document.querySelectorAll('.lang-btn, .mob-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
   });
 
-  // Newsletter text
   const nlTitle = document.querySelector('.nl-title');
   const nlBtn   = document.querySelector('.nl-btn');
   const nlInput = document.querySelector('.nl-input');
   if (lang === 'en') {
     if (nlTitle) nlTitle.innerHTML = 'Subscribe to our newsletter<br>for the latest interior design trends';
-    if (nlBtn && (nlBtn.textContent === 'Înscrie-te' || nlBtn.textContent === 'Subscribe')) nlBtn.textContent = 'Subscribe';
+    if (nlBtn && !nlBtn.disabled)  nlBtn.textContent = 'Subscribe';
     if (nlInput) nlInput.placeholder = 'Your email address';
   } else {
     if (nlTitle) nlTitle.innerHTML = 'Înscrie-te și primești articole noi<br>direct în căsuța ta de email';
-    if (nlBtn && (nlBtn.textContent === 'Înscrie-te' || nlBtn.textContent === 'Subscribe')) nlBtn.textContent = 'Înscrie-te';
+    if (nlBtn && !nlBtn.disabled)  nlBtn.textContent = 'Înscrie-te';
     if (nlInput) nlInput.placeholder = 'Adresa ta de email';
   }
+
+  if (_post) {
+    updateMeta(_post, lang);
+    injectSchema(_post, lang);
+    renderArticle(_post, lang);
+  }
 }
+
+// ── Newsletter ────────────────────────────────────────
+function setupNewsletter() {
+  const btn   = document.querySelector('.nl-btn');
+  const input = document.querySelector('.nl-input');
+  if (!btn || !input) return;
+  btn.addEventListener('click', async () => {
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      alert(_lang === 'ro' ? 'Introduceți o adresă de email validă.' : 'Please enter a valid email address.');
+      return;
+    }
+    const orig = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = _lang === 'ro' ? 'Se procesează…' : 'Processing…';
+    const { error } = await db.from('newsletter_subscribers').insert([{ email }]);
+    if (error?.code === '23505') {
+      btn.textContent = _lang === 'ro' ? 'Ești deja abonat!' : 'Already subscribed!';
+      btn.disabled = false;
+    } else if (error) {
+      alert(_lang === 'ro' ? 'Eroare. Încearcă din nou.' : 'Error. Please try again.');
+      btn.disabled = false;
+      btn.textContent = orig;
+    } else {
+      btn.textContent = _lang === 'ro' ? '✓ Mulțumim!' : '✓ Thank you!';
+      input.value = '';
+    }
+  });
+}
+
+// ── Main init ─────────────────────────────────────────
+async function init() {
+  _lang = localStorage.getItem('amd_lang') || 'ro';
+
+  // Apply lang UI chrome immediately
+  document.querySelectorAll('.lang-btn, .mob-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === _lang);
+  });
+
+  // Get slug from URL — e.g. article.html?slug=bucatarie-moderna-insula
+  const slug = new URLSearchParams(window.location.search).get('slug');
+
+  // Fetch all published posts for prev/next and related
+  const { data: allPosts, error: allError } = await db
+    .from('blog_posts')
+    .select('id, title_ro, title_en, slug, excerpt_ro, excerpt_en, cover_image, category, author, read_time_min, featured, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+
+  if (allError) console.warn('blog_posts (all):', allError.message);
+  _allPosts = allPosts || [];
+
+  // Fetch target post — by slug, or first post if no slug provided
+  let post = null;
+  if (slug) {
+    const { data, error } = await db
+      .from('blog_posts')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .single();
+    if (error) console.warn('blog_posts (single):', error.message);
+    post = data;
+  } else if (_allPosts.length > 0) {
+    // No slug — load the most recent/featured post as fallback
+    post = _allPosts.find(p => p.featured) || _allPosts[0];
+    if (post) {
+      // Fetch full content for the fallback post
+      const { data } = await db.from('blog_posts').select('*').eq('id', post.id).single();
+      if (data) post = data;
+    }
+  }
+
+  // Not found — redirect to blog
+  if (!post) {
+    document.getElementById('articleTitle').textContent = T[_lang].notFound;
+    document.getElementById('articleContent').innerHTML = `
+      <p style="text-align:center;padding:40px 0;color:var(--text-light)">
+        ${_lang === 'ro' ? 'Articolul nu a fost găsit. ' : 'Article not found. '}
+        <a href="blog.html" style="color:var(--accent)">${_lang === 'ro' ? 'Înapoi la blog' : 'Back to blog'}</a>
+      </p>`;
+    return;
+  }
+
+  _post = post;
+
+  // Update <head>, inject schema, render
+  updateMeta(post, _lang);
+  injectSchema(post, _lang);
+  renderArticle(post, _lang);
+  setupNewsletter();
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
 </body>
 </html>
