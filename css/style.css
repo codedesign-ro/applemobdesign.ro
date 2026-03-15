@@ -655,18 +655,17 @@ nav.scrolled {
 .ci-icon svg { width: 18px; height: 18px; }
 .ci-label { font-size: 0.68rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3px; }
 .ci-val { font-size: 0.9rem; font-weight: 600; color: var(--text); }
-.daniel-card {
-  background: var(--green);
-  border-radius: var(--radius-xl); padding: 28px;
-  display: flex; align-items: center; gap: 18px; margin-top: 0;
-}
 .team-cards { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
 .team-avatar-initial {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.2);
-  color: white; font-size: 1.4rem; font-weight: 700;
-  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  color: white; font-size: 1.5rem; font-weight: 700; border-radius: 50%;
+}
+.daniel-card {
+  background: var(--green);
+  border-radius: var(--radius-xl); padding: 28px;
+  display: flex; align-items: center; gap: 18px;
 }
 .daniel-photo {
   width: 64px; height: 64px; border-radius: 50%;
@@ -833,14 +832,12 @@ footer {
   .services-grid { grid-template-columns: 1fr; }
   .process-grid { grid-template-columns: 1fr; }
   .brands-row { gap: 8px; }
-  .brand-card { min-width: 110px; flex-direction: column; align-items: center; text-align: center; }
+  .brand-card { min-width: 110px; align-items: center; text-align: center; }
   .brand-name { text-align: center; }
-  .brand-tag { text-align: center; }
+  .brand-tag  { text-align: center; }
   .brands-title { text-align: center; }
   .brands-title .section-tag { justify-content: center; }
-  .team-cards { gap: 12px; }
-  .daniel-card { padding: 20px; gap: 12px; }
-  .daniel-info { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .portfolio-grid {
     display: grid; grid-template-columns: 1fr 1fr;
     grid-auto-rows: 200px; gap: 10px;
   }
@@ -876,6 +873,9 @@ footer {
   .contact-grid { gap: 32px; }
   .ci-card > div:last-child { flex: 1; min-width: 0; overflow-wrap: break-word; }
   .ci-val { overflow-wrap: break-word; word-break: break-word; }
+  .daniel-card { padding: 20px; gap: 12px; }
+  .daniel-info { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .team-cards  { gap: 10px; }
   .contact-form-wrap { padding: 24px 20px; }
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full { grid-column: span 1; }
