@@ -929,10 +929,10 @@ footer {
   .portfolio-filters { width: 100%; }
   .portfolio-grid {
     display: grid; grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 220px; gap: 10px;
+    grid-auto-rows: minmax(220px, auto); gap: 10px;
   }
-  .p-item { grid-column: span 1 !important; grid-row: span 1 !important; min-height: 220px; border-radius: var(--radius-md); }
-  .p-item:nth-child(1) { grid-column: span 2 !important; min-height: 280px; order: -1; }
+  .p-item { grid-column: span 1 !important; grid-row: span 1 !important; height: 220px; border-radius: var(--radius-md); }
+  .p-item:nth-child(1) { grid-column: span 2 !important; height: 280px; order: -1; }
   .newsletter { margin: 0 16px; padding: 36px 24px; margin-bottom: 48px; }
   footer { padding: 48px 24px 24px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
