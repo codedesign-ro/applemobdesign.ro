@@ -948,9 +948,9 @@ footer {
   #about, #contact { overflow-x: hidden; }
   .about-float-card {
     position: absolute;
-    top: 50% !important;
+    top: calc(50% - 60px) !important;
     bottom: auto;
-    left: 16px;
+    left: 46px;
     right: auto;
     transform: none;
     margin: 0;
