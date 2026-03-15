@@ -381,7 +381,7 @@ nav.scrolled {
   bottom: auto;
   right: auto;
   margin: 0;
-  background: white;
+  background: #ffffff;
   box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
@@ -390,6 +390,8 @@ nav.scrolled {
   padding: 10px 16px;
   gap: 10px;
   border-radius: 12px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .about-float-icon {
   width: 42px; height: 42px; border-radius: 12px;
