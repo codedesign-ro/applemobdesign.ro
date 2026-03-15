@@ -948,22 +948,22 @@ footer {
   #about, #contact { overflow-x: hidden; }
   .about-float-card {
     position: absolute;
-    top: calc(50% - 60px) !important;
+    top: 52%;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: auto;
-    left: 46px;
     right: auto;
-    transform: none;
     margin: 0;
     white-space: nowrap;
     z-index: 10;
-    padding: 8px 12px;
-    gap: 8px;
-    border-radius: 10px;
+    padding: 10px 16px;
+    gap: 10px;
+    border-radius: 12px;
   }
-  .about-float-icon { width: 28px; height: 28px; border-radius: 8px; }
-  .about-float-icon svg { width: 14px; height: 14px; }
-  .about-float-num { font-size: 1rem; }
-  .about-float-label { font-size: 0.58rem; }
+  .about-float-icon { width: 36px; height: 36px; border-radius: 10px; }
+  .about-float-icon svg { width: 18px; height: 18px; }
+  .about-float-num { font-size: 1.2rem; }
+  .about-float-label { font-size: 0.65rem; }
   .about-grid { gap: 32px; }
   .about-right { width: 100%; max-width: 100%; }
   .about-features { margin: 20px 0; }
