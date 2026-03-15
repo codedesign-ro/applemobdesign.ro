@@ -497,10 +497,10 @@ tr:hover td { background: var(--off); }
     <!-- ── ECHIPA ── -->
     <div class="page" id="page-echipa">
       <div class="page-header">
-        <div class="page-title">Echipă &amp; Designeri</div>
+        <div class="page-title">Echipă & Designeri</div>
         <div class="page-sub">Gestionează cardurile de contact afișate în secțiunea de contact de pe site.</div>
       </div>
-      <button class="btn-primary" onclick="openTeamModal(null)" style="margin-bottom:20px;display:inline-flex;align-items:center;gap:8px;">
+      <button class="btn-primary" onclick="openTeamModal(null)" style="margin-bottom:20px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Adaugă Membru
       </button>
@@ -522,11 +522,11 @@ tr:hover td { background: var(--off); }
           </div>
           <div class="f-group">
             <label class="f-label">Rol (RO)</label>
-            <input type="text" class="f-input" id="tm-role-ro" placeholder="Director Executiv &amp; Designer">
+            <input type="text" class="f-input" id="tm-role-ro" placeholder="Director Executiv & Designer">
           </div>
           <div class="f-group">
             <label class="f-label">Rol (EN)</label>
-            <input type="text" class="f-input" id="tm-role-en" placeholder="Executive Director &amp; Designer">
+            <input type="text" class="f-input" id="tm-role-en" placeholder="Executive Director & Designer">
           </div>
           <div class="f-group full">
             <label class="f-label">Telefon</label>
@@ -541,13 +541,13 @@ tr:hover td { background: var(--off); }
             <input type="number" class="f-input" id="tm-order" value="1" min="1">
           </div>
           <div class="f-group" style="display:flex;align-items:center;gap:10px;margin-top:24px;">
-            <input type="checkbox" id="tm-active" checked style="width:16px;height:16px;accent-color:var(--green);cursor:pointer;">
+            <input type="checkbox" id="tm-active" checked style="width:16px;height:16px;accent-color:var(--green);">
             <label class="f-label" for="tm-active" style="margin:0;cursor:pointer;">Activ (vizibil pe site)</label>
           </div>
         </div>
         <div style="display:flex;gap:12px;margin-top:24px;">
           <button class="btn-primary" onclick="saveTeamMember()" style="flex:1;">Salvează</button>
-          <button class="btn-outline" onclick="closeTeamModal()" style="flex:0 0 auto;padding:10px 20px;border-radius:100px;border:1.5px solid var(--gray);font-size:0.85rem;font-weight:500;cursor:pointer;">Anulează</button>
+          <button class="btn-outline" onclick="closeTeamModal()" style="flex:0 0 auto;">Anulează</button>
         </div>
       </div>
     </div>
@@ -1397,30 +1397,27 @@ async function markMessageRead(id) {
 // ══════════════════════════════════════
 async function loadEchipa() {
   const el = document.getElementById('echipaList');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div>Se încarcă...</div>';
   const { data, error } = await sb.from('team_members').select('*').order('order_num');
-  if (error) { el.innerHTML = '<p style="color:red;">Eroare: ' + error.message + '</p>'; return; }
-  if (!data || !data.length) { el.innerHTML = '<p style="color:#888;">Niciun membru adăugat încă.</p>'; return; }
+  if (error || !data) { el.innerHTML = '<p style="color:red;">Eroare la încărcare.</p>'; return; }
+  if (!data.length) { el.innerHTML = '<p style="color:#888;">Niciun membru adăugat încă.</p>'; return; }
   el.innerHTML = data.map(m => `
-    <div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:20px;">
-      <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--green);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.2rem;">
-        ${m.photo_url
-          ? `<img src="${m.photo_url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.textContent='${m.name.charAt(0)}'">`
-          : m.name.charAt(0)}
+    <div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--green);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.1rem;">
+        ${m.photo_url ? `<img src="${m.photo_url}" style="width:100%;height:100%;object-fit:cover;">` : m.name.charAt(0)}
       </div>
-      <div style="flex:1;min-width:160px;">
-        <div style="font-weight:700;color:var(--text);font-size:0.95rem;">${m.name}</div>
-        <div style="font-size:0.8rem;color:var(--text-light);margin-top:2px;">${m.role_ro || '—'}</div>
-        <div style="font-size:0.8rem;color:var(--text-light);">${m.phone || '—'}</div>
+      <div style="flex:1;min-width:180px;">
+        <div style="font-weight:700;color:var(--text);">${m.name}</div>
+        <div style="font-size:0.8rem;color:var(--text-light);">${m.role_ro || ''}</div>
+        <div style="font-size:0.8rem;color:var(--text-light);">${m.phone || ''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
         ${m.is_active
           ? '<span class="badge badge-green">Activ</span>'
           : '<span class="badge badge-gray">Inactiv</span>'}
-        <button class="btn-icon" onclick='openTeamModal(${JSON.stringify(JSON.stringify(m))})' title="Editează">
+        <button class="btn-icon" onclick="openTeamModal(${JSON.stringify(JSON.stringify(m))})" title="Editează">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
-        <button class="btn-icon btn-icon-danger" onclick="deleteTeamMember('${m.id}', '${m.name.replace(/'/g, "\\'")}')" title="Șterge">
+        <button class="btn-icon btn-icon-danger" onclick="deleteTeamMember('${m.id}', '${m.name}')" title="Șterge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
         </button>
       </div>
@@ -1431,24 +1428,24 @@ function openTeamModal(jsonStr) {
   document.getElementById('teamModal').classList.add('active');
   if (!jsonStr) {
     document.getElementById('teamModalTitle').textContent = 'Adaugă Membru';
-    document.getElementById('tm-id').value      = '';
-    document.getElementById('tm-name').value    = '';
+    document.getElementById('tm-id').value = '';
+    document.getElementById('tm-name').value = '';
     document.getElementById('tm-role-ro').value = '';
     document.getElementById('tm-role-en').value = '';
-    document.getElementById('tm-phone').value   = '';
-    document.getElementById('tm-photo').value   = '';
-    document.getElementById('tm-order').value   = '99';
+    document.getElementById('tm-phone').value = '';
+    document.getElementById('tm-photo').value = '';
+    document.getElementById('tm-order').value = '99';
     document.getElementById('tm-active').checked = true;
   } else {
     const m = JSON.parse(jsonStr);
     document.getElementById('teamModalTitle').textContent = 'Editează Membru';
-    document.getElementById('tm-id').value      = m.id      || '';
-    document.getElementById('tm-name').value    = m.name    || '';
+    document.getElementById('tm-id').value = m.id || '';
+    document.getElementById('tm-name').value = m.name || '';
     document.getElementById('tm-role-ro').value = m.role_ro || '';
     document.getElementById('tm-role-en').value = m.role_en || '';
-    document.getElementById('tm-phone').value   = m.phone   || '';
-    document.getElementById('tm-photo').value   = m.photo_url || '';
-    document.getElementById('tm-order').value   = m.order_num ?? 1;
+    document.getElementById('tm-phone').value = m.phone || '';
+    document.getElementById('tm-photo').value = m.photo_url || '';
+    document.getElementById('tm-order').value = m.order_num || 1;
     document.getElementById('tm-active').checked = m.is_active !== false;
   }
 }
@@ -1458,7 +1455,7 @@ function closeTeamModal() {
 }
 
 async function saveTeamMember() {
-  const id = document.getElementById('tm-id').value.trim();
+  const id = document.getElementById('tm-id').value;
   const payload = {
     name:      document.getElementById('tm-name').value.trim(),
     role_ro:   document.getElementById('tm-role-ro').value.trim(),
@@ -1469,17 +1466,20 @@ async function saveTeamMember() {
     is_active: document.getElementById('tm-active').checked,
   };
   if (!payload.name) { showToast('Numele este obligatoriu!', 'error'); return; }
-  const { error } = id
-    ? await sb.from('team_members').update(payload).eq('id', id)
-    : await sb.from('team_members').insert([payload]);
+  let error;
+  if (id) {
+    ({ error } = await sb.from('team_members').update(payload).eq('id', id));
+  } else {
+    ({ error } = await sb.from('team_members').insert([payload]));
+  }
   if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
-  showToast(id ? 'Membru actualizat cu succes!' : 'Membru adăugat cu succes!');
+  showToast(id ? 'Membru actualizat!' : 'Membru adăugat!');
   closeTeamModal();
   loadEchipa();
 }
 
 async function deleteTeamMember(id, name) {
-  if (!confirm(`Ștergi membrul "${name}"? Acțiunea nu poate fi anulată.`)) return;
+  if (!confirm(`Ștergi membrul "${name}"? Această acțiune nu poate fi anulată.`)) return;
   const { error } = await sb.from('team_members').delete().eq('id', id);
   if (error) { showToast('Eroare la ștergere!', 'error'); return; }
   showToast('Membru șters!');
