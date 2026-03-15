@@ -735,9 +735,7 @@
             </div>
           </div>
         </div>
-        <div class="designer-cards-stack reveal d3" id="designerCardsWrap">
-          <!-- Dan Buia + Andrei — populated from Supabase -->
-        </div>
+        <div class="designer-cards-stack reveal d3" id="designerCardsWrap" style="display:none"></div>
       </div>
       <div class="contact-right-col">
         <div class="contact-form-wrap reveal d1">
@@ -784,10 +782,12 @@
             </div>
           </div>
         </div>
-        <div class="director-card-wrap reveal d2" id="directorCardWrap">
-          <!-- Daniel Marosan — populated from Supabase -->
-        </div>
+        <div id="directorCardWrap" style="display:none"></div>
       </div>
+    </div>
+    <!-- Team cards — full width, 3 columns -->
+    <div class="team-row reveal d2" id="teamCardsWrap">
+      <!-- Populated dynamically from Supabase team_members -->
     </div>
   </div>
 </section>
@@ -1113,52 +1113,32 @@ function renderHeroImages(settings) {
 }
 
 function renderTeamCards(members, lang) {
+  const wrap = document.getElementById('teamCardsWrap')
+  if (!wrap || !members?.length) return
   const phoneIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>`
   const callLabel = lang === 'en' ? 'Call Now' : 'Sună Acum'
-
-  const makePhoto = m => m.photo_url
-    ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="team-avatar-initials" style="display:none">${m.name.charAt(0)}</div>`
-    : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
-  const makeCta = m => m.phone
-    ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="daniel-cta">${phoneIcon} ${callLabel}</a>`
-    : ''
-
-  // First member (lowest order_num) → director card on the right
-  const sorted    = [...members].sort((a, b) => a.order_num - b.order_num)
-  const director  = sorted[0]
-  const designers = sorted.slice(1)
-
-  // Director card — right column, below form
-  const dirWrap = document.getElementById('directorCardWrap')
-  if (dirWrap && director) {
-    const role = (lang === 'en' && director.role_en) ? director.role_en : (director.role_ro || '')
-    dirWrap.innerHTML = `<div class="director-card">
-      <div class="daniel-photo">${makePhoto(director)}</div>
-      <div class="daniel-info">
-        <div class="daniel-name">${director.name}</div>
-        <div class="daniel-role">${role}</div>
-        ${makeCta(director)}
-      </div>
-    </div>`
-    reObserve(dirWrap)
-  }
-
-  // Designer cards — left column, stacked vertically
-  const desWrap = document.getElementById('designerCardsWrap')
-  if (desWrap && designers.length) {
-    desWrap.innerHTML = designers.map(m => {
-      const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
-      return `<div class="designer-card">
-        <div class="daniel-photo large">${makePhoto(m)}</div>
-        <div class="daniel-info">
-          <div class="daniel-name">${m.name}</div>
-          <div class="daniel-role">${role}</div>
-          ${makeCta(m)}
+  const sorted = [...members].sort((a, b) => a.order_num - b.order_num)
+  wrap.innerHTML = sorted.map(m => {
+    const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
+    const photoHTML = m.photo_url
+      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="team-avatar-initials" style="display:none">${m.name.charAt(0)}</div>`
+      : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
+    const ctaHTML = m.phone
+      ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="team-cta">${phoneIcon} ${callLabel}</a>`
+      : ''
+    return `<div class="team-card">
+      <div class="team-card-left">
+        <div class="team-photo">${photoHTML}</div>
+        <div class="team-info">
+          <div class="team-name">${m.name}</div>
+          <div class="team-role">${role}</div>
+          ${ctaHTML}
         </div>
-      </div>`
-    }).join('')
-    reObserve(desWrap)
-  }
+      </div>
+      <img src="images/logo/applemobdesign-white-logo.png" alt="" class="team-card-logo" aria-hidden="true">
+    </div>`
+  }).join('')
+  reObserve(wrap)
 }
 
 function renderFaq(items, lang) {
