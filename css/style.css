@@ -589,7 +589,7 @@ nav.scrolled {
   transition: color 0.25s;
 }
 .brand-card:hover .brand-name { color: var(--green); }
-.brand-tag { font-size: 0.65rem; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; }
+.brand-tag { font-size: 0.65rem; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
 
 /* ─── TESTIMONIALS ─── */
 #testimonials { background: var(--off-white); }
