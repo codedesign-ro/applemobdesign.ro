@@ -381,6 +381,10 @@ tr:hover td { background: var(--off); }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Hero & Statistici
       </div>
+      <div class="nav-item" onclick="showPage('faq')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        FAQ
+      </div>
       <div class="nav-item" onclick="showPage('echipa')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Echipă
@@ -513,6 +517,21 @@ tr:hover td { background: var(--off); }
     </div>
 
     <!-- ── PARTENERI ── -->
+    <!-- ── FAQ ── -->
+    <div class="page" id="page-faq">
+      <div class="page-header">
+        <div class="page-title">FAQ — Întrebări Frecvente</div>
+        <div class="page-sub">Gestionează întrebările și răspunsurile afișate pe site. Suportă română și engleză.</div>
+      </div>
+      <button class="btn-add" onclick="openFaqModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adaugă Întrebare
+      </button>
+      <div class="card">
+        <div class="table-wrap" id="faqTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
     <!-- ── ECHIPĂ ── -->
     <div class="page" id="page-echipa">
       <div class="page-header">
@@ -720,6 +739,45 @@ tr:hover td { background: var(--off); }
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('brandModal')">Anulează</button>
       <button class="btn-save" onclick="saveBrand()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Modal -->
+<div class="modal-overlay" id="faqModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-title" id="faqModalTitle">Adaugă Întrebare FAQ</div>
+    <div class="modal-grid">
+      <div class="f-group full">
+        <label class="f-label">Întrebare (RO) *</label>
+        <input type="text" id="fq-q-ro" class="f-input" placeholder="ex: Cât durează producția?">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Răspuns (RO) *</label>
+        <textarea id="fq-a-ro" class="f-textarea" style="min-height:90px;" placeholder="Răspunsul în română..."></textarea>
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Question (EN)</label>
+        <input type="text" id="fq-q-en" class="f-input" placeholder="ex: How long does production take?">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">Answer (EN)</label>
+        <textarea id="fq-a-en" class="f-textarea" style="min-height:90px;" placeholder="Answer in English..."></textarea>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine Afișare</label>
+        <input type="number" id="fq-order" class="f-input" value="0">
+      </div>
+      <div class="f-group" style="display:flex;align-items:flex-end;">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="fq-active" checked><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Activ (vizibil pe site)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('faqModal')">Anulează</button>
+      <button class="btn-save" onclick="saveFaqItem()">Salvează</button>
     </div>
   </div>
 </div>
@@ -995,6 +1053,7 @@ function showPage(name) {
     hero:         loadHero,
     parteneri:    loadParteneri,
     echipa:       loadEchipa,
+    faq:          loadFaq,
     avansat:      loadAvansat,
   };
   if (loaders[name]) loaders[name]();
@@ -1714,6 +1773,85 @@ async function deleteTeamMember(id) {
   await sb.from('team_members').delete().eq('id', id);
   showToast('Membru șters.');
   loadEchipa();
+}
+
+// ══════════════════════════════════════
+// FAQ
+// ══════════════════════════════════════
+async function loadFaq() {
+  const { data } = await sb.from('faq_items').select('*').order('order_num');
+  const el = document.getElementById('faqTable');
+  if (!data || data.length === 0) {
+    el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Nicio întrebare adăugată.</p>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr><th>#</th><th>Întrebare RO</th><th>Întrebare EN</th><th>Ordine</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map((f, i) => `
+      <tr>
+        <td style="color:var(--text-light);font-size:0.8rem;">${i + 1}</td>
+        <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><strong>${f.question_ro || '—'}</strong></td>
+        <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-light);">${f.question_en || '—'}</td>
+        <td>${f.order_num}</td>
+        <td><span class="badge ${f.is_active ? 'badge-green' : 'badge-gray'}">${f.is_active ? 'Activ' : 'Inactiv'}</span></td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn-sm btn-edit" onclick="editFaqItem('${f.id}')">✏️</button>
+          <button class="btn-sm btn-delete" onclick="deleteFaqItem('${f.id}')">🗑</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openFaqModal() {
+  editingId = null;
+  document.getElementById('faqModalTitle').textContent = 'Adaugă Întrebare FAQ';
+  ['fq-q-ro', 'fq-a-ro', 'fq-q-en', 'fq-a-en'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fq-order').value = '0';
+  document.getElementById('fq-active').checked = true;
+  document.getElementById('faqModal').classList.add('open');
+}
+
+async function editFaqItem(id) {
+  const { data } = await sb.from('faq_items').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('faqModalTitle').textContent = 'Editează Întrebare FAQ';
+  document.getElementById('fq-q-ro').value  = data.question_ro || '';
+  document.getElementById('fq-a-ro').value  = data.answer_ro   || '';
+  document.getElementById('fq-q-en').value  = data.question_en || '';
+  document.getElementById('fq-a-en').value  = data.answer_en   || '';
+  document.getElementById('fq-order').value = data.order_num   || 0;
+  document.getElementById('fq-active').checked = data.is_active !== false;
+  document.getElementById('faqModal').classList.add('open');
+}
+
+async function saveFaqItem() {
+  const payload = {
+    question_ro: document.getElementById('fq-q-ro').value.trim(),
+    answer_ro:   document.getElementById('fq-a-ro').value.trim(),
+    question_en: document.getElementById('fq-q-en').value.trim() || null,
+    answer_en:   document.getElementById('fq-a-en').value.trim() || null,
+    order_num:   parseInt(document.getElementById('fq-order').value) || 0,
+    is_active:   document.getElementById('fq-active').checked,
+  };
+  if (!payload.question_ro || !payload.answer_ro) {
+    showToast('Întrebarea și răspunsul în română sunt obligatorii!', 'error');
+    return;
+  }
+  const { error } = editingId
+    ? await sb.from('faq_items').update(payload).eq('id', editingId)
+    : await sb.from('faq_items').insert(payload);
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('faqModal');
+  showToast(editingId ? 'Întrebare actualizată!' : 'Întrebare adăugată!');
+  loadFaq();
+}
+
+async function deleteFaqItem(id) {
+  if (!confirm('Ștergi această întrebare din FAQ?')) return;
+  await sb.from('faq_items').delete().eq('id', id);
+  showToast('Întrebare ștearsă.');
+  loadFaq();
 }
 
 // ══════════════════════════════════════

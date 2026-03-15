@@ -586,31 +586,8 @@
       <div class="section-tag reveal" style="justify-content:center;" data-i18n="faqTag">Întrebări Frecvente</div>
       <h2 class="section-title reveal d1" data-i18n="faqTitle">Tot Ce Trebuie<br><em>să Știi</em></h2>
     </div>
-    <div class="faq-grid">
-      <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq1Q">Cât durează producția mobilierului la comandă?</button>
-        <div class="faq-a"><p data-i18n="faq1A">Durata medie de producție este de 4–8 săptămâni, în funcție de complexitatea proiectului și materialele alese. Vei primi o estimare exactă după finalizarea proiectului 3D.</p></div>
-      </div>
-      <div class="faq-item reveal d1">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq2Q">Care este prețul mobilierului la comandă?</button>
-        <div class="faq-a"><p data-i18n="faq2A">Prețul variază în funcție de dimensiuni, materiale și complexitate. Oferim o ofertă personalizată gratuită după consultație. Investiția medie pentru o bucătărie completă pornește de la 3.000 EUR.</p></div>
-      </div>
-      <div class="faq-item reveal d2">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq3Q">Oferiți consultație gratuită?</button>
-        <div class="faq-a"><p data-i18n="faq3A">Da, prima consultație este complet gratuită. Ne putem întâlni la showroom-ul nostru din Baia Mare sau putem programa o vizită la domiciliu pentru a analiza spațiul.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq4Q">Livrați și în afara orașului Baia Mare?</button>
-        <div class="faq-a"><p data-i18n="faq4A">Da, livrăm și montăm în toată România. Lucrăm frecvent în Cluj-Napoca, Oradea, Satu Mare și alte orașe din nord-vestul țării. Costul transportului se calculează în funcție de distanță.</p></div>
-      </div>
-      <div class="faq-item reveal d1">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq5Q">Ce materiale folosiți pentru mobilierul la comandă?</button>
-        <div class="faq-a"><p data-i18n="faq5A">Folosim exclusiv materiale premium de la branduri europene certificate: panouri PAL Egger, feronerie Blum, sisteme de glisare Grass și lacuri Polozzi. Toate materialele respectă standardele ecologice europene.</p></div>
-      </div>
-      <div class="faq-item reveal d2">
-        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq6Q">Oferiți garanție pentru mobilierul produs?</button>
-        <div class="faq-a"><p data-i18n="faq6A">Oferim garanție completă de 2 ani pentru toate produsele livrate, acoperind atât materialele cât și execuția. Rămânem alături de tine și după montaj pentru orice ajustări necesare.</p></div>
-      </div>
+    <div class="faq-grid" id="faqGrid">
+      <!-- Populated dynamically from Supabase faq_items -->
     </div>
   </div>
 </section>
@@ -1156,6 +1133,53 @@ function renderTeamCards(members, lang) {
   reObserve(wrap)
 }
 
+function renderFaq(items, lang) {
+  const grid = document.getElementById('faqGrid')
+  if (!grid || !items?.length) return
+  const delays = ['', ' d1', ' d2', '', ' d1', ' d2']
+  grid.innerHTML = items.map((f, i) => {
+    const q = (lang === 'en' && f.question_en) ? f.question_en : (f.question_ro || '')
+    const a = (lang === 'en' && f.answer_en)   ? f.answer_en   : (f.answer_ro   || '')
+    return `<div class="faq-item reveal${delays[i % 6]}">
+      <button class="faq-q" onclick="toggleFaq(this)">${q}</button>
+      <div class="faq-a"><p>${a}</p></div>
+    </div>`
+  }).join('')
+  reObserve(grid)
+  // Inject / refresh FAQPage JSON-LD
+  injectFaqSchema(items, lang)
+}
+
+function toggleFaq(btn) {
+  const item = btn.parentElement
+  const isOpen = item.classList.contains('open')
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'))
+  if (!isOpen) item.classList.add('open')
+}
+
+function injectFaqSchema(items, lang) {
+  const existing = document.getElementById('faq-schema')
+  if (existing) existing.remove()
+  const mainEntity = items.map(f => ({
+    '@type': 'Question',
+    'name': (lang === 'en' && f.question_en) ? f.question_en : (f.question_ro || ''),
+    'acceptedAnswer': {
+      '@type': 'Answer',
+      'text': (lang === 'en' && f.answer_en) ? f.answer_en : (f.answer_ro || '')
+    }
+  }))
+  const script = document.createElement('script')
+  script.type = 'application/ld+json'
+  script.id   = 'faq-schema'
+  script.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': mainEntity
+  })
+  document.head.appendChild(script)
+}
+
 // ══════════════════════════════════════════════════════
 // LANGUAGE RE-RENDER HOOK
 // Exposed as window._amdRender so the regular setLang()
@@ -1170,6 +1194,7 @@ window._amdRender = function(lang) {
   if (C.contact)      renderContactDetails(C.contact, lang)
   if (C.brands)       renderBrands(C.brands, lang)
   if (C.teamMembers)  renderTeamCards(C.teamMembers, lang)
+  if (C.faqItems)     renderFaq(C.faqItems, lang)
 }
 
 // ══════════════════════════════════════════════════════
@@ -1255,6 +1280,7 @@ async function init() {
     { data: brands,       error: e6 },
     { data: heroSettingsRows, error: e7 },
     { data: teamMembers,  error: e8 },
+    { data: faqItems,     error: e9 },
   ] = await Promise.all([
     db.from('hero_stats').select('*').order('order_num'),
     db.from('services').select('*').eq('is_active', true).order('order_num'),
@@ -1268,6 +1294,7 @@ async function init() {
     // hero_settings is also a key-value table
     db.from('hero_settings').select('key,value'),
     db.from('team_members').select('*').eq('is_active', true).order('order_num'),
+    db.from('faq_items').select('*').eq('is_active', true).order('order_num'),
   ])
 
   // Log errors — each section gracefully falls back to static HTML on failure
@@ -1279,6 +1306,7 @@ async function init() {
   if (e6) console.warn('brands:', e6.message)
   if (e7) console.warn('hero_settings:', e7.message)
   if (e8) console.warn('team_members:', e8.message)
+  if (e9) console.warn('faq_items:', e9.message)
 
   // Convert key-value tables to plain objects
   const toObj = rows => rows?.length ? rows.reduce((a, r) => { a[r.key] = r.value; return a }, {}) : null
@@ -1294,6 +1322,7 @@ async function init() {
   if (brands?.length)       { C.brands       = brands;       renderBrands(C.brands, _lang) }
   if (heroSettings)         { renderHeroImages(heroSettings) }
   if (teamMembers?.length)  { C.teamMembers  = teamMembers;  renderTeamCards(C.teamMembers, _lang) }
+  if (faqItems?.length)     { C.faqItems     = faqItems;     renderFaq(C.faqItems, _lang) }
 
   setupContactForm()
   setupNewsletterForm()
