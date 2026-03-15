@@ -14,10 +14,21 @@
 <link rel="alternate" hreflang="en" href="https://applemobdesign.ro/?lang=en">
 <meta property="og:title" content="Apple Mob Design — Mobilier la Comandă, Baia Mare">
 <meta property="og:description" content="Mobilier la comandă în Baia Mare. Bucătării, dormitoare, living-uri custom din materiale premium. 20+ ani experiență.">
-<meta property="og:image" content="https://applemobdesign.ro/images/logo/applemobdesign-logo.png">
+<meta property="og:image" content="https://applemobdesign.ro/images/og/applemobdesign-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Apple Mob Design — Mobilier la Comandă, Baia Mare">
 <meta property="og:url" content="https://applemobdesign.ro/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ro_RO">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:site_name" content="Apple Mob Design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@applemobdesign">
+<meta name="twitter:title" content="Apple Mob Design — Mobilier la Comandă, Baia Mare">
+<meta name="twitter:description" content="Mobilier la comandă în Baia Mare. Bucătării, dormitoare, living-uri custom din materiale premium. 20+ ani experiență.">
+<meta name="twitter:image" content="https://applemobdesign.ro/images/og/applemobdesign-og.jpg">
+<meta name="twitter:image:alt" content="Apple Mob Design — Mobilier la Comandă, Baia Mare">
 <link rel="icon" type="image/png" sizes="32x32" href="images/logo/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/logo/favicon-16x16.png">
 <link rel="apple-touch-icon" href="images/logo/apple-touch-icon.png">
@@ -567,6 +578,43 @@
   </div>
 </section>
 
+<!-- ── FAQ ── -->
+
+<section id="faq">
+  <div class="section-wrap">
+    <div style="text-align:center;max-width:560px;margin:0 auto 48px;">
+      <div class="section-tag reveal" style="justify-content:center;" data-i18n="faqTag">Întrebări Frecvente</div>
+      <h2 class="section-title reveal d1" data-i18n="faqTitle">Tot Ce Trebuie<br><em>să Știi</em></h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq1Q">Cât durează producția mobilierului la comandă?</button>
+        <div class="faq-a"><p data-i18n="faq1A">Durata medie de producție este de 4–8 săptămâni, în funcție de complexitatea proiectului și materialele alese. Vei primi o estimare exactă după finalizarea proiectului 3D.</p></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq2Q">Care este prețul mobilierului la comandă?</button>
+        <div class="faq-a"><p data-i18n="faq2A">Prețul variază în funcție de dimensiuni, materiale și complexitate. Oferim o ofertă personalizată gratuită după consultație. Investiția medie pentru o bucătărie completă pornește de la 3.000 EUR.</p></div>
+      </div>
+      <div class="faq-item reveal d2">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq3Q">Oferiți consultație gratuită?</button>
+        <div class="faq-a"><p data-i18n="faq3A">Da, prima consultație este complet gratuită. Ne putem întâlni la showroom-ul nostru din Baia Mare sau putem programa o vizită la domiciliu pentru a analiza spațiul.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq4Q">Livrați și în afara orașului Baia Mare?</button>
+        <div class="faq-a"><p data-i18n="faq4A">Da, livrăm și montăm în toată România. Lucrăm frecvent în Cluj-Napoca, Oradea, Satu Mare și alte orașe din nord-vestul țării. Costul transportului se calculează în funcție de distanță.</p></div>
+      </div>
+      <div class="faq-item reveal d1">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq5Q">Ce materiale folosiți pentru mobilierul la comandă?</button>
+        <div class="faq-a"><p data-i18n="faq5A">Folosim exclusiv materiale premium de la branduri europene certificate: panouri PAL Egger, feronerie Blum, sisteme de glisare Grass și lacuri Polozzi. Toate materialele respectă standardele ecologice europene.</p></div>
+      </div>
+      <div class="faq-item reveal d2">
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq6Q">Oferiți garanție pentru mobilierul produs?</button>
+        <div class="faq-a"><p data-i18n="faq6A">Oferim garanție completă de 2 ani pentru toate produsele livrate, acoperind atât materialele cât și execuția. Rămânem alături de tine și după montaj pentru orice ajustări necesare.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── BRANDS ── -->
 
 <section id="brands">
@@ -1090,7 +1138,8 @@ function renderTeamCards(members, lang) {
   wrap.innerHTML = members.map(m => {
     const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
     const photoHTML = m.photo_url
-      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy">`
+      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        + `<div class="team-avatar-initials" style="display:none">${m.name.charAt(0)}</div>`
       : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
     const ctaHTML = m.phone
       ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="daniel-cta">${phoneIcon} ${callLabel}</a>`
@@ -1383,6 +1432,21 @@ const translations = {
     footerCredit: 'Website creat de',
     // Page title & meta
     pageTitle: 'Apple Mob Design — Mobilier la Comandă, Baia Mare',
+    // FAQ
+    faqTag: 'Întrebări Frecvente',
+    faqTitle: 'Tot Ce Trebuie<br><em>să Știi</em>',
+    faq1Q: 'Cât durează producția mobilierului la comandă?',
+    faq1A: 'Durata medie de producție este de 4–8 săptămâni, în funcție de complexitatea proiectului și materialele alese. Vei primi o estimare exactă după finalizarea proiectului 3D.',
+    faq2Q: 'Care este prețul mobilierului la comandă?',
+    faq2A: 'Prețul variază în funcție de dimensiuni, materiale și complexitate. Oferim o ofertă personalizată gratuită după consultație. Investiția medie pentru o bucătărie completă pornește de la 3.000 EUR.',
+    faq3Q: 'Oferiți consultație gratuită?',
+    faq3A: 'Da, prima consultație este complet gratuită. Ne putem întâlni la showroom-ul nostru din Baia Mare sau putem programa o vizită la domiciliu pentru a analiza spațiul.',
+    faq4Q: 'Livrați și în afara orașului Baia Mare?',
+    faq4A: 'Da, livrăm și montăm în toată România. Lucrăm frecvent în Cluj-Napoca, Oradea, Satu Mare și alte orașe din nord-vestul țării. Costul transportului se calculează în funcție de distanță.',
+    faq5Q: 'Ce materiale folosiți pentru mobilierul la comandă?',
+    faq5A: 'Folosim exclusiv materiale premium de la branduri europene certificate: panouri PAL Egger, feronerie Blum, sisteme de glisare Grass și lacuri Polozzi. Toate materialele respectă standardele ecologice europene.',
+    faq6Q: 'Oferiți garanție pentru mobilierul produs?',
+    faq6A: 'Oferim garanție completă de 2 ani pentru toate produsele livrate, acoperind atât materialele cât și execuția. Rămânem alături de tine și după montaj pentru orice ajustări necesare.',
   },
   en: {
     // Nav
@@ -1509,6 +1573,21 @@ const translations = {
     footerCredit: 'Website by',
     // Page title
     pageTitle: 'Apple Mob Design — Custom Furniture, Baia Mare',
+    // FAQ
+    faqTag: 'Frequently Asked Questions',
+    faqTitle: 'Everything You Need<br><em>to Know</em>',
+    faq1Q: 'How long does custom furniture production take?',
+    faq1A: 'Average production time is 4–8 weeks, depending on the complexity of the project and chosen materials. You will receive an exact estimate after the 3D design is finalised.',
+    faq2Q: 'How much does custom furniture cost?',
+    faq2A: 'Pricing varies based on dimensions, materials and complexity. We offer a free personalised quote after the initial consultation. Average investment for a complete kitchen starts from €3,000.',
+    faq3Q: 'Do you offer a free consultation?',
+    faq3A: 'Yes, the first consultation is completely free. We can meet at our Baia Mare showroom or schedule a home visit to assess your space.',
+    faq4Q: 'Do you deliver outside of Baia Mare?',
+    faq4A: 'Yes, we deliver and install across Romania. We frequently work in Cluj-Napoca, Oradea, Satu Mare and other north-western cities. Transport costs are calculated based on distance.',
+    faq5Q: 'What materials do you use for custom furniture?',
+    faq5A: 'We use exclusively premium materials from certified European brands: Egger PAL boards, Blum hardware, Grass sliding systems and Polozzi lacquers. All materials comply with European ecological standards.',
+    faq6Q: 'Do you offer a warranty on your furniture?',
+    faq6A: 'We offer a full 2-year warranty on all delivered products, covering both materials and workmanship. We remain by your side even after installation for any necessary adjustments.',
   }
 };
 
