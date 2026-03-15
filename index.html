@@ -711,20 +711,7 @@
           </div>
         </div>
         <div class="team-cards" id="teamCards">
-          <!-- Populated dynamically from Supabase team_members table -->
-          <div class="daniel-card reveal d3">
-            <div class="daniel-photo">
-              <img src="https://applemobdesign.ro/wp-content/uploads/2020/10/team_member_img_2.jpg" alt="Daniel Marosan" loading="lazy">
-            </div>
-            <div class="daniel-info">
-              <div class="daniel-name">Daniel Marosan</div>
-              <div class="daniel-role" data-i18n="danielRole">Director Executiv &amp; Designer</div>
-              <a href="tel:0040492332457" class="daniel-cta">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
-                Sună Acum
-              </a>
-            </div>
-          </div>
+          <!-- Loaded dynamically from Supabase team_members -->
         </div>
       </div>
       <div class="contact-form-wrap reveal d1">
@@ -1006,29 +993,30 @@ function renderTeam(members, lang) {
   const container = document.getElementById('teamCards')
   if (!container || !members?.length) return
   const callLabel = lang === 'en' ? 'Call Now' : 'Sună Acum'
-  const telHref = v => v.replace(/[\s\-().]/g, '')
+  const telHref   = v => (v || '').replace(/[\s\-().]/g, '')
+  const delays    = ['d1', 'd2', 'd3']
   container.innerHTML = members.map((m, i) => {
-    const delays = ['d1', 'd2', 'd3']
-    const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
+    const role  = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
     const photo = m.photo_url
       ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy">`
       : `<div class="team-avatar-initial">${m.name.charAt(0)}</div>`
     return `
-    <div class="daniel-card reveal ${delays[i % 3]}">
-      <div class="daniel-photo">${photo}</div>
-      <div class="daniel-info">
-        <div class="daniel-name">${m.name}</div>
-        <div class="daniel-role">${role}</div>
-        <a href="tel:${telHref(m.phone || '')}" class="daniel-cta">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
-          ${callLabel}
-        </a>
-      </div>
-    </div>`
+      <div class="daniel-card reveal ${delays[i % 3]}">
+        <div class="daniel-photo">${photo}</div>
+        <div class="daniel-info">
+          <div class="daniel-name">${m.name}</div>
+          <div class="daniel-role">${role}</div>
+          <a href="tel:${telHref(m.phone)}" class="daniel-cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
+            ${callLabel}
+          </a>
+        </div>
+      </div>`
   }).join('')
 }
 
-
+// contact_details is a key-value table: rows have { key, value }
+// We receive it pre-converted to a plain object: { phone, email, address, hours, whatsapp, ... }
 function renderContactDetails(d, lang) {
   if (!d) return
 
@@ -1133,6 +1121,7 @@ window._amdRender = function(lang) {
   if (C.portfolio)    renderPortfolio(C.portfolio, lang)
   if (C.contact)      renderContactDetails(C.contact, lang)
   if (C.brands)       renderBrands(C.brands, lang)
+  if (C.teamMembers)  renderTeam(C.teamMembers, lang)
 }
 
 // ══════════════════════════════════════════════════════
@@ -1210,14 +1199,14 @@ async function init() {
 
   // Fetch everything in parallel
   const [
-    { data: heroStats,    error: e1 },
-    { data: services,     error: e2 },
-    { data: testimonials, error: e3 },
-    { data: portfolio,    error: e4 },
-    { data: contactRows,  error: e5 },
-    { data: brands,       error: e6 },
-    { data: heroSettingsRows, error: e7 },
-    { data: teamMembers,  error: e8 },
+    { data: heroStats,       error: e1 },
+    { data: services,        error: e2 },
+    { data: testimonials,    error: e3 },
+    { data: portfolio,       error: e4 },
+    { data: contactRows,     error: e5 },
+    { data: brands,          error: e6 },
+    { data: heroSettingsRows,error: e7 },
+    { data: teamMembers,     error: e8 },
   ] = await Promise.all([
     db.from('hero_stats').select('*').order('order_num'),
     db.from('services').select('*').eq('is_active', true).order('order_num'),
