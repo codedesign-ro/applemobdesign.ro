@@ -925,6 +925,8 @@ footer {
   .process-grid { grid-template-columns: 1fr; }
   .brands-row { gap: 8px; }
   .brand-card { min-width: 110px; }
+  .portfolio-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
+  .portfolio-filters { width: 100%; }
   .portfolio-grid {
     display: grid; grid-template-columns: 1fr 1fr;
     grid-auto-rows: 220px; gap: 10px;
