@@ -710,18 +710,8 @@
             </div>
           </div>
         </div>
-        <div class="daniel-card reveal d3">
-          <div class="daniel-photo">
-            <img src="https://applemobdesign.ro/wp-content/uploads/2020/10/team_member_img_2.jpg" alt="Daniel Marosan" loading="lazy">
-          </div>
-          <div class="daniel-info">
-            <div class="daniel-name">Daniel Marosan</div>
-            <div class="daniel-role" data-i18n="danielRole">Director Executiv & Designer</div>
-            <a href="tel:0040492332457" class="daniel-cta">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
-              Sună Acum
-            </a>
-          </div>
+        <div class="team-cards-grid reveal d3" id="teamCardsWrap">
+          <!-- Populated dynamically from Supabase team_members -->
         </div>
       </div>
       <div class="contact-form-wrap reveal d1">
@@ -1092,6 +1082,31 @@ function renderHeroImages(settings) {
   }
 }
 
+function renderTeamCards(members, lang) {
+  const wrap = document.getElementById('teamCardsWrap')
+  if (!wrap || !members?.length) return
+  const phoneIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>`
+  const callLabel = lang === 'en' ? 'Call Now' : 'Sună Acum'
+  wrap.innerHTML = members.map(m => {
+    const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
+    const photoHTML = m.photo_url
+      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy">`
+      : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
+    const ctaHTML = m.phone
+      ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="daniel-cta">${phoneIcon} ${callLabel}</a>`
+      : ''
+    return `<div class="team-card">
+      <div class="daniel-photo">${photoHTML}</div>
+      <div class="daniel-info">
+        <div class="daniel-name">${m.name}</div>
+        <div class="daniel-role">${role}</div>
+        ${ctaHTML}
+      </div>
+    </div>`
+  }).join('')
+  reObserve(wrap)
+}
+
 // ══════════════════════════════════════════════════════
 // LANGUAGE RE-RENDER HOOK
 // Exposed as window._amdRender so the regular setLang()
@@ -1105,6 +1120,7 @@ window._amdRender = function(lang) {
   if (C.portfolio)    renderPortfolio(C.portfolio, lang)
   if (C.contact)      renderContactDetails(C.contact, lang)
   if (C.brands)       renderBrands(C.brands, lang)
+  if (C.teamMembers)  renderTeamCards(C.teamMembers, lang)
 }
 
 // ══════════════════════════════════════════════════════
@@ -1189,6 +1205,7 @@ async function init() {
     { data: contactRows,  error: e5 },
     { data: brands,       error: e6 },
     { data: heroSettingsRows, error: e7 },
+    { data: teamMembers,  error: e8 },
   ] = await Promise.all([
     db.from('hero_stats').select('*').order('order_num'),
     db.from('services').select('*').eq('is_active', true).order('order_num'),
@@ -1201,6 +1218,7 @@ async function init() {
     db.from('brands').select('*').eq('is_active', true).order('order_num'),
     // hero_settings is also a key-value table
     db.from('hero_settings').select('key,value'),
+    db.from('team_members').select('*').eq('is_active', true).order('order_num'),
   ])
 
   // Log errors — each section gracefully falls back to static HTML on failure
@@ -1211,6 +1229,7 @@ async function init() {
   if (e5) console.warn('contact_details:', e5.message)
   if (e6) console.warn('brands:', e6.message)
   if (e7) console.warn('hero_settings:', e7.message)
+  if (e8) console.warn('team_members:', e8.message)
 
   // Convert key-value tables to plain objects
   const toObj = rows => rows?.length ? rows.reduce((a, r) => { a[r.key] = r.value; return a }, {}) : null
@@ -1225,6 +1244,7 @@ async function init() {
   if (contact)              { C.contact      = contact;      renderContactDetails(C.contact, _lang) }
   if (brands?.length)       { C.brands       = brands;       renderBrands(C.brands, _lang) }
   if (heroSettings)         { renderHeroImages(heroSettings) }
+  if (teamMembers?.length)  { C.teamMembers  = teamMembers;  renderTeamCards(C.teamMembers, _lang) }
 
   setupContactForm()
   setupNewsletterForm()

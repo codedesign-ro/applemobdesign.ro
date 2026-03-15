@@ -381,6 +381,10 @@ tr:hover td { background: var(--off); }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Hero & Statistici
       </div>
+      <div class="nav-item" onclick="showPage('echipa')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Echipă
+      </div>
       <div class="nav-item" onclick="showPage('parteneri')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Parteneri
@@ -509,6 +513,21 @@ tr:hover td { background: var(--off); }
     </div>
 
     <!-- ── PARTENERI ── -->
+    <!-- ── ECHIPĂ ── -->
+    <div class="page" id="page-echipa">
+      <div class="page-header">
+        <div class="page-title">Echipă</div>
+        <div class="page-sub">Gestionează membrii echipei afișați în secțiunea de contact.</div>
+      </div>
+      <button class="btn-add" onclick="openTeamModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adaugă Membru
+      </button>
+      <div class="card">
+        <div class="table-wrap" id="teamTable"><div class="loading"><div class="spinner"></div>Se încarcă...</div></div>
+      </div>
+    </div>
+
     <div class="page" id="page-parteneri">
       <div class="page-header">
         <div class="page-title">Parteneri & Branduri</div>
@@ -701,6 +720,50 @@ tr:hover td { background: var(--off); }
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('brandModal')">Anulează</button>
       <button class="btn-save" onclick="saveBrand()">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<!-- Team Modal -->
+<div class="modal-overlay" id="teamModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-title" id="teamModalTitle">Adaugă Membru Echipă</div>
+    <div class="modal-grid">
+      <div class="f-group full">
+        <label class="f-label">Nume *</label>
+        <input type="text" id="tm-name" class="f-input" placeholder="ex: Daniel Marosan">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Rol (RO)</label>
+        <input type="text" id="tm-role-ro" class="f-input" placeholder="ex: Director Executiv & Designer">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Rol (EN)</label>
+        <input type="text" id="tm-role-en" class="f-input" placeholder="ex: Executive Director & Designer">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Telefon</label>
+        <input type="text" id="tm-phone" class="f-input" placeholder="ex: 0040747520185">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Ordine Afișare</label>
+        <input type="number" id="tm-order" class="f-input" value="0">
+      </div>
+      <div class="f-group full">
+        <label class="f-label">URL Fotografie</label>
+        <input type="url" id="tm-photo" class="f-input" placeholder="https://...">
+        <span class="f-hint">Lasă gol pentru a afișa inițiala numelui</span>
+      </div>
+      <div class="f-group full">
+        <label class="f-toggle">
+          <label class="toggle"><input type="checkbox" id="tm-active" checked><span class="toggle-slider"></span></label>
+          <span class="f-toggle-label">Activ (vizibil pe site)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('teamModal')">Anulează</button>
+      <button class="btn-save" onclick="saveTeamMember()">Salvează</button>
     </div>
   </div>
 </div>
@@ -927,6 +990,7 @@ function showPage(name) {
     servicii:     loadServicii,
     hero:         loadHero,
     parteneri:    loadParteneri,
+    echipa:       loadEchipa,
     avansat:      loadAvansat,
   };
   if (loaders[name]) loaders[name]();
@@ -1564,6 +1628,88 @@ async function deleteBrand(id) {
   await sb.from('brands').delete().eq('id', id);
   showToast('Brand șters.');
   loadParteneri();
+}
+
+// ══════════════════════════════════════
+// ECHIPĂ
+// ══════════════════════════════════════
+async function loadEchipa() {
+  const { data } = await sb.from('team_members').select('*').order('order_num');
+  const el = document.getElementById('teamTable');
+  if (!data || data.length === 0) {
+    el.innerHTML = '<p style="padding:20px;color:var(--text-light)">Niciun membru adăugat.</p>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr><th>Foto</th><th>Nume</th><th>Rol RO</th><th>Rol EN</th><th>Telefon</th><th>Ordine</th><th>Status</th><th>Acțiuni</th></tr></thead>
+    <tbody>${data.map(m => `
+      <tr>
+        <td>${m.photo_url
+          ? `<img src="${m.photo_url}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.style.display='none'">`
+          : `<div style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;">${m.name.charAt(0)}</div>`}</td>
+        <td><strong>${m.name}</strong></td>
+        <td>${m.role_ro || '—'}</td>
+        <td>${m.role_en || '—'}</td>
+        <td>${m.phone || '—'}</td>
+        <td>${m.order_num}</td>
+        <td><span class="badge ${m.is_active ? 'badge-green' : 'badge-gray'}">${m.is_active ? 'Activ' : 'Inactiv'}</span></td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn-sm btn-edit" onclick="editTeamMember('${m.id}')">✏️</button>
+          <button class="btn-sm btn-delete" onclick="deleteTeamMember('${m.id}')">🗑</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+function openTeamModal() {
+  editingId = null;
+  document.getElementById('teamModalTitle').textContent = 'Adaugă Membru Echipă';
+  ['tm-name','tm-role-ro','tm-role-en','tm-phone','tm-photo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('tm-order').value = '0';
+  document.getElementById('tm-active').checked = true;
+  document.getElementById('teamModal').classList.add('open');
+}
+
+async function editTeamMember(id) {
+  const { data } = await sb.from('team_members').select('*').eq('id', id).single();
+  if (!data) return;
+  editingId = id;
+  document.getElementById('teamModalTitle').textContent = 'Editează Membru';
+  document.getElementById('tm-name').value     = data.name || '';
+  document.getElementById('tm-role-ro').value  = data.role_ro || '';
+  document.getElementById('tm-role-en').value  = data.role_en || '';
+  document.getElementById('tm-phone').value    = data.phone || '';
+  document.getElementById('tm-photo').value    = data.photo_url || '';
+  document.getElementById('tm-order').value    = data.order_num || 0;
+  document.getElementById('tm-active').checked = data.is_active !== false;
+  document.getElementById('teamModal').classList.add('open');
+}
+
+async function saveTeamMember() {
+  const payload = {
+    name:      document.getElementById('tm-name').value.trim(),
+    role_ro:   document.getElementById('tm-role-ro').value.trim() || null,
+    role_en:   document.getElementById('tm-role-en').value.trim() || null,
+    phone:     document.getElementById('tm-phone').value.trim() || null,
+    photo_url: document.getElementById('tm-photo').value.trim() || null,
+    order_num: parseInt(document.getElementById('tm-order').value) || 0,
+    is_active: document.getElementById('tm-active').checked,
+  };
+  if (!payload.name) { showToast('Numele este obligatoriu!', 'error'); return; }
+  const { error } = editingId
+    ? await sb.from('team_members').update(payload).eq('id', editingId)
+    : await sb.from('team_members').insert(payload);
+  if (error) { showToast('Eroare: ' + error.message, 'error'); return; }
+  closeModal('teamModal');
+  showToast(editingId ? 'Membru actualizat!' : 'Membru adăugat!');
+  loadEchipa();
+}
+
+async function deleteTeamMember(id) {
+  if (!confirm('Ștergi acest membru din echipă?')) return;
+  await sb.from('team_members').delete().eq('id', id);
+  showToast('Membru șters.');
+  loadEchipa();
 }
 
 // ══════════════════════════════════════
