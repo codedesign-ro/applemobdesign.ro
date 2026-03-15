@@ -374,15 +374,18 @@ nav.scrolled {
 }
 .about-img-sec img { width: 100%; height: 100%; object-fit: cover; }
 .about-float-card {
-  position: absolute; top: 44%; left: 56%;
-  transform: translateX(-50%);
-  background: white;
-  border-radius: var(--radius-md);
-  padding: 16px 22px;
-  box-shadow: var(--shadow-md);
-  display: flex; align-items: center; gap: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  bottom: auto;
+  right: auto;
+  margin: 0;
   white-space: nowrap;
-  z-index: 5;
+  z-index: 10;
+  padding: 10px 16px;
+  gap: 10px;
+  border-radius: 12px;
 }
 .about-float-icon {
   width: 42px; height: 42px; border-radius: 12px;
