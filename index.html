@@ -1058,11 +1058,6 @@ function renderContactDetails(d, lang) {
     if (!i18nKey && labelEl.textContent.trim() === 'Email' && d.email) valEl.textContent = d.email
   })
 
-  // ── Daniel card phone link ──
-  if (d.phone) {
-    const danielCta = document.querySelector('.daniel-cta')
-    if (danielCta) danielCta.href = `tel:${telHref(d.phone)}`
-  }
 }
 
 function renderBrands(brands, lang) {
@@ -1186,6 +1181,38 @@ function injectFaqSchema(items, lang) {
     'mainEntity': mainEntity
   })
   document.head.appendChild(script)
+}
+
+// ══════════════════════════════════════════════════════
+// TEAM CARDS
+// ══════════════════════════════════════════════════════
+function renderTeamCards(members, lang) {
+  const wrap = document.getElementById('teamCardsWrap')
+  if (!wrap || !members?.length) return
+  const phoneIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>`
+  const callLabel = lang === 'en' ? 'Call Now' : 'Sună Acum'
+  const sorted = [...members].sort((a, b) => a.order_num - b.order_num)
+  wrap.innerHTML = sorted.map(m => {
+    const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
+    const photoHTML = m.photo_url
+      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy">`
+      : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
+    const ctaHTML = m.phone
+      ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="team-cta">${phoneIcon} ${callLabel}</a>`
+      : ''
+    return `<div class="team-card">
+      <div class="team-card-left">
+        <div class="team-photo">${photoHTML}</div>
+        <div class="team-info">
+          <div class="team-name">${m.name}</div>
+          <div class="team-role">${role}</div>
+          ${ctaHTML}
+        </div>
+      </div>
+      <img src="images/logo/applemobdesign-white-logo.png" alt="" class="team-card-logo" aria-hidden="true">
+    </div>`
+  }).join('')
+  reObserve(wrap)
 }
 
 // ══════════════════════════════════════════════════════
