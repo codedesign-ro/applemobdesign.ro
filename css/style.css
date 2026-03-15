@@ -381,6 +381,10 @@ nav.scrolled {
   bottom: auto;
   right: auto;
   margin: 0;
+  background: white;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
   white-space: nowrap;
   z-index: 10;
   padding: 10px 16px;
