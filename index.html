@@ -735,52 +735,57 @@
             </div>
           </div>
         </div>
-        <div class="team-cards-grid reveal d3" id="teamCardsWrap">
-          <!-- Populated dynamically from Supabase team_members -->
+        <div class="designer-cards-stack reveal d3" id="designerCardsWrap">
+          <!-- Dan Buia + Andrei — populated from Supabase -->
         </div>
       </div>
-      <div class="contact-form-wrap reveal d1">
-        <div class="form-title" data-i18n="formTitle">Solicită o Ofertă</div>
-        <div class="form-sub" data-i18n="formSub">Pentru orice întrebări suntem aici să te ajutăm</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label" data-i18n="fldFirst">Prenume</label>
-            <input type="text" id="form-first-name" class="form-input" placeholder="Ion">
+      <div class="contact-right-col">
+        <div class="contact-form-wrap reveal d1">
+          <div class="form-title" data-i18n="formTitle">Solicită o Ofertă</div>
+          <div class="form-sub" data-i18n="formSub">Pentru orice întrebări suntem aici să te ajutăm</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" data-i18n="fldFirst">Prenume</label>
+              <input type="text" id="form-first-name" class="form-input" placeholder="Ion">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="fldLast">Nume</label>
+              <input type="text" id="form-last-name" class="form-input" placeholder="Popescu">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Email</label>
+              <input type="email" id="form-email" class="form-input" placeholder="ion@example.com">
+            </div>
+            <div class="form-group full">
+              <label class="form-label" data-i18n="fldPhone">Telefon</label>
+              <input type="tel" id="form-phone" class="form-input" placeholder="0040 7XX XXX XXX">
+            </div>
+            <div class="form-group full">
+              <label class="form-label" data-i18n="fldType">Tipul Proiectului</label>
+              <select class="form-select">
+                <option value="">Selectează tipul de mobilier</option>
+                <option>Mobilier Dormitor</option>
+                <option>Bucătărie la Comandă</option>
+                <option>Mobilier Living</option>
+                <option>Mansardă</option>
+                <option>Baie</option>
+                <option>Mai multe camere</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label" data-i18n="fldMsg">Mesaj</label>
+              <textarea class="form-textarea" placeholder="Descrie proiectul tău — spațiu, stil dorit, buget aproximativ..."></textarea>
+            </div>
+            <div class="form-group full">
+              <button class="form-submit">
+                Trimite Mesaj
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="fldLast">Nume</label>
-            <input type="text" id="form-last-name" class="form-input" placeholder="Popescu">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Email</label>
-            <input type="email" id="form-email" class="form-input" placeholder="ion@example.com">
-          </div>
-          <div class="form-group full">
-            <label class="form-label" data-i18n="fldPhone">Telefon</label>
-            <input type="tel" id="form-phone" class="form-input" placeholder="0040 7XX XXX XXX">
-          </div>
-          <div class="form-group full">
-            <label class="form-label" data-i18n="fldType">Tipul Proiectului</label>
-            <select class="form-select">
-              <option value="">Selectează tipul de mobilier</option>
-              <option>Mobilier Dormitor</option>
-              <option>Bucătărie la Comandă</option>
-              <option>Mobilier Living</option>
-              <option>Mansardă</option>
-              <option>Baie</option>
-              <option>Mai multe camere</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label class="form-label" data-i18n="fldMsg">Mesaj</label>
-            <textarea class="form-textarea" placeholder="Descrie proiectul tău — spațiu, stil dorit, buget aproximativ..."></textarea>
-          </div>
-          <div class="form-group full">
-            <button class="form-submit">
-              Trimite Mesaj
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
+        </div>
+        <div class="director-card-wrap reveal d2" id="directorCardWrap">
+          <!-- Daniel Marosan — populated from Supabase -->
         </div>
       </div>
     </div>
@@ -1108,29 +1113,52 @@ function renderHeroImages(settings) {
 }
 
 function renderTeamCards(members, lang) {
-  const wrap = document.getElementById('teamCardsWrap')
-  if (!wrap || !members?.length) return
-  const phoneIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>`
+  const phoneIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>`
   const callLabel = lang === 'en' ? 'Call Now' : 'Sună Acum'
-  wrap.innerHTML = members.map(m => {
-    const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
-    const photoHTML = m.photo_url
-      ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-        + `<div class="team-avatar-initials" style="display:none">${m.name.charAt(0)}</div>`
-      : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
-    const ctaHTML = m.phone
-      ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="daniel-cta">${phoneIcon} ${callLabel}</a>`
-      : ''
-    return `<div class="team-card">
-      <div class="daniel-photo">${photoHTML}</div>
+
+  const makePhoto = m => m.photo_url
+    ? `<img src="${m.photo_url}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="team-avatar-initials" style="display:none">${m.name.charAt(0)}</div>`
+    : `<div class="team-avatar-initials">${m.name.charAt(0)}</div>`
+  const makeCta = m => m.phone
+    ? `<a href="tel:${m.phone.replace(/\s/g,'')}" class="daniel-cta">${phoneIcon} ${callLabel}</a>`
+    : ''
+
+  // First member (lowest order_num) → director card on the right
+  const sorted    = [...members].sort((a, b) => a.order_num - b.order_num)
+  const director  = sorted[0]
+  const designers = sorted.slice(1)
+
+  // Director card — right column, below form
+  const dirWrap = document.getElementById('directorCardWrap')
+  if (dirWrap && director) {
+    const role = (lang === 'en' && director.role_en) ? director.role_en : (director.role_ro || '')
+    dirWrap.innerHTML = `<div class="director-card">
+      <div class="daniel-photo">${makePhoto(director)}</div>
       <div class="daniel-info">
-        <div class="daniel-name">${m.name}</div>
+        <div class="daniel-name">${director.name}</div>
         <div class="daniel-role">${role}</div>
-        ${ctaHTML}
+        ${makeCta(director)}
       </div>
     </div>`
-  }).join('')
-  reObserve(wrap)
+    reObserve(dirWrap)
+  }
+
+  // Designer cards — left column, stacked vertically
+  const desWrap = document.getElementById('designerCardsWrap')
+  if (desWrap && designers.length) {
+    desWrap.innerHTML = designers.map(m => {
+      const role = (lang === 'en' && m.role_en) ? m.role_en : (m.role_ro || '')
+      return `<div class="designer-card">
+        <div class="daniel-photo large">${makePhoto(m)}</div>
+        <div class="daniel-info">
+          <div class="daniel-name">${m.name}</div>
+          <div class="daniel-role">${role}</div>
+          ${makeCta(m)}
+        </div>
+      </div>`
+    }).join('')
+    reObserve(desWrap)
+  }
 }
 
 function renderFaq(items, lang) {
