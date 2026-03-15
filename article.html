@@ -15,14 +15,14 @@
 <link rel="alternate" hreflang="en" href="https://applemobdesign.ro/article.html" id="meta-hreflang-en">
 <meta property="og:title" content="Blog — Apple Mob Design" id="meta-og-title">
 <meta property="og:description" content="Articole despre design interior și mobilier la comandă." id="meta-og-desc">
-<meta property="og:image" content="https://applemobdesign.ro/images/logo/applemobdesign-logo.png" id="meta-og-image">
+<meta property="og:image" content="https://applemobdesign.ro/images/og/applemobdesign-article-og.jpg" id="meta-og-image">
 <meta property="og:url" content="https://applemobdesign.ro/article.html" id="meta-og-url">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blog — Apple Mob Design" id="meta-tw-title">
 <meta name="twitter:description" content="Articole despre design interior și mobilier la comandă." id="meta-tw-desc">
-<meta name="twitter:image" content="https://applemobdesign.ro/images/logo/applemobdesign-logo.png" id="meta-tw-image">
+<meta name="twitter:image" content="https://applemobdesign.ro/images/og/applemobdesign-article-og.jpg" id="meta-tw-image">
 <link rel="icon" type="image/png" sizes="32x32" href="images/logo/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/logo/favicon-16x16.png">
 <link rel="apple-touch-icon" href="images/logo/apple-touch-icon.png">
@@ -385,7 +385,7 @@ function updateMeta(post, lang) {
   const title   = getTitle(post, lang);
   const excerpt = getExcerpt(post, lang);
   const url     = `https://applemobdesign.ro/article.html?slug=${post.slug}`;
-  const img     = post.cover_image || 'https://applemobdesign.ro/images/logo/applemobdesign-logo.png';
+  const img     = post.cover_image || 'https://applemobdesign.ro/images/og/applemobdesign-article-og.jpg';
   const pageTitle = `${title} — Apple Mob Design Blog`;
 
   document.title = pageTitle;
