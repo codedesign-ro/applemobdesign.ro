@@ -1047,6 +1047,7 @@ window.saveContactField = saveContactField;
 window.saveService = saveService;
 window.saveHeroStat = saveHeroStat;
 window.saveHeroSetting = saveHeroSetting;
+window.openCloudinaryWidget = openCloudinaryWidget;
 
 // ══════════════════════════════════════
 // AUTH
@@ -1978,33 +1979,40 @@ async function deleteCategory(id) {
 // CLOUDINARY UPLOAD WIDGET
 // ══════════════════════════════════════
 function openCloudinaryWidget(inputId, folder, multi = false) {
-  const widget = cloudinary.createUploadWidget({
-    cloudName:            'dzkcu9d0s',
-    uploadPreset:         'applemobdesign_upload',
-    folder:               folder,
-    multiple:             multi,
-    maxFiles:             multi ? 20 : 1,
-    resourceType:         'image',
-    clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
-    maxFileSize:          8000000, // 8 MB
-    language:             'en',
-    showSkipCropButton:   true,
-  }, (error, result) => {
-    if (error) { showToast('Upload eșuat: ' + error.message, 'error'); return; }
-    if (result.event === 'success') {
-      const url = result.info.secure_url;
-      const el  = document.getElementById(inputId);
-      if (el.tagName === 'TEXTAREA') {
-        // Multi-image: append each URL as a new line
-        el.value = el.value.trim() ? el.value.trim() + '\n' + url : url;
-      } else {
-        // Single image: replace value and close widget
-        el.value = url;
-        widget.close();
-      }
+  try {
+    if (typeof cloudinary === 'undefined') {
+      alert('Cloudinary widget not loaded. Check your internet connection and refresh.');
+      return;
     }
-  });
-  widget.open();
+    const widget = cloudinary.createUploadWidget({
+      cloudName:            'dzkcu9d0s',
+      uploadPreset:         'applemobdesign_upload',
+      folder:               folder,
+      multiple:             multi,
+      maxFiles:             multi ? 20 : 1,
+      resourceType:         'image',
+      clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+      maxFileSize:          8000000, // 8 MB
+      language:             'en',
+      showSkipCropButton:   true,
+    }, (error, result) => {
+      if (error) { showToast('Upload eșuat: ' + error.message, 'error'); return; }
+      if (result.event === 'success') {
+        const url = result.info.secure_url;
+        const el  = document.getElementById(inputId);
+        if (el.tagName === 'TEXTAREA') {
+          el.value = el.value.trim() ? el.value.trim() + '\n' + url : url;
+        } else {
+          el.value = url;
+          widget.close();
+        }
+      }
+    });
+    widget.open();
+  } catch (err) {
+    console.error('Cloudinary widget error:', err);
+    alert('Upload failed: ' + err.message);
+  }
 }
 
 // ══════════════════════════════════════
