@@ -1,1 +1,522 @@
+<!DOCTYPE html>
 
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagină Negăsită — Apple Mob Design</title>
+<meta name="description" content="Pagina pe care o cauți nu există. Revino la Apple Mob Design — mobilier la comandă în Baia Mare.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://applemobdesign.ro/404.html">
+<link rel="icon" type="image/png" sizes="32x32" href="images/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/logo/favicon-16x16.png">
+<link rel="apple-touch-icon" href="images/logo/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+
+<style>
+/* ── 404 PAGE STYLES ── */
+.page-404 {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background decorative elements */
+.page-404-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.page-404-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--green);
+}
+.page-404-bg-circle:nth-child(1) {
+  width: 600px; height: 600px;
+  top: -200px; right: -150px;
+  opacity: 0.04;
+}
+.page-404-bg-circle:nth-child(2) {
+  width: 400px; height: 400px;
+  bottom: -100px; left: -120px;
+  opacity: 0.05;
+}
+.page-404-bg-circle:nth-child(3) {
+  width: 200px; height: 200px;
+  top: 40%; left: 20%;
+  opacity: 0.03;
+}
+
+/* Nav */
+.nav-404 {
+  position: relative;
+  z-index: 10;
+  padding: 24px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Main content */
+.content-404 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 40px 48px 80px;
+}
+
+.inner-404 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1160px;
+  width: 100%;
+}
+
+/* Left — text */
+.left-404 {}
+
+.tag-404 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+}
+.tag-404::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.number-404 {
+  font-family: var(--serif);
+  font-size: clamp(100px, 14vw, 160px);
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.number-404 em {
+  font-style: italic;
+  color: var(--green);
+}
+
+.headline-404 {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+.headline-404 strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.body-404 {
+  font-size: 1rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  max-width: 440px;
+  margin-bottom: 36px;
+}
+
+.btns-404 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Quick links */
+.links-404 {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1.5px solid var(--gray-light);
+}
+.links-label-404 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+}
+.links-row-404 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.link-chip-404 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  background: var(--off-white);
+  border: 1.5px solid var(--gray);
+  border-radius: 100px;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: all 0.22s;
+}
+.link-chip-404:hover {
+  background: var(--green-pale);
+  border-color: var(--green-mid);
+  color: var(--green);
+  transform: translateY(-2px);
+}
+.link-chip-404 svg {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+}
+
+/* Right — illustration */
+.right-404 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.illustration-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* Furniture illustration — built from CSS shapes */
+.cabinet-404 {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--green-pale);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cabinet-404-inner {
+  width: 76%;
+  height: 80%;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+
+.cabinet-door {
+  background: var(--off-white);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--gray);
+  position: relative;
+  transition: all 0.3s;
+}
+.cabinet-door:hover {
+  background: var(--green-pale);
+  border-color: var(--green-mid);
+}
+.cabinet-door::after {
+  content: '';
+  position: absolute;
+  width: 6px; height: 6px;
+  background: var(--gray);
+  border-radius: 50%;
+  top: 50%; right: 12px;
+  transform: translateY(-50%);
+}
+
+/* The "missing" door — open/empty state */
+.cabinet-door.missing {
+  background: transparent;
+  border: 2.5px dashed var(--green-mid);
+  border-radius: var(--radius-sm);
+}
+.cabinet-door.missing::after { display: none; }
+.cabinet-door.missing::before {
+  content: '?';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-style: italic;
+  color: var(--green-mid);
+  font-weight: 300;
+}
+
+/* Decorative floaters */
+.float-chip-404 {
+  position: absolute;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  animation: floatBob 4s ease-in-out infinite;
+}
+.float-chip-404:nth-child(2) { animation-delay: -1.5s; }
+
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.float-chip-404-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  color: white; flex-shrink: 0;
+}
+.float-chip-404-icon svg { width: 16px; height: 16px; }
+.float-chip-404-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.float-chip-404-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.float-chip-404.top-right {
+  top: -20px; right: -20px;
+}
+.float-chip-404.bottom-left {
+  bottom: 20px; left: -30px;
+  animation-delay: -2.5s;
+}
+
+/* Footer strip */
+.footer-strip-404 {
+  position: relative;
+  z-index: 1;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1.5px solid var(--gray-light);
+}
+.footer-strip-copy {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+.footer-strip-copy a {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .inner-404 { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+  .tag-404 { justify-content: center; }
+  .body-404 { margin-left: auto; margin-right: auto; }
+  .btns-404 { justify-content: center; }
+  .links-row-404 { justify-content: center; }
+  .right-404 { order: -1; }
+  .illustration-wrap { max-width: 320px; margin: 0 auto; }
+  .float-chip-404.top-right { right: 0; }
+  .float-chip-404.bottom-left { left: 0; }
+}
+
+@media (max-width: 640px) {
+  .nav-404 { padding: 20px 24px; }
+  .content-404 { padding: 24px 24px 60px; }
+  .number-404 { font-size: 100px; }
+  .footer-strip-404 { padding: 16px 24px; flex-direction: column; gap: 6px; text-align: center; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="page-404">
+
+  <!-- Background -->
+
+  <div class="page-404-bg">
+    <div class="page-404-bg-circle"></div>
+    <div class="page-404-bg-circle"></div>
+    <div class="page-404-bg-circle"></div>
+  </div>
+
+  <!-- Nav -->
+
+  <nav class="nav-404">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo/applemobdesign-logo.png" alt="Apple Mob Design" height="44">
+    </a>
+    <a href="index.html#contact" class="btn-nav">Solicită Ofertă</a>
+  </nav>
+
+  <!-- Main content -->
+
+  <div class="content-404">
+    <div class="inner-404">
+
+```
+  <!-- Left -->
+  <div class="left-404">
+    <div class="tag-404">Eroare 404</div>
+
+    <div class="number-404">4<em>0</em>4</div>
+
+    <h1 class="headline-404">
+      Această pagină a<br>
+      <strong>fost mutată sau nu există</strong>
+    </h1>
+
+    <p class="body-404">
+      Se pare că linkul pe care l-ați accesat nu mai este valabil sau a fost mutat. 
+      Nu-ți face griji — mobilierul nostru e la locul lui. Navighează înapoi la pagina principală.
+    </p>
+
+    <div class="btns-404">
+      <a href="index.html" class="btn-primary">
+        Înapoi Acasă
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="index.html#contact" class="btn-secondary">Contactează-ne</a>
+    </div>
+
+    <div class="links-404">
+      <div class="links-label-404">Pagini populare</div>
+      <div class="links-row-404">
+        <a href="index.html#about" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Despre Noi
+        </a>
+        <a href="index.html#services" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="16" width="20" height="5" rx="1"/><rect x="4" y="10" width="6" height="6" rx="1"/><rect x="14" y="7" width="6" height="9" rx="1"/></svg>
+          Servicii
+        </a>
+        <a href="index.html#portfolio" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Portofoliu
+        </a>
+        <a href="bucatarii-la-comanda.html" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="16" width="20" height="5" rx="1"/><rect x="4" y="10" width="6" height="6" rx="1"/><rect x="14" y="7" width="6" height="9" rx="1"/></svg>
+          Bucătării
+        </a>
+        <a href="blog.html" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Blog
+        </a>
+        <a href="index.html#contact" class="link-chip-404">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72"/></svg>
+          Contact
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right — illustration -->
+  <div class="right-404">
+    <div class="illustration-wrap">
+
+      <!-- Floating chips -->
+      <div class="float-chip-404 top-right">
+        <div class="float-chip-404-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.3 7 1-5 4.9 1.2 6.9L12 17.8l-6.2 3.3L7 14.2 2 9.3l7-1L12 2z"/></svg>
+        </div>
+        <div>
+          <div class="float-chip-404-label">Proiecte</div>
+          <div class="float-chip-404-val">500+</div>
+        </div>
+      </div>
+
+      <!-- Cabinet illustration -->
+      <div class="cabinet-404">
+        <div class="cabinet-404-inner">
+          <div class="cabinet-door"></div>
+          <div class="cabinet-door"></div>
+          <div class="cabinet-door missing"></div>
+          <div class="cabinet-door"></div>
+          <div class="cabinet-door"></div>
+          <div class="cabinet-door"></div>
+        </div>
+      </div>
+
+      <!-- Bottom float chip -->
+      <div class="float-chip-404 bottom-left">
+        <div class="float-chip-404-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg>
+        </div>
+        <div>
+          <div class="float-chip-404-label">Calitate</div>
+          <div class="float-chip-404-val">Garantată</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- Footer strip -->
+
+  <div class="footer-strip-404">
+    <div class="footer-strip-copy">
+      © 2026 Apple Mob Design — Baia Mare, România. Website creat de <a href="https://codedesign.ro" target="_blank">CodeDesign.ro</a>
+    </div>
+    <div class="footer-strip-copy">
+      <a href="tel:+40747520185" style="color:var(--green);font-weight:600;">0040 747 520 185</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Auto-redirect after 30s to homepage
+let countdown = 30
+const updateCountdown = () => {
+  countdown--
+  if (countdown <= 0) window.location.href = 'index.html'
+}
+setInterval(updateCountdown, 1000)
+</script>
+
+</body>
+</html>
