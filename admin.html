@@ -296,7 +296,36 @@ tr:hover td { background: var(--off); }
   .modal-grid { grid-template-columns: 1fr; }
   .modal-grid .full { grid-column: span 1; }
 }
+
+/* ── CLOUDINARY UPLOAD ── */
+.img-input-wrap {
+  display: flex; gap: 8px; align-items: center;
+}
+.img-input-wrap .f-input {
+  flex: 1; min-width: 0;
+}
+.cld-upload-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 14px; height: 42px; white-space: nowrap;
+  background: var(--green); color: white; border: none;
+  border-radius: 10px; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; font-family: var(--sans); flex-shrink: 0;
+  transition: background 0.2s;
+}
+.cld-upload-btn:hover { background: var(--green-dark); }
+.cld-upload-btn svg { width: 14px; height: 14px; }
+.cld-multi-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; margin-top: 6px;
+  background: var(--green-pale); color: var(--green);
+  border: 1.5px solid var(--green-mid); border-radius: 10px;
+  font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  font-family: var(--sans); transition: all 0.2s;
+}
+.cld-multi-btn:hover { background: var(--green-mid); }
+.cld-multi-btn svg { width: 14px; height: 14px; }
 </style>
+<script src="https://upload-widget.cloudinary.com/latest/global/all.js"></script>
 </head>
 <body>
 
@@ -614,12 +643,22 @@ tr:hover td { background: var(--off); }
       </div>
       <div class="f-group full">
         <label class="f-label">URL Imagine Principală</label>
-        <input type="url" id="p-cover" class="f-input" placeholder="https://...">
+        <div class="img-input-wrap">
+          <input type="url" id="p-cover" class="f-input" placeholder="https://...">
+          <button type="button" class="cld-upload-btn" onclick="openCloudinaryWidget('p-cover','applemobdesign/portfolio')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
         <span class="f-hint">Linkul imaginii principale afișate în grilă</span>
       </div>
       <div class="f-group full">
         <label class="f-label">Imagini Suplimentare (URL-uri, câte unul pe linie)</label>
         <textarea id="p-images" class="f-textarea" placeholder="https://imagine1.jpg&#10;https://imagine2.jpg" style="min-height:70px;"></textarea>
+        <button type="button" class="cld-multi-btn" onclick="openCloudinaryWidget('p-images','applemobdesign/portfolio',true)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Imagini Multiple
+        </button>
       </div>
       <div class="f-group">
         <label class="f-toggle">
@@ -664,7 +703,13 @@ tr:hover td { background: var(--off); }
       </div>
       <div class="f-group full">
         <label class="f-label">Fotografie Client (URL imagine)</label>
-        <input type="url" id="t-photo" class="f-input" placeholder="https://...">
+        <div class="img-input-wrap">
+          <input type="url" id="t-photo" class="f-input" placeholder="https://...">
+          <button type="button" class="cld-upload-btn" onclick="openCloudinaryWidget('t-photo','applemobdesign/testimonials')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
         <span class="f-hint">Opțional — folosit pentru testimonialul principal (featured). Dacă nu ai o fotografie reală, lasă gol.</span>
       </div>
       <div class="f-group">
@@ -726,7 +771,13 @@ tr:hover td { background: var(--off); }
       </div>
       <div class="f-group full">
         <label class="f-label">Logo Brand (URL imagine PNG/JPG)</label>
-        <input type="url" id="b-logo" class="f-input" placeholder="https://...logo.png">
+        <div class="img-input-wrap">
+          <input type="url" id="b-logo" class="f-input" placeholder="https://...logo.png">
+          <button type="button" class="cld-upload-btn" onclick="openCloudinaryWidget('b-logo','applemobdesign/brands')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
         <span class="f-hint">Opțional — dacă adaugi un logo, acesta va fi afișat în locul numelui text. Recomandat: PNG transparent, min. 200x80px.</span>
       </div>
       <div class="f-group">
@@ -809,7 +860,13 @@ tr:hover td { background: var(--off); }
       </div>
       <div class="f-group full">
         <label class="f-label">URL Fotografie</label>
-        <input type="url" id="tm-photo" class="f-input" placeholder="https://...">
+        <div class="img-input-wrap">
+          <input type="url" id="tm-photo" class="f-input" placeholder="https://...">
+          <button type="button" class="cld-upload-btn" onclick="openCloudinaryWidget('tm-photo','applemobdesign/team')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
         <span class="f-hint">Lasă gol pentru a afișa inițiala numelui</span>
       </div>
       <div class="f-group full">
@@ -883,7 +940,13 @@ tr:hover td { background: var(--off); }
       </div>
       <div class="f-group full">
         <label class="f-label">Imagine Copertă (URL)</label>
-        <input type="url" id="bl-cover" class="f-input" placeholder="https://...">
+        <div class="img-input-wrap">
+          <input type="url" id="bl-cover" class="f-input" placeholder="https://...">
+          <button type="button" class="cld-upload-btn" onclick="openCloudinaryWidget('bl-cover','applemobdesign/blog')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
       </div>
       <div class="f-group">
         <label class="f-label">Categorie</label>
@@ -1582,8 +1645,12 @@ async function loadHero() {
       ${aboutSettings.map(s => `
         <div class="contact-field-card" style="margin-bottom:12px;">
           <div class="contact-field-label">${labelMap[s.key] || s.key}</div>
-          <div class="contact-field-row">
-            <input type="url" class="f-input" id="hset-${s.id}" value="${s.value}" placeholder="https://...">
+          <div class="contact-field-row" style="flex-wrap:wrap;gap:8px;">
+            <input type="url" class="f-input" id="hset-${s.id}" value="${s.value}" placeholder="https://..." style="flex:1;min-width:0;">
+            <button class="cld-upload-btn" type="button" onclick="openCloudinaryWidget('hset-${s.id}','applemobdesign/hero')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload
+            </button>
             <button class="btn-save-field" onclick="saveHeroSetting('${s.id}', 'hset-${s.id}')">Salvează</button>
           </div>
           ${s.value ? '<img src="' + s.value + '" style="margin-top:10px;height:80px;border-radius:8px;object-fit:cover;" onerror="this.style.display=\'none\'">' : ''}
@@ -1905,6 +1972,39 @@ async function deleteCategory(id) {
   showToast('Categorie ștearsă.');
   await loadCategories();
   loadAvansat();
+}
+
+// ══════════════════════════════════════
+// CLOUDINARY UPLOAD WIDGET
+// ══════════════════════════════════════
+function openCloudinaryWidget(inputId, folder, multi = false) {
+  const widget = cloudinary.createUploadWidget({
+    cloudName:            'dzkcu9d0s',
+    uploadPreset:         'applemobdesign_upload',
+    folder:               folder,
+    multiple:             multi,
+    maxFiles:             multi ? 20 : 1,
+    resourceType:         'image',
+    clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+    maxFileSize:          8000000, // 8 MB
+    language:             'en',
+    showSkipCropButton:   true,
+  }, (error, result) => {
+    if (error) { showToast('Upload eșuat: ' + error.message, 'error'); return; }
+    if (result.event === 'success') {
+      const url = result.info.secure_url;
+      const el  = document.getElementById(inputId);
+      if (el.tagName === 'TEXTAREA') {
+        // Multi-image: append each URL as a new line
+        el.value = el.value.trim() ? el.value.trim() + '\n' + url : url;
+      } else {
+        // Single image: replace value and close widget
+        el.value = url;
+        widget.close();
+      }
+    }
+  });
+  widget.open();
 }
 
 // ══════════════════════════════════════
