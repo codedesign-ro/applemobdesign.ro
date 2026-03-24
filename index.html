@@ -669,30 +669,14 @@
       <div class="section-tag" data-i18n="brandsTag">Parteneri Premium</div>
       <h2>Lucrăm cu <em>Cele Mai Bune Branduri</em></h2>
     </div>
-    <div class="brands-row">
-      <div class="brand-card reveal">
-        <div class="brand-name">Blum</div>
-        <div class="brand-tag" data-i18n="brand1">Feronerie</div>
-      </div>
-      <div class="brand-card reveal d1">
-        <div class="brand-name">Egger</div>
-        <div class="brand-tag" data-i18n="brand2">Panouri PAL</div>
-      </div>
-      <div class="brand-card reveal d2">
-        <div class="brand-name">Grass</div>
-        <div class="brand-tag" data-i18n="brand3">Sisteme Glisare</div>
-      </div>
-      <div class="brand-card reveal d1">
-        <div class="brand-name">Polozzi</div>
-        <div class="brand-tag" data-i18n="brand4">Lacuri & Vopsele</div>
-      </div>
-      <div class="brand-card reveal d2">
-        <div class="brand-name">Franke</div>
-        <div class="brand-tag" data-i18n="brand5">Chiuvete & Robinete</div>
-      </div>
-      <div class="brand-card reveal d3">
-        <div class="brand-name">Teka</div>
-        <div class="brand-tag" data-i18n="brand6">Electrocasnice</div>
+    <div class="brands-carousel">
+      <div class="brands-track">
+        <div class="brand-card"><div class="brand-name">Blum</div><div class="brand-tag" data-i18n="brand1">Feronerie</div></div>
+        <div class="brand-card"><div class="brand-name">Egger</div><div class="brand-tag" data-i18n="brand2">Panouri PAL</div></div>
+        <div class="brand-card"><div class="brand-name">Grass</div><div class="brand-tag" data-i18n="brand3">Sisteme Glisare</div></div>
+        <div class="brand-card"><div class="brand-name">Polozzi</div><div class="brand-tag" data-i18n="brand4">Lacuri & Vopsele</div></div>
+        <div class="brand-card"><div class="brand-name">Franke</div><div class="brand-tag" data-i18n="brand5">Chiuvete & Robinete</div></div>
+        <div class="brand-card"><div class="brand-name">Teka</div><div class="brand-tag" data-i18n="brand6">Electrocasnice</div></div>
       </div>
     </div>
   </div>
@@ -1130,22 +1114,25 @@ function renderContactDetails(d, lang) {
 }
 
 function renderBrands(brands, lang) {
-  const row = document.querySelector('.brands-row')
-  if (!row || !brands?.length) return
-  const delays = ['', ' d1', ' d2', ' d1', ' d2', ' d3']
-  row.innerHTML = brands.map((b, i) => {
-    // Actual columns: category_ro, category_en, website_url
+  const track = document.querySelector('.brands-track')
+  if (!track || !brands?.length) return
+  const buildCard = (b) => {
     const tag = (lang === 'en' && b.category_en) ? b.category_en : (b.category_ro || '')
     const nameHTML = b.logo_url
       ? `<img src="${b.logo_url}" alt="${b.name}" style="max-height:36px;object-fit:contain;">`
       : `<div class="brand-name">${b.name}</div>`
     const inner = `${nameHTML}<div class="brand-tag">${tag}</div>`
     if (b.website_url) {
-      return `<a href="${b.website_url}" target="_blank" rel="noopener" class="brand-card reveal${delays[i % 6]}">${inner}</a>`
+      return `<a href="${b.website_url}" target="_blank" rel="noopener" class="brand-card">${inner}</a>`
     }
-    return `<div class="brand-card reveal${delays[i % 6]}">${inner}</div>`
-  }).join('')
-  reObserve(row)
+    return `<div class="brand-card">${inner}</div>`
+  }
+  const cards = brands.map(buildCard).join('')
+  // Duplicate the set so the animation loops seamlessly
+  track.innerHTML = cards + cards
+  // Adjust speed based on number of brands (~2.5s per brand)
+  const duration = brands.length * 2.5
+  track.style.setProperty('--brands-duration', duration + 's')
 }
 
 function renderHeroImages(settings) {
